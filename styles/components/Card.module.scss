@@ -1,0 +1,48 @@
+.card {
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  text-decoration: none;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.card .cardDismissal {
+  margin-right: -1.5rem;
+  margin-top: -1.5rem;
+  float: right;
+}
+
+.card h5.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.card h6.cardSubTitle {
+  font-size: 1rem;
+  margin-top: -0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.card .cardImage {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card .cardBody {
+  padding: 1.25rem;
+  height: inherit;
+  flex: 1 1 auto;
+}
+
+.card .cardAction {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 40px;
+}

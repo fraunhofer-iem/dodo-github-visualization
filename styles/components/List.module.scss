@@ -1,0 +1,42 @@
+.listGroup {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.5rem;
+}
+
+@mixin listGroupItem {
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-top: 0;
+  line-height: 1.5;
+}
+
+.listGroupItem {
+  @include listGroupItem();
+}
+
+.listGroupAction {
+  @include listGroupItem();
+  padding: 0;
+}
+
+.listGroupAction button {
+  width: 100%;
+  text-align: left;
+}
+
+.listGroupTitle {
+  border-top: 1px solid;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  vertical-align: middle;
+  position: relative;
+}
+
+.listGroupItem:last-child,
+.listGroupAction:last-child {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}

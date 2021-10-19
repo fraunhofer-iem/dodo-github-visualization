@@ -1,0 +1,19 @@
+@mixin btn($display) {
+  display: $display;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  min-width: 50px;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+}
+
+.btn {
+  @include btn(inline-block);
+}
+
+.btn:hover {
+  cursor: pointer;
+}
