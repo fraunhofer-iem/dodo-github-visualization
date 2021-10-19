@@ -1,0 +1,49 @@
+[{  "type": "KPI",
+  "name": "Technical Debt",
+  "children": ["2", "3"],
+  "id": "1",
+  "description": "Technical Debt occurs if short term decisions are made, which slow development down in the long run."
+}, {  "type": "INFORMATION",
+    "name": "Code Complexity",
+    "children": [],
+    "id": "2",
+    "description": "Are there to many dependencies inside your code base?"
+  }
+  , {  "type": "INFORMATION",
+    "name": "Ticket Handling",
+    "children": ["4"],
+    "id": "3",
+    "description": "Are there to many dependencies inside your code base?"
+  }, 
+  {  "type": "INFORMATION",
+    "name": "Number of Assignee Switches",
+    "children": ["6", "5"],
+    "id": "4",
+    "description": "Are there to many dependencies inside your code base?"
+  }, 
+  {  "type": "DATA",
+    "name": "Assignee",
+    "children": ["8"],
+    "id": "5",
+    "description": "Are there to many dependencies inside your code base?"
+  }, 
+  {  "type": "DATA",
+    "name": "Ticket",
+    "children": ["8"],
+    "id": "6",
+    "description": "Are there to many dependencies inside your code base?"
+  }, 
+{
+  "type": "SYSTEM",
+  "name": "Version Control System",
+  "children": [],
+  "id": "7",
+  "description": "Are there to many dependencies inside your code base?"
+},
+{
+  "type": "SYSTEM",
+  "name": "Ticketing",
+  "children": [],
+  "id": "8",
+  "description": "Are there to many dependencies inside your code base?"
+}]
