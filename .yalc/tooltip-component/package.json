@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "description": "React component that organizes tooltips for non-React targets using Popper VirtualElements and the official Tippy.js for React component.",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "start": "rollup -c -w"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "tooltip-component",
+  "author": "Jan-Niclas Struewer",
+  "module": "dist/tooltip-component.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/tooltip-component.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/tooltip-component.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "dependencies": {
+    "@tippyjs/react": "^4.2.5"
+  },
+  "files": [
+    "dist"
+  ],
+  "yalcSig": "bddc8525f1c90772eb611edf5835f4d5"
+}

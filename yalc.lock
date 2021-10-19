@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "tooltip-component": {
+      "signature": "bddc8525f1c90772eb611edf5835f4d5",
+      "file": true
+    }
+  }
+}
