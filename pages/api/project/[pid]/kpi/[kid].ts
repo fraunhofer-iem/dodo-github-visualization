@@ -16,11 +16,11 @@ export default function handler(
   res: NextApiResponse<KPI_Detail>,
 ) {
   const {
-    query: { id },
+    query: { kid },
   } = req
 
   res.status(200).json({
-    id: id as string,
+    id: kid as string,
     score: 2,
     name: "Quality",
     description: "quality is important",
