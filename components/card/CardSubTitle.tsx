@@ -9,8 +9,8 @@ export default function CardSubTitle(props: Props) {
   const { theme } = useUIContext()
 
   return (
-    <h6 className={styles.cardSubTitle} style={theme.card.subTitle.css()}>
+    <h5 className={styles.cardSubTitle} style={theme.card.subTitle.css()}>
       {props.children}
-    </h6>
+    </h5>
   )
 }

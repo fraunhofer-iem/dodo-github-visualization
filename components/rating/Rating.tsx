@@ -1,4 +1,5 @@
 import Icon from "./Icon"
+import { IconName } from "./IconName"
 
 interface Props {
   children?: string
@@ -10,12 +11,12 @@ export default function Rating(props: Props) {
   return (
     <>
       {[5, 10, 15, 20, 25].map((limit) => (
-        <Icon>
+        <Icon key={limit}>
           {rating - limit >= 0
-            ? "star"
+            ? IconName.star
             : rating - limit > -5
-            ? "star_half"
-            : "star_border"}
+            ? IconName.starHalf
+            : IconName.starBorder}
         </Icon>
       ))}
       {rating}

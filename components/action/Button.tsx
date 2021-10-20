@@ -8,8 +8,9 @@ interface Props {
   cxtAction?: () => void
   children: React.ReactNode
   type?: "button" | "submit"
-  width?: number
+  width?: string
   display?: string
+  align?: "left" | "right" | "center"
 }
 
 export const contexts = {
@@ -26,10 +27,13 @@ export default function Button(props: Props) {
 
   const css = theme.button[context].css()
   if (props.width) {
-    css["width"] = `${props.width}%`
+    css["width"] = props.width
   }
   if (props.display) {
     css["display"] = props.display
+  }
+  if (props.align) {
+    css["textAlign"] = props.align
   }
 
   return (
