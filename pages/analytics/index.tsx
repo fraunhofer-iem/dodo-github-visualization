@@ -15,7 +15,7 @@ const Analytics: NextPage = () => {
         <CardTitle>KPI Analytics</CardTitle>
         <CardBody>
           <SectionTitle>Project Overview</SectionTitle>
-          <Table context={"striped"} pageLimit={3}>
+          <Table width="50%" context={"striped"} pageLimit={3}>
             {{
               columns: ["Project", "Rating"],
               rows: [

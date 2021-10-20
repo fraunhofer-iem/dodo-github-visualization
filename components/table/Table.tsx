@@ -19,6 +19,7 @@ interface Props {
   }
   pageLimit?: number
   context?: TableContext
+  width?: string
 }
 
 export default function Table(props: Props) {
@@ -27,6 +28,9 @@ export default function Table(props: Props) {
   const tableData = props.children ?? { columns: [], rows: [] }
   const context = props.context ?? "neutral"
   const limit = props.pageLimit ?? tableData.rows.length
+  const width = props.width ?? "100%"
+  const css = theme.table[context].table.css()
+  css.width = width
 
   const previousPage = () => {
     if ((page - 1) * limit >= 0) {
@@ -40,7 +44,7 @@ export default function Table(props: Props) {
   }
 
   return (
-    <table className={styles.table} style={theme.table[context].table.css()}>
+    <table className={styles.table} style={css}>
       <TableHead>
         {tableData.columns.map((columnContent, i) => (
           <TableCell context={context} scope="col" key={i}>
