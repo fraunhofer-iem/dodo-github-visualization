@@ -20,31 +20,61 @@ const Analytics: NextPage = () => {
               columns: ["Project", "Rating"],
               rows: [
                 [
-                  <Anchor href="/analytics/projects/a" context="neutral">
+                  <Anchor
+                    href="/analytics/projects/a"
+                    context="neutral"
+                    width="100%"
+                    display="block"
+                    align="left"
+                  >
                     Project A
                   </Anchor>,
                   <Rating>1.3</Rating>,
                 ],
                 [
-                  <Anchor href="/analytics/projects/b" context="neutral">
+                  <Anchor
+                    href="/analytics/projects/b"
+                    context="neutral"
+                    width="100%"
+                    display="block"
+                    align="left"
+                  >
                     Project B
                   </Anchor>,
                   <Rating>8.5</Rating>,
                 ],
                 [
-                  <Anchor href="/analytics/projects/c" context="neutral">
+                  <Anchor
+                    href="/analytics/projects/c"
+                    context="neutral"
+                    width="100%"
+                    display="block"
+                    align="left"
+                  >
                     Project C
                   </Anchor>,
                   <Rating>25</Rating>,
                 ],
                 [
-                  <Anchor href="/analytics/projects/d" context="neutral">
+                  <Anchor
+                    href="/analytics/projects/d"
+                    context="neutral"
+                    width="100%"
+                    display="block"
+                    align="left"
+                  >
                     Project D
                   </Anchor>,
                   <Rating>21.6</Rating>,
                 ],
                 [
-                  <Anchor href="/analytics/projects/e" context="neutral">
+                  <Anchor
+                    href="/analytics/projects/e"
+                    context="neutral"
+                    width="100%"
+                    display="block"
+                    align="left"
+                  >
                     Project E
                   </Anchor>,
                   <Rating>15.7</Rating>,
