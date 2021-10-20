@@ -46,6 +46,36 @@ const LightTheme: Theme = {
       fontWeight: "600",
     }),
   },
+  table: {
+    neutral: {
+      table: new CSSProperties({
+        backgroundColor: transparent,
+      }),
+      row: new CSSProperties({
+        backgroundColor: transparent,
+      }),
+      headCell: new CSSProperties({
+        borderColor: gray,
+      }),
+      dataCell: new CSSProperties({
+        borderColor: gray,
+      }),
+    },
+    striped: {
+      table: new CSSProperties({
+        backgroundColor: transparent,
+      }),
+      row: new CSSProperties({
+        backgroundColor: white.darken(0.1),
+      }),
+      headCell: new CSSProperties({
+        borderColor: gray,
+      }),
+      dataCell: new CSSProperties({
+        borderColor: gray,
+      }),
+    },
+  },
   button: {
     primary: new CSSProperties({
       backgroundColor: blue.darken(0.2),

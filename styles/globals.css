@@ -14,3 +14,5 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@import "../node_modules/material-design-icons/iconfont/material-icons.css";

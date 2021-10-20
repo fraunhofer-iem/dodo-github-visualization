@@ -25,6 +25,20 @@ export type Theme = {
     listItem: CSSProperties
     listTitle: CSSProperties
   }
+  table: {
+    neutral: {
+      table: CSSProperties
+      row: CSSProperties
+      headCell: CSSProperties
+      dataCell: CSSProperties
+    }
+    striped: {
+      table: CSSProperties
+      row: CSSProperties
+      headCell: CSSProperties
+      dataCell: CSSProperties
+    }
+  }
   cytoscape?: {
     canvas: cytoscape.Stylesheet[]
   }

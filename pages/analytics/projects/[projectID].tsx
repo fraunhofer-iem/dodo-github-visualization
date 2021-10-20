@@ -1,12 +1,14 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
-import Card from "../components/card/Card"
-import CardBody from "../components/card/CardBody"
-import LineChart from "../components/chart/LineChart"
-import PieChart from "../components/chart/PieChart"
-import Grid from "../components/layout/Grid"
-import Page from "../components/layout/Page"
-import prData from "../util/data/pullRequestData.json"
+import { useRouter } from "next/dist/client/router"
+import Card from "../../../components/card/Card"
+import CardBody from "../../../components/card/CardBody"
+import CardTitle from "../../../components/card/CardTitle"
+import LineChart from "../../../components/chart/LineChart"
+import PieChart from "../../../components/chart/PieChart"
+import Grid from "../../../components/layout/Grid"
+import Page from "../../../components/layout/Page"
+import prData from "../../../util/data/pullRequestData.json"
 import {
   Color,
   lime,
@@ -14,7 +16,7 @@ import {
   red,
   turquoise,
   yellow,
-} from "../util/themes/Theme"
+} from "../../../util/themes/Theme"
 
 const timeline = (): ChartData<"line"> => {
   const labels: number[] = []
@@ -108,10 +110,13 @@ const count = (): ChartData<"pie"> => {
 }
 
 const Detail: NextPage = () => {
-  cluster()
+  const router = useRouter()
+  const { projectID } = router.query
+
   return (
-    <Page title="Project Detail - KPI Dashboard">
+    <Page title={`Project ${projectID}  - KPI Dashboard`}>
       <Card width="99%">
+        <CardTitle>{`Project ${projectID}`}</CardTitle>
         <CardBody>
           <Grid>
             <LineChart data={timeline()} width="500px" height="500px" />
