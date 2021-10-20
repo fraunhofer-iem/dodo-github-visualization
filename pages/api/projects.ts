@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequestQuery } from "next/dist/server/api-utils";
 import { PAGE_SIZE_LIMIT, Pagination } from "../../util/commonApiTypes"
 import projects from "../../util/data/projects.json"
 
@@ -12,27 +13,34 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Project[]>,
 ) {
-  const pagination = getPagination(req);
+  const pagination = getPagination(req.query);
+  console.log(pagination);
   res.status(200).json(projects)
 }
 
-const getPagination = (req: NextApiRequest): Pagination => {
-  if(hasPageNumber(req)){
-    if(hasValidPageSize(req)){
-      return {pageNumber: req.query.pageNumber, pageSize: req.query.pageSize}
+const getPagination = (query: NextApiRequestQuery): Pagination => {
+  if (hasValidPageNumber(query)) {
+    if (hasValidPageSize(query)) {
+      return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
     } else {
-      return {pageNumber: req.query.pageNumber, pageSize: PAGE_SIZE_LIMIT}
+      return { pageNumber: +query.pageNumber, pageSize: PAGE_SIZE_LIMIT }
     }
   } else {
-    return {pageSize: PAGE_SIZE_LIMIT, pageNumber: 1}
+    return { pageSize: PAGE_SIZE_LIMIT, pageNumber: 1 }
   }
 }
 
-const hasPageNumber = (req: NextApiRequest) => {
-  return req.hasOwnProperty('pageNumber') ;
+const hasValidPageNumber = (query: NextApiRequestQuery) => {
+  return query.hasOwnProperty("pageNumber") && isNumber(query["pageNumber"])
 }
 
+const hasValidPageSize = (query: NextApiRequestQuery) => {
+  if (query.hasOwnProperty("pageSize")) {
+    return isNumber(query["pageSize"]);
+  }
+  return false
+}
 
-const hasValidPageSize = (req: NextApiRequest) => {
-  return (req.hasOwnProperty('pageSize') && ObjectpageSize > PAGE_SIZE_LIMIT)
+const isNumber = (numVal: string | string[]) => {
+  return typeof numVal == "string" && !isNaN(+numVal)
 }
