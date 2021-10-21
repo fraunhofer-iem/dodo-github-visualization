@@ -4,6 +4,7 @@ export type User = {
   name: string
   admin: boolean
   id: string
+  isLoggedIn: boolean
 }
 
 export default withSession(async (req, res) => {
