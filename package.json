@@ -24,7 +24,6 @@
     "cytoscape-popper": "^2.0.0",
     "deep-equal": "^2.0.5",
     "lodash": "^4.17.21",
-    "material-design-icons": "^3.0.1",
     "mobx": "^6.3.5",
     "mobx-react-lite": "^3.2.1",
     "next": "11.1.2",
