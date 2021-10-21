@@ -21,6 +21,9 @@ const LightTheme: Theme = {
       backgroundColor: black.brighten(0.1),
       color: white,
     }),
+    sidebar: new CSSProperties({
+      backgroundColor: white.darken(0.05),
+    }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {

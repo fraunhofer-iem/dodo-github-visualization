@@ -1,13 +1,19 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
+import { useRef } from "react"
+import Button from "../../../components/action/Button"
 import Card from "../../../components/card/Card"
 import CardBody from "../../../components/card/CardBody"
+import CardSubTitle from "../../../components/card/CardSubTitle"
 import CardTitle from "../../../components/card/CardTitle"
 import LineChart from "../../../components/chart/LineChart"
 import PieChart from "../../../components/chart/PieChart"
 import Grid from "../../../components/layout/Grid"
 import Page from "../../../components/layout/Page"
+import Sidebar from "../../../components/layout/Sidebar"
+import Icon from "../../../components/rating/Icon"
+import { IconName } from "../../../components/rating/IconName"
 import prData from "../../../util/data/pullRequestData.json"
 import {
   Color,
@@ -112,11 +118,30 @@ const count = (): ChartData<"pie"> => {
 const Detail: NextPage = () => {
   const router = useRouter()
   const { projectID } = router.query
+  const toggleSidebar = useRef<() => void>(() => {})
 
   return (
-    <Page title={`Project ${projectID}  - KPI Dashboard`}>
+    <Page
+      title={`Project ${projectID}  - KPI Dashboard`}
+      sidebar={
+        <Button
+          context="neutral"
+          action={() => {
+            toggleSidebar.current()
+          }}
+        >
+          <Icon>{IconName.menu}</Icon>
+        </Button>
+      }
+    >
+      <Sidebar
+        control={(control: () => void) => (toggleSidebar.current = control)}
+      >
+        Test
+      </Sidebar>
       <Card width="99%">
         <CardTitle>{`Project ${projectID}`}</CardTitle>
+        <CardSubTitle>{`<Project URL>`}</CardSubTitle>
         <CardBody>
           <Grid>
             <LineChart data={timeline()} width="500px" height="500px" />

@@ -7,6 +7,7 @@ export type Theme = {
     }
     bar: CSSProperties
     container: CSSProperties
+    sidebar: CSSProperties
   }
   card: {
     card: CSSProperties
