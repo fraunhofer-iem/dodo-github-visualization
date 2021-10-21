@@ -96,6 +96,39 @@ const LightTheme: Theme = {
       color: "inherit",
     }),
   },
+  cytoscape: {
+    canvas: [
+      {
+        selector: "node[label]",
+        style: {
+          label: "data(label)",
+          "text-valign": "bottom",
+        },
+      },
+      {
+        selector: "node[hover = 'true']",
+        style: {
+          backgroundColor: black.rgba(),
+        },
+      },
+      {
+        selector: "node[hover = 'false']",
+        style: {
+          backgroundColor: gray.rgba(),
+        },
+      },
+      {
+        selector: "edge",
+        style: {
+          width: 2,
+          "line-color": white.darken(0.2).rgba(),
+          "target-arrow-color": white.darken(0.2).rgba(),
+          "target-arrow-shape": "triangle",
+          "curve-style": "taxi",
+        },
+      },
+    ],
+  },
 }
 
 export default LightTheme
