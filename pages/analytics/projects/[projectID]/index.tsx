@@ -91,43 +91,61 @@ const Detail: NextPage = () => {
           <CardBody>
             <Table context="striped">
               {{
-                columns: ["Name", "Score"],
+                columns: [
+                  { content: "Name", sortable: true },
+                  { content: "Score", sortable: true },
+                ],
                 rows: [
                   [
-                    <Anchor
-                      href={`/analytics/projects/${projectID}/kpis/1`}
-                      context="neutral"
-                      width="100%"
-                      display="block"
-                      align="left"
-                    >
-                      KPI 1
-                    </Anchor>,
-                    93,
+                    {
+                      content: (
+                        <Anchor
+                          href={`/analytics/projects/${projectID}/kpis/1`}
+                          context="neutral"
+                          width="100%"
+                          display="block"
+                          align="left"
+                        >
+                          KPI 1
+                        </Anchor>
+                      ),
+                      sortKey: 1,
+                    },
+                    { content: 93, sortKey: 93 },
                   ],
                   [
-                    <Anchor
-                      href={`/analytics/projects/${projectID}/kpis/2`}
-                      context="neutral"
-                      width="100%"
-                      display="block"
-                      align="left"
-                    >
-                      KPI 2
-                    </Anchor>,
-                    23,
+                    {
+                      content: (
+                        <Anchor
+                          href={`/analytics/projects/${projectID}/kpis/2`}
+                          context="neutral"
+                          width="100%"
+                          display="block"
+                          align="left"
+                        >
+                          KPI 2
+                        </Anchor>
+                      ),
+                      sortKey: 2,
+                    },
+                    { content: 23, sortKey: 23 },
                   ],
                   [
-                    <Anchor
-                      href={`/analytics/projects/${projectID}/kpis/a3`}
-                      context="neutral"
-                      width="100%"
-                      display="block"
-                      align="left"
-                    >
-                      KPI 3
-                    </Anchor>,
-                    57,
+                    {
+                      content: (
+                        <Anchor
+                          href={`/analytics/projects/${projectID}/kpis/3`}
+                          context="neutral"
+                          width="100%"
+                          display="block"
+                          align="left"
+                        >
+                          KPI 3
+                        </Anchor>
+                      ),
+                      sortKey: 3,
+                    },
+                    { content: 57, sortKey: 57 },
                   ],
                 ],
               }}

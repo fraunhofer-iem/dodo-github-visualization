@@ -15,69 +15,97 @@ const Analytics: NextPage = () => {
         <CardTitle>KPI Analytics</CardTitle>
         <CardBody>
           <SectionTitle>Project Overview</SectionTitle>
-          <Table width="50%" context={"striped"} pageLimit={3}>
+          <Table width="50%" context={"striped"}>
             {{
-              columns: ["Project", "Rating"],
+              columns: [
+                { content: "Project", sortable: true },
+                { content: "Rating", sortable: true },
+              ],
               rows: [
                 [
-                  <Anchor
-                    href="/analytics/projects/a"
-                    context="neutral"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    Project A
-                  </Anchor>,
-                  <Rating>1.3</Rating>,
+                  {
+                    content: (
+                      <Anchor
+                        href="/analytics/projects/a"
+                        context="neutral"
+                        width="100%"
+                        display="block"
+                        align="left"
+                      >
+                        Project A
+                      </Anchor>
+                    ),
+                    sortKey: "a",
+                  },
+                  { content: <Rating>1.3</Rating>, sortKey: 1.3 },
                 ],
                 [
-                  <Anchor
-                    href="/analytics/projects/b"
-                    context="neutral"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    Project B
-                  </Anchor>,
-                  <Rating>8.5</Rating>,
+                  {
+                    content: (
+                      <Anchor
+                        href="/analytics/projects/b"
+                        context="neutral"
+                        width="100%"
+                        display="block"
+                        align="left"
+                      >
+                        Project B
+                      </Anchor>
+                    ),
+                    sortKey: "b",
+                  },
+                  { content: <Rating>8.5</Rating>, sortKey: 8.5 },
                 ],
                 [
-                  <Anchor
-                    href="/analytics/projects/c"
-                    context="neutral"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    Project C
-                  </Anchor>,
-                  <Rating>25</Rating>,
+                  {
+                    content: (
+                      <Anchor
+                        href="/analytics/projects/c"
+                        context="neutral"
+                        width="100%"
+                        display="block"
+                        align="left"
+                      >
+                        Project C
+                      </Anchor>
+                    ),
+                    sortKey: "c",
+                  },
+                  { content: <Rating>25</Rating>, sortKey: 25 },
                 ],
                 [
-                  <Anchor
-                    href="/analytics/projects/d"
-                    context="neutral"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    Project D
-                  </Anchor>,
-                  <Rating>21.6</Rating>,
+                  {
+                    content: (
+                      <Anchor
+                        href="/analytics/projects/d"
+                        context="neutral"
+                        width="100%"
+                        display="block"
+                        align="left"
+                      >
+                        Project D
+                      </Anchor>
+                    ),
+                    sortKey: "d",
+                  },
+                  { content: <Rating>21.6</Rating>, sortKey: 21.6 },
                 ],
                 [
-                  <Anchor
-                    href="/analytics/projects/e"
-                    context="neutral"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    Project E
-                  </Anchor>,
-                  <Rating>15.7</Rating>,
+                  {
+                    content: (
+                      <Anchor
+                        href="/analytics/projects/e"
+                        context="neutral"
+                        width="100%"
+                        display="block"
+                        align="left"
+                      >
+                        Project E
+                      </Anchor>
+                    ),
+                    sortKey: "e",
+                  },
+                  { content: <Rating>15.7</Rating>, sortKey: 15.7 },
                 ],
               ],
             }}
