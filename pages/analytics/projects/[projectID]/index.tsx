@@ -15,6 +15,10 @@ import Sidebar from "../../../../components/layout/Sidebar"
 import Icon from "../../../../components/rating/Icon"
 import { IconName } from "../../../../components/rating/IconName"
 import Table from "../../../../components/table/Table"
+import {
+  AuthorizationDetails,
+  requireAuthorization,
+} from "../../../../util/api/requireAuthorization"
 import prData from "../../../../util/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../util/themes/Theme"
 
@@ -64,106 +68,108 @@ const count = (): ChartData<"pie"> => {
   }
 }
 
-const Detail: NextPage = () => {
+const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
   const { projectID } = router.query
   const toggleSidebar = useRef<() => void>(() => {})
 
   return (
-    <Page
-      title={`Project ${projectID}  - KPI Dashboard`}
-      sidebar={
-        <Button
-          context="neutral"
-          action={() => {
-            toggleSidebar.current()
-          }}
-        >
-          <Icon>{IconName.menu}</Icon>
-        </Button>
-      }
-    >
-      <Sidebar
-        control={(control: () => void) => (toggleSidebar.current = control)}
+    props.user?.isLoggedIn && (
+      <Page
+        title={`Project ${projectID}  - KPI Dashboard`}
+        sidebar={
+          <Button
+            context="neutral"
+            action={() => {
+              toggleSidebar.current()
+            }}
+          >
+            <Icon>{IconName.menu}</Icon>
+          </Button>
+        }
       >
-        <Card width="95%">
-          <CardTitle>List of KPIs</CardTitle>
+        <Sidebar
+          control={(control: () => void) => (toggleSidebar.current = control)}
+        >
+          <Card width="95%">
+            <CardTitle>List of KPIs</CardTitle>
+            <CardBody>
+              <Table context="striped">
+                {{
+                  columns: [
+                    { content: "Name", sortable: true },
+                    { content: "Score", sortable: true },
+                  ],
+                  rows: [
+                    [
+                      {
+                        content: (
+                          <Anchor
+                            href={`/analytics/projects/${projectID}/kpis/1`}
+                            context="neutral"
+                            width="100%"
+                            display="block"
+                            align="left"
+                          >
+                            KPI 1
+                          </Anchor>
+                        ),
+                        sortKey: 1,
+                      },
+                      { content: 93, sortKey: 93 },
+                    ],
+                    [
+                      {
+                        content: (
+                          <Anchor
+                            href={`/analytics/projects/${projectID}/kpis/2`}
+                            context="neutral"
+                            width="100%"
+                            display="block"
+                            align="left"
+                          >
+                            KPI 2
+                          </Anchor>
+                        ),
+                        sortKey: 2,
+                      },
+                      { content: 23, sortKey: 23 },
+                    ],
+                    [
+                      {
+                        content: (
+                          <Anchor
+                            href={`/analytics/projects/${projectID}/kpis/3`}
+                            context="neutral"
+                            width="100%"
+                            display="block"
+                            align="left"
+                          >
+                            KPI 3
+                          </Anchor>
+                        ),
+                        sortKey: 3,
+                      },
+                      { content: 57, sortKey: 57 },
+                    ],
+                  ],
+                }}
+              </Table>
+            </CardBody>
+          </Card>
+        </Sidebar>
+        <Card width="99%">
+          <CardTitle>{`Project ${projectID}`}</CardTitle>
+          <CardSubTitle>{`<Project URL>`}</CardSubTitle>
           <CardBody>
-            <Table context="striped">
-              {{
-                columns: [
-                  { content: "Name", sortable: true },
-                  { content: "Score", sortable: true },
-                ],
-                rows: [
-                  [
-                    {
-                      content: (
-                        <Anchor
-                          href={`/analytics/projects/${projectID}/kpis/1`}
-                          context="neutral"
-                          width="100%"
-                          display="block"
-                          align="left"
-                        >
-                          KPI 1
-                        </Anchor>
-                      ),
-                      sortKey: 1,
-                    },
-                    { content: 93, sortKey: 93 },
-                  ],
-                  [
-                    {
-                      content: (
-                        <Anchor
-                          href={`/analytics/projects/${projectID}/kpis/2`}
-                          context="neutral"
-                          width="100%"
-                          display="block"
-                          align="left"
-                        >
-                          KPI 2
-                        </Anchor>
-                      ),
-                      sortKey: 2,
-                    },
-                    { content: 23, sortKey: 23 },
-                  ],
-                  [
-                    {
-                      content: (
-                        <Anchor
-                          href={`/analytics/projects/${projectID}/kpis/3`}
-                          context="neutral"
-                          width="100%"
-                          display="block"
-                          align="left"
-                        >
-                          KPI 3
-                        </Anchor>
-                      ),
-                      sortKey: 3,
-                    },
-                    { content: 57, sortKey: 57 },
-                  ],
-                ],
-              }}
-            </Table>
+            <Grid>
+              <PieChart data={count()} width="500px" height="500px" />
+            </Grid>
           </CardBody>
         </Card>
-      </Sidebar>
-      <Card width="99%">
-        <CardTitle>{`Project ${projectID}`}</CardTitle>
-        <CardSubTitle>{`<Project URL>`}</CardSubTitle>
-        <CardBody>
-          <Grid>
-            <PieChart data={count()} width="500px" height="500px" />
-          </Grid>
-        </CardBody>
-      </Card>
-    </Page>
+      </Page>
+    )
   )
-}
+})
 
 export default Detail
