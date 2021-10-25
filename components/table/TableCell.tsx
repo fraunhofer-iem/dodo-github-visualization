@@ -54,9 +54,7 @@ export default function TableCell(props: Props) {
         ) : ordering == Ordering.descending ? (
           <Icon>{IconName.arrowDropDown}</Icon>
         ) : undefined
-      ) : (
-        <Icon>{IconName.arrowRight}</Icon>
-      )}
+      ) : undefined}
     </th>
   ) : (
     <td style={theme.table[props.context].headCell.css()}>{props.children}</td>

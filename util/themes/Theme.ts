@@ -40,6 +40,11 @@ export type Theme = {
       dataCell: CSSProperties
     }
   }
+  form: {
+    label: CSSProperties
+    input: CSSProperties
+    select: CSSProperties
+  }
   cytoscape?: {
     canvas: cytoscape.Stylesheet[]
   }

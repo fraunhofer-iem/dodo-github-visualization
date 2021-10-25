@@ -15,7 +15,7 @@ const Analytics: NextPage = () => {
         <CardTitle>KPI Analytics</CardTitle>
         <CardBody>
           <SectionTitle>Project Overview</SectionTitle>
-          <Table width="50%" context={"striped"}>
+          <Table width="50%" context={"striped"} paginate={true}>
             {{
               columns: [
                 { content: "Project", sortable: true },

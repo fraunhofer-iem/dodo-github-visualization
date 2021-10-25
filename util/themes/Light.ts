@@ -79,6 +79,14 @@ const LightTheme: Theme = {
       }),
     },
   },
+  form: {
+    label: new CSSProperties({ color: black }),
+    input: new CSSProperties({
+      backgroundColor: white,
+      borderColor: white.darken(0.1),
+    }),
+    select: new CSSProperties({}),
+  },
   button: {
     primary: new CSSProperties({
       backgroundColor: blue.darken(0.2),
