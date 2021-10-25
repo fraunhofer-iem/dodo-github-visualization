@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import kpis from "../../../../util/data/kpis.json"
 
-export type KPI = {
+export type Kpi = {
   name: string
   score: number
   id: string
@@ -9,7 +9,7 @@ export type KPI = {
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<KPI[]>,
+  res: NextApiResponse<Kpi[]>,
 ) {
   console.log(req.query)
   res.status(200).json(kpis)

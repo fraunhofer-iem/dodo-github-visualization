@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Project } from "../projects"
-import { KPI_Detail } from "./[pid]/kpi/[kid]"
-import { KPI } from "./[pid]/kpis"
+import { KpiDetail } from "./[pid]/kpi/[kid]"
+import { Kpi } from "./[pid]/kpis"
 
 export type ProjectDetail = Project & {
-  KPIs: KPI[]
-  selectedKPIs: KPI_Detail[]
+  KPIs: Kpi[]
+  selectedKPIs: KpiDetail[]
   url: string
 }
 
