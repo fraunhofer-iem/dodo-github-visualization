@@ -1,5 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
+import { useState } from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
 import Card from "../../components/card/Card"
@@ -18,7 +19,11 @@ import { Project } from "../api/projects"
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const { data: projects } = useSWR<Project[]>("/api/projects")
+    const [pageNumber, setPageNumber] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const { data: projects } = useSWR<Project[]>(
+      `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    )
     return (
       props.user?.isLoggedIn && (
         <Page title="Analytics - KPI Dashboard">
@@ -26,7 +31,12 @@ const Analytics: NextPage = requireAuthorization(
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
               <SectionTitle>Project Overview</SectionTitle>
-              <Table width="50%" context={"striped"} paginate={true}>
+              <Table
+                width="50%"
+                context={"striped"}
+                paginate={true}
+                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+              >
                 {{
                   columns: [
                     { content: "Project", sortable: true },

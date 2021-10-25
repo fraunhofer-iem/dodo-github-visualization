@@ -2,7 +2,7 @@ import { useState } from "react"
 import styles from "../../styles/components/Table.module.scss"
 import { useUIContext } from "../../util/uiContext"
 import Button from "../action/Button"
-import Select, { Option } from "../Form/Select"
+import Select from "../Form/Select"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
 import TableBody from "./TableBody"
@@ -20,44 +20,43 @@ interface Props {
   context?: TableContext
   width?: string
   paginate?: boolean
+  pageNumber?: number
+  setPageNumber?: (pageNumber: number) => void
+  pageSize?: number
+  setPageSize?: (pageSize: number) => void
 }
 
 export default function Table(props: Props) {
-  console.log(props.children)
   const { theme } = useUIContext()
-  const [page, setPage] = useState<number>(0)
   const tableData = props.children ?? { columns: [], rows: [] }
-  const [sortedBy, setSortColumn] = useState<number>(-1)
+  const [sortColumn, setSortColumn] = useState<number>(-1)
+  const [ordering, setOrdering] = useState<Ordering>(Ordering.given)
   const context = props.context ?? "neutral"
-  const [pageSize, setPageSize] = useState<number>(5)
   const width = props.width ?? "100%"
+  const [pageNumber, setPageNumber] = [
+    props.pageNumber ?? 0,
+    props.setPageNumber ?? (() => {}),
+  ]
+  const [pageSize, setPageSize] = [
+    props.pageSize ?? 0,
+    props.setPageSize ?? (() => {}),
+  ]
 
-  const previousPage = () => {
-    if ((page - 1) * pageSize >= 0) {
-      setPage(page - 1)
-    }
-  }
-  const nextPage = () => {
-    if ((page + 1) * pageSize < tableData.rows.length) {
-      setPage(page + 1)
-    }
-  }
+  console.log(sortColumn)
+  console.log(ordering)
 
-  const sortByColumn = (column: number, ordering: Ordering) => {
-    if (ordering != Ordering.given) {
-      tableData.rows.sort((a, b) => {
-        if (a[column].sortKey < b[column].sortKey) {
-          return -1
-        } else if (a[column].sortKey > b[column].sortKey) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-      if (ordering == Ordering.descending) {
-        tableData.rows.reverse()
+  if (ordering != Ordering.given) {
+    tableData.rows.sort((a, b) => {
+      if (a[sortColumn].sortKey < b[sortColumn].sortKey) {
+        return -1
+      } else if (a[sortColumn].sortKey > b[sortColumn].sortKey) {
+        return 1
+      } else {
+        return 0
       }
-      setSortColumn(column)
+    })
+    if (ordering == Ordering.descending) {
+      tableData.rows.reverse()
     }
   }
 
@@ -71,34 +70,34 @@ export default function Table(props: Props) {
               scope="col"
               key={i}
               column={i + 1}
-              callback={column.sortable ? sortByColumn : undefined}
-              sortedBy={i == sortedBy}
+              sortedBy={i == sortColumn}
+              setSortColumn={column.sortable ? setSortColumn : undefined}
+              ordering={i == sortColumn ? ordering : Ordering.given}
+              setOrdering={column.sortable ? setOrdering : undefined}
             >
               {column.content}
             </TableCell>
           ))}
         </TableHead>
         <TableBody>
-          {tableData.rows.map((cells, i) =>
-            i >= page * pageSize && i < page * pageSize + pageSize ? (
-              <TableRow
-                context={
-                  context === "striped"
-                    ? (i - page * pageSize) % 2 == 0
-                      ? context
-                      : "neutral"
-                    : context
-                }
-                key={i}
-              >
-                {cells.map((cell, i) => (
-                  <TableCell context={context} key={i}>
-                    {cell.content}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ) : undefined,
-          )}
+          {tableData.rows.map((cells, i) => (
+            <TableRow
+              context={
+                context === "striped"
+                  ? i % 2 == 0
+                    ? context
+                    : "neutral"
+                  : context
+              }
+              key={i}
+            >
+              {cells.map((cell, i) => (
+                <TableCell context={context} key={i}>
+                  {cell.content}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
         </TableBody>
       </table>
       {props.paginate && (
@@ -106,42 +105,27 @@ export default function Table(props: Props) {
           <Button
             context="neutral"
             display="inline-block"
-            action={previousPage}
-            disabled={page == 0}
+            action={() => setPageNumber(pageNumber - 1)}
+            disabled={pageNumber <= 1}
           >
             <Icon>{IconName.chevronLeft}</Icon>
           </Button>
-          Page{" "}
-          <Select
-            multiple={false}
-            options={(() => {
-              const options: Option[] = []
-              for (let i = 1; i <= page; i++) {
-                options.push({
-                  id: i,
-                  name: `${i}`,
-                  selected: i == page,
-                })
-              }
-              return options
-            })()}
-            changeHandler={(selection) => {
-              if (!Array.isArray(selection)) {
-                setPage(selection)
-              }
-            }}
-          />
-          <Button context="neutral" display="inline-block" action={nextPage}>
+          Page {pageNumber}
+          <Button
+            context="neutral"
+            display="inline-block"
+            action={() => setPageNumber(pageNumber + 1)}
+          >
             <Icon>{IconName.chevronRight}</Icon>
           </Button>
           <br />
           Show{" "}
           <Select
             multiple={false}
-            options={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50].map((size) => ({
-              id: size,
-              name: `${size}`,
-              selected: pageSize == size,
+            options={Array.from(Array(50).keys()).map((_, i) => ({
+              id: i + 1,
+              name: `${i + 1}`,
+              selected: pageSize == i + 1,
             }))}
             changeHandler={(selection) => {
               if (!Array.isArray(selection)) {

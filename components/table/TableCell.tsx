@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useUIContext } from "../../util/uiContext"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
@@ -9,8 +8,10 @@ interface Props {
   children?: React.ReactNode
   context: TableContext
   column?: number
-  callback?: (column: number, ordering: Ordering) => void
   sortedBy?: boolean
+  ordering?: Ordering
+  setOrdering?: (ordering: Ordering) => void
+  setSortColumn?: (column: number) => void
 }
 
 export enum Ordering {
@@ -21,27 +22,35 @@ export enum Ordering {
 
 export default function TableCell(props: Props) {
   const { theme } = useUIContext()
-  const [ordering, setOrdering] = useState<Ordering>(Ordering.given)
+  const [ordering, setOrdering] = [
+    props.ordering ?? Ordering.given,
+    props.setOrdering ?? (() => {}),
+  ]
+  const [column, setSortColumn] = [
+    props.column,
+    props.setSortColumn ?? (() => {}),
+  ]
 
   const toggleOrdering = () => {
     switch (ordering) {
       case Ordering.ascending:
         setOrdering(Ordering.descending)
-        return Ordering.descending
+        break
       case Ordering.descending:
         setOrdering(Ordering.ascending)
-        return Ordering.ascending
+        break
       default:
         setOrdering(Ordering.ascending)
-        return Ordering.ascending
+        break
     }
   }
 
   return props.scope ? (
     <th
       onClick={() => {
-        if (props.column && props.callback) {
-          props.callback(props.column - 1, toggleOrdering())
+        if (column) {
+          toggleOrdering()
+          setSortColumn(column - 1)
         }
       }}
       scope={props.scope}
