@@ -8,11 +8,13 @@ import CytoscapeComponent, {
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
 import Page from "../components/layout/Page"
+import useUser from "../util/api/useUser"
 import kpis from "../util/data/kpiExample.json"
 import { useUIContext } from "../util/uiContext"
 
 const Hierarchy: NextPage = tippyfy((props: TooltipControl) => {
   const { theme } = useUIContext()
+  const { user } = useUser({ redirectTo: "/" })
   const cy = useRef<cytoscape.Core | null>()
 
   const elements: cytoscape.ElementDefinition[] = []
