@@ -23,25 +23,22 @@ interface Props {
 }
 
 export default function Table(props: Props) {
+  console.log(props.children)
   const { theme } = useUIContext()
   const [page, setPage] = useState<number>(0)
-  const [tableData, setTableData] = useState(
-    props.children ?? { columns: [], rows: [] },
-  )
+  const tableData = props.children ?? { columns: [], rows: [] }
   const [sortedBy, setSortColumn] = useState<number>(-1)
   const context = props.context ?? "neutral"
-  const [elementsPerPage, setElementsPerPage] = useState<number>(
-    tableData.rows.length,
-  )
+  const [pageSize, setPageSize] = useState<number>(5)
   const width = props.width ?? "100%"
 
   const previousPage = () => {
-    if ((page - 1) * elementsPerPage >= 0) {
+    if ((page - 1) * pageSize >= 0) {
       setPage(page - 1)
     }
   }
   const nextPage = () => {
-    if ((page + 1) * elementsPerPage < tableData.rows.length) {
+    if ((page + 1) * pageSize < tableData.rows.length) {
       setPage(page + 1)
     }
   }
@@ -60,7 +57,6 @@ export default function Table(props: Props) {
       if (ordering == Ordering.descending) {
         tableData.rows.reverse()
       }
-      setTableData({ ...tableData })
       setSortColumn(column)
     }
   }
@@ -84,12 +80,11 @@ export default function Table(props: Props) {
         </TableHead>
         <TableBody>
           {tableData.rows.map((cells, i) =>
-            i >= page * elementsPerPage &&
-            i < page * elementsPerPage + elementsPerPage ? (
+            i >= page * pageSize && i < page * pageSize + pageSize ? (
               <TableRow
                 context={
                   context === "striped"
-                    ? (i - page * elementsPerPage) % 2 == 0
+                    ? (i - page * pageSize) % 2 == 0
                       ? context
                       : "neutral"
                     : context
@@ -111,14 +106,6 @@ export default function Table(props: Props) {
           <Button
             context="neutral"
             display="inline-block"
-            action={() => setPage(0)}
-            disabled={page == 0}
-          >
-            <Icon>{IconName.firstPage}</Icon>
-          </Button>
-          <Button
-            context="neutral"
-            display="inline-block"
             action={previousPage}
             disabled={page == 0}
           >
@@ -129,14 +116,10 @@ export default function Table(props: Props) {
             multiple={false}
             options={(() => {
               const options: Option[] = []
-              for (
-                let i = 0;
-                i < tableData.rows.length / elementsPerPage;
-                i++
-              ) {
+              for (let i = 1; i <= page; i++) {
                 options.push({
                   id: i,
-                  name: `${i + 1}`,
+                  name: `${i}`,
                   selected: i == page,
                 })
               }
@@ -148,40 +131,21 @@ export default function Table(props: Props) {
               }
             }}
           />
-          of {tableData.rows.length / elementsPerPage}
           <Button context="neutral" display="inline-block" action={nextPage}>
             <Icon>{IconName.chevronRight}</Icon>
-          </Button>
-          <Button
-            context="neutral"
-            display="inline-block"
-            action={() =>
-              setPage(Math.ceil(tableData.rows.length / elementsPerPage) - 1)
-            }
-            disabled={
-              page == Math.ceil(tableData.rows.length / elementsPerPage) - 1
-            }
-          >
-            <Icon>{IconName.lastPage}</Icon>
           </Button>
           <br />
           Show{" "}
           <Select
             multiple={false}
-            options={(() => {
-              const options: Option[] = []
-              for (let i = 5; i <= tableData.rows.length; i += 5) {
-                options.push({
-                  id: i,
-                  name: `${i}`,
-                  selected: i == elementsPerPage,
-                })
-              }
-              return options
-            })()}
+            options={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50].map((size) => ({
+              id: size,
+              name: `${size}`,
+              selected: pageSize == size,
+            }))}
             changeHandler={(selection) => {
               if (!Array.isArray(selection)) {
-                setElementsPerPage(selection)
+                setPageSize(selection)
               }
             }}
           />
