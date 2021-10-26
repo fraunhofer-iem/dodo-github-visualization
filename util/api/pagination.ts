@@ -9,9 +9,7 @@ export type Pagination = {
 
 export const getPagination = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
-    console.log("hi")
     if (hasValidPageSize(query)) {
-      console.log("ho")
       return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
     } else {
       return { pageNumber: +query.pageNumber, pageSize: PAGE_SIZE_LIMIT }
