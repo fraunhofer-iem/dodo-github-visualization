@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { Kpi } from "../kpis"
 
-import { KPI } from "../kpis"
-
-export type KPI_Detail = KPI & {
+export type KpiDetail = Kpi & {
   description: string
-  children: KPI[]
+  children: Kpi[]
   calculation: string
   // this is custom for each KPI, I guess we need to define a type for each KPI
   // and cast the KPI_Detail as needed
@@ -13,7 +12,7 @@ export type KPI_Detail = KPI & {
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<KPI_Detail>,
+  res: NextApiResponse<KpiDetail>,
 ) {
   const {
     query: { kid },

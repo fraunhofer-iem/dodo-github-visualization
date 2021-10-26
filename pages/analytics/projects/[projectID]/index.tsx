@@ -1,8 +1,8 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useRef } from "react"
-import Anchor from "../../../../components/action/Anchor"
+import { useRef, useState } from "react"
+import useSWR from "swr"
 import Button from "../../../../components/action/Button"
 import Card from "../../../../components/card/Card"
 import CardBody from "../../../../components/card/CardBody"
@@ -21,6 +21,8 @@ import {
 } from "../../../../util/api/requireAuthorization"
 import prData from "../../../../util/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../util/themes/Theme"
+import { ProjectDetail } from "../../../api/projects/[pid]"
+import { Kpi } from "../../../api/projects/[pid]/kpis"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -71,12 +73,18 @@ const count = (): ChartData<"pie"> => {
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
   const { projectID } = router.query
+  const { data: project } = useSWR<ProjectDetail>(`/api/projects/${projectID}`)
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(5)
+  const { data: kpis } = useSWR<Kpi[]>(
+    `/api/projects/${projectID}/kpis?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+  )
   const toggleSidebar = useRef<() => void>(() => {})
 
   return (
     props.user?.isLoggedIn && (
       <Page
-        title={`Project ${projectID}  - KPI Dashboard`}
+        title={`${project?.name}  - KPI Dashboard`}
         sidebar={
           <Button
             context="neutral"
@@ -94,73 +102,47 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           <Card width="95%">
             <CardTitle>List of KPIs</CardTitle>
             <CardBody>
-              <Table context="striped">
+              <Table
+                context="striped"
+                paginate={true}
+                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+              >
                 {{
                   columns: [
                     { content: "Name", sortable: true },
                     { content: "Score", sortable: true },
                   ],
-                  rows: [
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/1`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 1
-                          </Anchor>
-                        ),
-                        sortKey: 1,
-                      },
-                      { content: 93, sortKey: 93 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/2`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 2
-                          </Anchor>
-                        ),
-                        sortKey: 2,
-                      },
-                      { content: 23, sortKey: 23 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/3`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 3
-                          </Anchor>
-                        ),
-                        sortKey: 3,
-                      },
-                      { content: 57, sortKey: 57 },
-                    ],
-                  ],
+                  rows: kpis
+                    ? kpis.map((kpi) => [
+                        {
+                          content: (
+                            <Button
+                              action={() =>
+                                router.push(
+                                  `/analytics/projects/${project?.id}/kpis/${kpi.id}`,
+                                )
+                              }
+                              context="neutral"
+                              width="100%"
+                              display="block"
+                              align="left"
+                            >
+                              {kpi.name}
+                            </Button>
+                          ),
+                          sortKey: kpi.name,
+                        },
+                        { content: kpi.score, sortKey: kpi.score },
+                      ])
+                    : [],
                 }}
               </Table>
             </CardBody>
           </Card>
         </Sidebar>
         <Card width="99%">
-          <CardTitle>{`Project ${projectID}`}</CardTitle>
-          <CardSubTitle>{`<Project URL>`}</CardSubTitle>
+          <CardTitle>{`Project ${project?.name}`}</CardTitle>
+          <CardSubTitle>{project?.url as string}</CardSubTitle>
           <CardBody>
             <Grid>
               <PieChart data={count()} width="500px" height="500px" />
