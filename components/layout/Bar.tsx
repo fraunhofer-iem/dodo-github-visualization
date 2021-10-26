@@ -2,7 +2,7 @@ import styles from "../../styles/components/Layout.module.scss"
 import { useUIContext } from "../../util/uiContext"
 
 interface Props {
-  title: string
+  title: React.ReactNode
   children?: React.ReactNode
 }
 

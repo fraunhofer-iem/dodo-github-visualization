@@ -21,6 +21,9 @@ const LightTheme: Theme = {
       backgroundColor: black.brighten(0.1),
       color: white,
     }),
+    sidebar: new CSSProperties({
+      backgroundColor: white.darken(0.05),
+    }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {
@@ -76,6 +79,14 @@ const LightTheme: Theme = {
       }),
     },
   },
+  form: {
+    label: new CSSProperties({ color: black }),
+    input: new CSSProperties({
+      backgroundColor: white,
+      borderColor: white.darken(0.1),
+    }),
+    select: new CSSProperties({}),
+  },
   button: {
     primary: new CSSProperties({
       backgroundColor: blue.darken(0.2),
@@ -95,6 +106,39 @@ const LightTheme: Theme = {
       backgroundColor: transparent,
       color: "inherit",
     }),
+  },
+  cytoscape: {
+    canvas: [
+      {
+        selector: "node[label]",
+        style: {
+          label: "data(label)",
+          "text-valign": "bottom",
+        },
+      },
+      {
+        selector: "node[hover = 'true']",
+        style: {
+          backgroundColor: black.rgba(),
+        },
+      },
+      {
+        selector: "node[hover = 'false']",
+        style: {
+          backgroundColor: gray.rgba(),
+        },
+      },
+      {
+        selector: "edge",
+        style: {
+          width: 2,
+          "line-color": white.darken(0.2).rgba(),
+          "target-arrow-color": white.darken(0.2).rgba(),
+          "target-arrow-shape": "triangle",
+          "curve-style": "taxi",
+        },
+      },
+    ],
   },
 }
 
