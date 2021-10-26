@@ -12,6 +12,7 @@ export interface Props {
   display?: string
   align?: "left" | "right" | "center"
   href?: string
+  disabled?: boolean
 }
 
 export const contexts = {
@@ -63,6 +64,7 @@ export default function Button(props: Props) {
         e.preventDefault()
       }}
       type={props.type}
+      disabled={props.disabled}
     >
       {props.children}
     </button>

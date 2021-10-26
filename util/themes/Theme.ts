@@ -7,6 +7,7 @@ export type Theme = {
     }
     bar: CSSProperties
     container: CSSProperties
+    sidebar: CSSProperties
   }
   card: {
     card: CSSProperties
@@ -38,6 +39,11 @@ export type Theme = {
       headCell: CSSProperties
       dataCell: CSSProperties
     }
+  }
+  form: {
+    label: CSSProperties
+    input: CSSProperties
+    select: CSSProperties
   }
   cytoscape?: {
     canvas: cytoscape.Stylesheet[]

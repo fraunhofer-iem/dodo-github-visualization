@@ -5,6 +5,7 @@ import Anchor from "../action/Anchor"
 
 interface Props {
   title: string
+  sidebar?: React.ReactNode
   children?: React.ReactNode
 }
 
@@ -14,7 +15,14 @@ export default function Page(props: Props) {
       <Head>
         <title>{props.title}</title>
       </Head>
-      <Bar title="KPI Dashboard">
+      <Bar
+        title={
+          <>
+            {props.sidebar}
+            KPI Dashboard
+          </>
+        }
+      >
         <Anchor href="/analytics" context="neutral">
           KPI Analytics
         </Anchor>

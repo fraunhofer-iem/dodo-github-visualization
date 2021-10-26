@@ -2,7 +2,7 @@ import styles from "../../styles/components/Card.module.scss"
 import { useUIContext } from "../../util/uiContext"
 
 interface Props {
-  children: string
+  children: React.ReactNode
 }
 
 export default function CardTitle(props: Props) {

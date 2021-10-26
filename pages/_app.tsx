@@ -1,21 +1,32 @@
 import type { AppProps } from "next/app"
-import { useState } from "react"
+import React, { useState } from "react"
 import "../styles/globals.css"
 import { locales, themes, UIContext } from "../util/uiContext"
+import myFetch from "../util/api/fetchJson"
+import { SWRConfig } from "swr"
 
 export default function KPIDashboard({ Component, pageProps }: AppProps) {
   const [theme, setTheme] = useState(themes.light)
   const [locale, setLocale] = useState(locales.english)
 
   return (
-    <UIContext.Provider
+    <SWRConfig
       value={{
-        theme: theme,
-        locale: locale,
-        toggleTheme: () => {},
+        fetcher: myFetch,
+        onError: (err: any) => {
+          console.error(err)
+        },
       }}
     >
-      <Component {...pageProps} />
-    </UIContext.Provider>
+      <UIContext.Provider
+        value={{
+          theme: theme,
+          locale: locale,
+          toggleTheme: () => {},
+        }}
+      >
+        <Component {...pageProps} />
+      </UIContext.Provider>
+    </SWRConfig>
   )
 }
