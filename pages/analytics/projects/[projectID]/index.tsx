@@ -141,7 +141,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           </Card>
         </Sidebar>
         <Card width="99%">
-          <CardTitle>{`Project ${project?.name}`}</CardTitle>
+          <CardTitle>{`${project?.name}`}</CardTitle>
           <CardSubTitle>{project?.url as string}</CardSubTitle>
           <CardBody>
             <Grid>
