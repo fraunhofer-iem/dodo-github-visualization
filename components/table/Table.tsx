@@ -42,9 +42,6 @@ export default function Table(props: Props) {
     props.setPageSize ?? (() => {}),
   ]
 
-  console.log(sortColumn)
-  console.log(ordering)
-
   if (ordering != Ordering.given) {
     tableData.rows.sort((a, b) => {
       if (a[sortColumn].sortKey < b[sortColumn].sortKey) {
