@@ -1,7 +1,7 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import useSWR from "swr"
 import Button from "../../../../../components/action/Button"
 import Card from "../../../../../components/card/Card"
@@ -10,19 +10,18 @@ import CardSubTitle from "../../../../../components/card/CardSubTitle"
 import CardTitle from "../../../../../components/card/CardTitle"
 import LineChart from "../../../../../components/chart/LineChart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
+import KpiTable from "../../../../../components/KpiTable"
 import Grid from "../../../../../components/layout/Grid"
 import Page from "../../../../../components/layout/Page"
 import Sidebar from "../../../../../components/layout/Sidebar"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
-import Table from "../../../../../components/table/Table"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../../../../util/api/requireAuthorization"
 import { purple, turquoise } from "../../../../../util/themes/Theme"
 import { ProjectDetail } from "../../../../api/projects/[pid]"
-import { Kpi } from "../../../../api/projects/[pid]/kpis"
 import { KpiDetail } from "../../../../api/projects/[pid]/kpis/[kid]"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
@@ -77,11 +76,6 @@ const KPIDetail: NextPage = requireAuthorization(
     const { data: project } = useSWR<ProjectDetail>(
       `/api/projects/${projectID}`,
     )
-    const [pageNumber, setPageNumber] = useState<number>(1)
-    const [pageSize, setPageSize] = useState<number>(5)
-    const { data: kpis } = useSWR<Kpi[]>(
-      `/api/projects/${projectID}/kpis?pageSize=${pageSize}&pageNumber=${pageNumber}`,
-    )
     const { data: kpi } = useSWR<KpiDetail>(
       `/api/projects/${projectID}/kpis/${kpiID}`,
     )
@@ -108,53 +102,10 @@ const KPIDetail: NextPage = requireAuthorization(
             <Card width="95%">
               <CardTitle>List of KPIs</CardTitle>
               <CardBody>
-                <Table
-                  context="striped"
-                  paginate={true}
-                  {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
-                >
-                  {{
-                    columns: [
-                      { content: "Name", sortable: true },
-                      { content: "Score", sortable: true },
-                    ],
-                    rows: kpis
-                      ? kpis.map((kpi) => [
-                          {
-                            content: (
-                              <Button
-                                action={() =>
-                                  router.push(
-                                    `/analytics/projects/${project?.id}/kpis/${kpi.id}`,
-                                  )
-                                }
-                                context="neutral"
-                                width="100%"
-                                display="block"
-                                align="left"
-                              >
-                                {kpiID === kpi.id ? (
-                                  <strong>{kpi.name}</strong>
-                                ) : (
-                                  kpi.name
-                                )}
-                              </Button>
-                            ),
-                            sortKey: kpi.name,
-                          },
-                          {
-                            content:
-                              kpiID === kpi.id ? (
-                                <strong>{kpi.score}</strong>
-                              ) : (
-                                kpi.score
-                              ),
-                            sortKey: kpi.score,
-                          },
-                        ])
-                      : [],
-                  }}
-                </Table>
+                <KpiTable
+                  projectID={projectID as string}
+                  kpiID={kpiID as string}
+                />
               </CardBody>
             </Card>
           </Sidebar>

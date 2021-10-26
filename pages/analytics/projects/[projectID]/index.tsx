@@ -1,7 +1,7 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import useSWR from "swr"
 import Button from "../../../../components/action/Button"
 import Card from "../../../../components/card/Card"
@@ -9,12 +9,12 @@ import CardBody from "../../../../components/card/CardBody"
 import CardSubTitle from "../../../../components/card/CardSubTitle"
 import CardTitle from "../../../../components/card/CardTitle"
 import PieChart from "../../../../components/chart/PieChart"
+import KpiTable from "../../../../components/KpiTable"
 import Grid from "../../../../components/layout/Grid"
 import Page from "../../../../components/layout/Page"
 import Sidebar from "../../../../components/layout/Sidebar"
 import Icon from "../../../../components/rating/Icon"
 import { IconName } from "../../../../components/rating/IconName"
-import Table from "../../../../components/table/Table"
 import {
   AuthorizationDetails,
   requireAuthorization,
@@ -22,7 +22,6 @@ import {
 import prData from "../../../../util/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../util/themes/Theme"
 import { ProjectDetail } from "../../../api/projects/[pid]"
-import { Kpi } from "../../../api/projects/[pid]/kpis"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -74,11 +73,6 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
   const { projectID } = router.query
   const { data: project } = useSWR<ProjectDetail>(`/api/projects/${projectID}`)
-  const [pageNumber, setPageNumber] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(5)
-  const { data: kpis } = useSWR<Kpi[]>(
-    `/api/projects/${projectID}/kpis?pageSize=${pageSize}&pageNumber=${pageNumber}`,
-  )
   const toggleSidebar = useRef<() => void>(() => {})
 
   return (
@@ -102,41 +96,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           <Card width="95%">
             <CardTitle>List of KPIs</CardTitle>
             <CardBody>
-              <Table
-                context="striped"
-                paginate={true}
-                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
-              >
-                {{
-                  columns: [
-                    { content: "Name", sortable: true },
-                    { content: "Score", sortable: true },
-                  ],
-                  rows: kpis
-                    ? kpis.map((kpi) => [
-                        {
-                          content: (
-                            <Button
-                              action={() =>
-                                router.push(
-                                  `/analytics/projects/${project?.id}/kpis/${kpi.id}`,
-                                )
-                              }
-                              context="neutral"
-                              width="100%"
-                              display="block"
-                              align="left"
-                            >
-                              {kpi.name}
-                            </Button>
-                          ),
-                          sortKey: kpi.name,
-                        },
-                        { content: kpi.score, sortKey: kpi.score },
-                      ])
-                    : [],
-                }}
-              </Table>
+              <KpiTable projectID={projectID as string} />
             </CardBody>
           </Card>
         </Sidebar>
