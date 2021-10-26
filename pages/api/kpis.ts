@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { KPI_Detail } from "./project/[pid]/kpi/[kid]"
+import { KpiDetail } from "./projects/[pid]/kpi/[kid]"
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<KPI_Detail[]>,
+  res: NextApiResponse<KpiDetail[]>,
 ) {
   res.status(200).json([
     {
