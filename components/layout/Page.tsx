@@ -1,7 +1,8 @@
 import Head from "next/head"
+import { useRouter } from "next/router"
 import Bar from "../../components/layout/Bar"
 import Container from "../../components/layout/Container"
-import Anchor from "../action/Anchor"
+import Button from "../action/Button"
 
 interface Props {
   title: string
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export default function Page(props: Props) {
+  const router = useRouter()
+
   return (
     <>
       <Head>
@@ -23,12 +26,12 @@ export default function Page(props: Props) {
           </>
         }
       >
-        <Anchor href="/analytics" context="neutral">
+        <Button action={() => router.push("/analytics")} context="neutral">
           KPI Analytics
-        </Anchor>
-        <Anchor href="/hierarchy" context="neutral">
+        </Button>
+        <Button action={() => router.push("/hierarchy")} context="neutral">
           KPI Hierarchy
-        </Anchor>
+        </Button>
       </Bar>
       <Container>{props.children}</Container>
     </>

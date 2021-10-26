@@ -1,5 +1,8 @@
 import { NextPage } from "next"
-import Anchor from "../../components/action/Anchor"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import useSWR from "swr"
+import Button from "../../components/action/Button"
 import Card from "../../components/card/Card"
 import CardBody from "../../components/card/CardBody"
 import CardTitle from "../../components/card/CardTitle"
@@ -11,9 +14,16 @@ import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../util/api/requireAuthorization"
+import { Project } from "../api/projects"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
+    const router = useRouter()
+    const [pageNumber, setPageNumber] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const { data: projects } = useSWR<Project[]>(
+      `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    )
     return (
       props.user?.isLoggedIn && (
         <Page title="Analytics - KPI Dashboard">
@@ -21,99 +31,43 @@ const Analytics: NextPage = requireAuthorization(
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
               <SectionTitle>Project Overview</SectionTitle>
-              <Table width="50%" context={"striped"} paginate={true}>
+              <Table
+                width="50%"
+                context={"striped"}
+                paginate={true}
+                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+              >
                 {{
                   columns: [
                     { content: "Project", sortable: true },
                     { content: "Rating", sortable: true },
                   ],
-                  rows: [
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href="/analytics/projects/a"
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            Project A
-                          </Anchor>
-                        ),
-                        sortKey: "a",
-                      },
-                      { content: <Rating>1.3</Rating>, sortKey: 1.3 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href="/analytics/projects/b"
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            Project B
-                          </Anchor>
-                        ),
-                        sortKey: "b",
-                      },
-                      { content: <Rating>8.5</Rating>, sortKey: 8.5 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href="/analytics/projects/c"
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            Project C
-                          </Anchor>
-                        ),
-                        sortKey: "c",
-                      },
-                      { content: <Rating>25</Rating>, sortKey: 25 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href="/analytics/projects/d"
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            Project D
-                          </Anchor>
-                        ),
-                        sortKey: "d",
-                      },
-                      { content: <Rating>21.6</Rating>, sortKey: 21.6 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href="/analytics/projects/e"
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            Project E
-                          </Anchor>
-                        ),
-                        sortKey: "e",
-                      },
-                      { content: <Rating>15.7</Rating>, sortKey: 15.7 },
-                    ],
-                  ],
+                  rows: projects
+                    ? projects.map((project) => [
+                        {
+                          content: (
+                            <Button
+                              action={() =>
+                                router.push(`/analytics/projects/${project.id}`)
+                              }
+                              context="neutral"
+                              width="100%"
+                              display="block"
+                              align="left"
+                            >
+                              {project.name}
+                            </Button>
+                          ),
+                          sortKey: project.name,
+                        },
+                        {
+                          content: (
+                            <Rating>{`${project.maturityIndex}`}</Rating>
+                          ),
+                          sortKey: project.maturityIndex,
+                        },
+                      ])
+                    : [],
                 }}
               </Table>
             </CardBody>
