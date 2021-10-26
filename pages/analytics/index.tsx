@@ -21,9 +21,12 @@ const Analytics: NextPage = requireAuthorization(
     const router = useRouter()
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(5)
-    const { data: projects } = useSWR<Project[]>(
+    const { data: projects, error: error } = useSWR<Project[]>(
       `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`,
     )
+    if (error) {
+      setPageNumber(pageNumber - 1)
+    }
     return (
       props.user?.isLoggedIn && (
         <Page title="Analytics - KPI Dashboard">

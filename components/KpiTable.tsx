@@ -15,9 +15,12 @@ export default function KpiTable(props: Props) {
   const router = useRouter()
   const [pageNumber, setPageNumber] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(5)
-  const { data: kpis } = useSWR<Kpi[]>(
+  const { data: kpis, error: error } = useSWR<Kpi[]>(
     `/api/projects/${projectID}/kpis?pageSize=${pageSize}&pageNumber=${pageNumber}`,
   )
+  if (error) {
+    setPageNumber(pageNumber - 1)
+  }
 
   return (
     <Table

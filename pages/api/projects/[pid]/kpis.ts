@@ -16,6 +16,10 @@ export default function handler(
   console.log({ pageNumber, pageSize })
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
+  if (startOfChunk >= kpis.length) {
+    res.status(404).json([])
+    return
+  }
   if (endOfChunk >= kpis.length) {
     endOfChunk = kpis.length
     startOfChunk = kpis.length - pageSize

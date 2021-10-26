@@ -16,6 +16,10 @@ export default function handler(
   console.log({ pageNumber, pageSize })
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
+  if (startOfChunk >= projects.length) {
+    res.status(404).json([])
+    return
+  }
   if (endOfChunk >= projects.length) {
     endOfChunk = projects.length
     startOfChunk = projects.length - pageSize
