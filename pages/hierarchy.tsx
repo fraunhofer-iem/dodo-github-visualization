@@ -1,5 +1,6 @@
 import { NextPage } from "next"
 import { useCallback, useRef } from "react"
+import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import Card from "../components/card/Card"
 import CardTitle from "../components/card/CardTitle"
@@ -12,25 +13,26 @@ import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../util/api/requireAuthorization"
-import kpis from "../util/data/kpiExample.json"
 import { useUIContext } from "../util/uiContext"
+import { KpiType } from "./api/kpis"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
     const cy = useRef<cytoscape.Core | null>()
     const { setTippy } = props
+    const { data: kpis } = useSWR<KpiType[]>(`/api/kpis`)
     const elements: cytoscape.ElementDefinition[] = []
 
-    kpis.forEach((kpi) => {
+    kpis?.forEach((currKpi) => {
       elements.push(
-        nodeDefinition(kpi.type, parseInt(kpi.id), kpi.name, {
-          description: kpi.description,
+        nodeDefinition(currKpi.type, parseInt(currKpi.id), currKpi.name, {
+          description: currKpi.description,
           hover: "false",
         }),
       )
-      kpi.children.forEach((child) => {
-        elements.push(edgeDefinition(kpi.id, child))
+      currKpi.children.forEach((currChild) => {
+        elements.push(edgeDefinition(currKpi.id, currChild))
       })
     })
 
