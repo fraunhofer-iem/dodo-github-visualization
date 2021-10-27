@@ -1,6 +1,7 @@
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
 
 export const PAGE_SIZE_LIMIT = 50
+export const FIRST_PAGE = 1
 
 export type Pagination = {
   pageSize: number
@@ -15,7 +16,7 @@ export const getPagination = (query: NextApiRequestQuery): Pagination => {
       return { pageNumber: +query.pageNumber, pageSize: PAGE_SIZE_LIMIT }
     }
   } else {
-    return { pageSize: PAGE_SIZE_LIMIT, pageNumber: 1 }
+    return { pageSize: PAGE_SIZE_LIMIT, pageNumber: FIRST_PAGE }
   }
 }
 
@@ -23,7 +24,7 @@ const hasValidPageNumber = (query: NextApiRequestQuery) => {
   return (
     query.hasOwnProperty("pageNumber") &&
     isNumber(query["pageNumber"]) &&
-    +query["pageNumber"] > 0
+    +query["pageNumber"] >= FIRST_PAGE
   )
 }
 
@@ -31,7 +32,7 @@ const hasValidPageSize = (query: NextApiRequestQuery) => {
   if (query.hasOwnProperty("pageSize") && isNumber(query["pageSize"])) {
     const pageSize = +query["pageSize"]
     // check if pageSize is in a valid range
-    return pageSize > 0 && pageSize <= PAGE_SIZE_LIMIT
+    return pageSize >= FIRST_PAGE && pageSize <= PAGE_SIZE_LIMIT
   }
   return false
 }
