@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { KpiDetail } from "./project/[pid]/kpi/[kid]"
+import { KpiDetail } from "./projects/[pid]/kpis/[kid]"
 
 export default function handler(
   req: NextApiRequest,
