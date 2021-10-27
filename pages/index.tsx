@@ -1,6 +1,5 @@
 import type { NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import React from "react"
 import Button from "../components/action/Button"
 import Card from "../components/card/Card"
@@ -12,8 +11,6 @@ import fetchJson from "../util/api/fetchJson"
 import useUser from "../util/api/useUser"
 
 const Landing: NextPage = () => {
-  const router = useRouter()
-
   const { mutateUser } = useUser({
     redirectTo: "/analytics",
     redirectIfFound: true,
