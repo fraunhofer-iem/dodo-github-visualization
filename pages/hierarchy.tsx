@@ -42,6 +42,58 @@ const Hierarchy: NextPage = requireAuthorization(
           return
         }
 
+        const showNode = (node: cytoscape.NodeSingular) => {
+          node.data("hidden", "false")
+          node.incomers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "false")
+            showNode(currEdge.source())
+          })
+        }
+
+        const hideNode = (node: cytoscape.NodeSingular) => {
+          node.data("hidden", "true")
+          node.data("expanded", false)
+          node.incomers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "true")
+            collapseNode(currEdge.source())
+          })
+        }
+
+        const collapseNode = (node: cytoscape.NodeSingular) => {
+          node.data("expanded", false)
+          node.outgoers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "true")
+            currEdge.target().data("hidden", "true")
+          })
+        }
+
+        c.nodes().forEach((currNode: cytoscape.NodeSingular) => {
+          if (!currNode.predecessors().length) {
+            currNode.successors().forEach((currSuccessor) => {
+              currSuccessor.data("hidden", "true")
+            })
+          }
+        })
+
+        c.on("tap", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          if (node.data("expanded")) {
+            node
+              .outgoers("edge")
+              .forEach((currEdge: cytoscape.EdgeSingular) => {
+                hideNode(currEdge.target())
+              })
+          } else {
+            node
+              .outgoers("edge")
+              .forEach((currEdge: cytoscape.EdgeSingular) => {
+                showNode(currEdge.target())
+              })
+          }
+
+          node.data("expanded", !node.data("expanded"))
+        })
+
         c.on("mouseover", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
           setTippy(node.id(), {

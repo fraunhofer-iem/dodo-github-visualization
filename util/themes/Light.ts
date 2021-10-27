@@ -117,6 +117,18 @@ const LightTheme: Theme = {
         },
       },
       {
+        selector: "[hidden = 'true']",
+        style: {
+          visibility: "hidden",
+        },
+      },
+      {
+        selector: "[hidden = 'false']",
+        style: {
+          visibility: "visible",
+        },
+      },
+      {
         selector: "node[hover = 'true']",
         style: {
           backgroundColor: black.rgba(),
