@@ -1,7 +1,6 @@
 import styles from "../../styles/components/Card.module.scss"
 import { useUIContext } from "../../util/uiContext"
 import Button from "../action/Button"
-// import Button from "../action/Button"
 
 interface Props {
   dismiss: () => void

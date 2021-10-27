@@ -1,21 +1,21 @@
 import styles from "../../styles/components/Card.module.scss"
-
+import Image from "next/image"
 interface Props {
-    src: string
-    width?: number
-    height?: number
-    alt?: string
+  src: string
+  width?: number
+  height?: number
+  alt?: string
 }
 
 export default function CardImage(props: Props) {
-    return (
-        <div className={styles.cardImage}>
-            <img
-                src={props.src}
-                width={props.width}
-                height={props.height}
-                alt={props.alt}
-            />
-        </div>
-    )
+  return (
+    <div className={styles.cardImage}>
+      <Image
+        src={props.src}
+        width={props.width}
+        height={props.height}
+        alt={props.alt}
+      />
+    </div>
+  )
 }
