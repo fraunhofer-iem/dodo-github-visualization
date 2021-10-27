@@ -1,36 +1,36 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../util/api/pagination"
-import projects from "../../util/data/projects.json"
+import { getPagination } from "../../../../util/api/pagination"
+import kpis from "../../../../util/data/kpis.json"
 
-export type Project = {
+export type Kpi = {
   name: string
-  maturityIndex: number
+  score: number
   id: string
 }
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Project[]>,
+  res: NextApiResponse<Kpi[]>,
 ) {
   const { pageNumber, pageSize } = getPagination(req.query)
   console.log({ pageNumber, pageSize })
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
-  if (startOfChunk >= projects.length) {
+  if (startOfChunk >= kpis.length) {
     res.status(404).json([])
     return
   }
-  if (endOfChunk >= projects.length) {
-    endOfChunk = projects.length
-    startOfChunk = projects.length - pageSize
+  if (endOfChunk >= kpis.length) {
+    endOfChunk = kpis.length
+    startOfChunk = kpis.length - pageSize
   }
   if (startOfChunk < 0) {
     startOfChunk = 0
     endOfChunk = pageSize
   }
-  const chunk: Project[] = projects.slice(
-    startOfChunk < projects.length ? startOfChunk : undefined,
-    endOfChunk < projects.length ? endOfChunk : undefined,
+  const chunk: Kpi[] = kpis.slice(
+    startOfChunk < kpis.length ? startOfChunk : undefined,
+    endOfChunk < kpis.length ? endOfChunk : undefined,
   )
   console.log(startOfChunk, endOfChunk)
   console.log(chunk)

@@ -2,25 +2,26 @@ import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import { useRef } from "react"
-import Anchor from "../../../../components/action/Anchor"
+import useSWR from "swr"
 import Button from "../../../../components/action/Button"
 import Card from "../../../../components/card/Card"
 import CardBody from "../../../../components/card/CardBody"
 import CardSubTitle from "../../../../components/card/CardSubTitle"
 import CardTitle from "../../../../components/card/CardTitle"
 import PieChart from "../../../../components/chart/PieChart"
+import KpiTable from "../../../../components/KpiTable"
 import Grid from "../../../../components/layout/Grid"
 import Page from "../../../../components/layout/Page"
 import Sidebar from "../../../../components/layout/Sidebar"
 import Icon from "../../../../components/rating/Icon"
 import { IconName } from "../../../../components/rating/IconName"
-import Table from "../../../../components/table/Table"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../../../util/api/requireAuthorization"
 import prData from "../../../../util/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../util/themes/Theme"
+import { ProjectDetail } from "../../../api/projects/[pid]"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -71,12 +72,13 @@ const count = (): ChartData<"pie"> => {
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
   const { projectID } = router.query
+  const { data: project } = useSWR<ProjectDetail>(`/api/projects/${projectID}`)
   const toggleSidebar = useRef<() => void>(() => {})
 
   return (
     props.user?.isLoggedIn && (
       <Page
-        title={`Project ${projectID}  - KPI Dashboard`}
+        title={`${project?.name}  - KPI Dashboard`}
         sidebar={
           <Button
             context="neutral"
@@ -94,73 +96,13 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           <Card width="95%">
             <CardTitle>List of KPIs</CardTitle>
             <CardBody>
-              <Table context="striped">
-                {{
-                  columns: [
-                    { content: "Name", sortable: true },
-                    { content: "Score", sortable: true },
-                  ],
-                  rows: [
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/1`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 1
-                          </Anchor>
-                        ),
-                        sortKey: 1,
-                      },
-                      { content: 93, sortKey: 93 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/2`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 2
-                          </Anchor>
-                        ),
-                        sortKey: 2,
-                      },
-                      { content: 23, sortKey: 23 },
-                    ],
-                    [
-                      {
-                        content: (
-                          <Anchor
-                            href={`/analytics/projects/${projectID}/kpis/3`}
-                            context="neutral"
-                            width="100%"
-                            display="block"
-                            align="left"
-                          >
-                            KPI 3
-                          </Anchor>
-                        ),
-                        sortKey: 3,
-                      },
-                      { content: 57, sortKey: 57 },
-                    ],
-                  ],
-                }}
-              </Table>
+              <KpiTable projectID={projectID as string} />
             </CardBody>
           </Card>
         </Sidebar>
         <Card width="99%">
-          <CardTitle>{`Project ${projectID}`}</CardTitle>
-          <CardSubTitle>{`<Project URL>`}</CardSubTitle>
+          <CardTitle>{`${project?.name}`}</CardTitle>
+          <CardSubTitle>{project?.url as string}</CardSubTitle>
           <CardBody>
             <Grid>
               <PieChart data={count()} width="500px" height="500px" />

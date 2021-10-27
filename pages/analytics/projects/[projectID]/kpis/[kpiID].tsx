@@ -2,7 +2,7 @@ import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import { useRef } from "react"
-import Anchor from "../../../../../components/action/Anchor"
+import useSWR from "swr"
 import Button from "../../../../../components/action/Button"
 import Card from "../../../../../components/card/Card"
 import CardBody from "../../../../../components/card/CardBody"
@@ -10,20 +10,21 @@ import CardSubTitle from "../../../../../components/card/CardSubTitle"
 import CardTitle from "../../../../../components/card/CardTitle"
 import LineChart from "../../../../../components/chart/LineChart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
+import KpiTable from "../../../../../components/KpiTable"
 import Grid from "../../../../../components/layout/Grid"
 import Page from "../../../../../components/layout/Page"
 import Sidebar from "../../../../../components/layout/Sidebar"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
-import Table from "../../../../../components/table/Table"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../../../../util/api/requireAuthorization"
-import prData from "../../../../../util/data/pullRequestData.json"
 import { purple, turquoise } from "../../../../../util/themes/Theme"
+import { ProjectDetail } from "../../../../api/projects/[pid]"
+import { KpiDetail } from "../../../../api/projects/[pid]/kpis/[kid]"
 
-const timeline = (): ChartData<"line"> => {
+const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
   prData.forEach((v, i) => labels.push(i))
   const chartData: ChartData<"line"> = {
@@ -43,7 +44,7 @@ const timeline = (): ChartData<"line"> => {
   return chartData
 }
 
-const cluster = (): ChartData<"line"> => {
+const cluster = (prData: number[]): ChartData<"line"> => {
   const data: [number, number][] = []
   prData.forEach((v, i) => data.push([i, v]))
   data.sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))
@@ -72,12 +73,18 @@ const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
     const { projectID, kpiID } = router.query
+    const { data: project } = useSWR<ProjectDetail>(
+      `/api/projects/${projectID}`,
+    )
+    const { data: kpi } = useSWR<KpiDetail>(
+      `/api/projects/${projectID}/kpis/${kpiID}`,
+    )
     const toggleSidebar = useRef<() => void>(() => {})
 
     return (
       props.user?.isLoggedIn && (
         <Page
-          title={`KPI ${kpiID} - Project ${projectID}  - KPI Dashboard`}
+          title={`${kpi?.name} - ${project?.id} - KPI Dashboard`}
           sidebar={
             <Button
               context="neutral"
@@ -95,87 +102,46 @@ const KPIDetail: NextPage = requireAuthorization(
             <Card width="95%">
               <CardTitle>List of KPIs</CardTitle>
               <CardBody>
-                <Table context="striped">
-                  {{
-                    columns: [
-                      { content: "Name", sortable: true },
-                      { content: "Score", sortable: true },
-                    ],
-                    rows: [
-                      [
-                        {
-                          content: (
-                            <Anchor
-                              href={`/analytics/projects/${projectID}/kpis/1`}
-                              context="neutral"
-                              width="100%"
-                              display="block"
-                              align="left"
-                            >
-                              KPI 1
-                            </Anchor>
-                          ),
-                          sortKey: 1,
-                        },
-                        { content: 93, sortKey: 93 },
-                      ],
-                      [
-                        {
-                          content: (
-                            <Anchor
-                              href={`/analytics/projects/${projectID}/kpis/2`}
-                              context="neutral"
-                              width="100%"
-                              display="block"
-                              align="left"
-                            >
-                              KPI 2
-                            </Anchor>
-                          ),
-                          sortKey: 2,
-                        },
-                        { content: 23, sortKey: 23 },
-                      ],
-                      [
-                        {
-                          content: (
-                            <Anchor
-                              href={`/analytics/projects/${projectID}/kpis/3`}
-                              context="neutral"
-                              width="100%"
-                              display="block"
-                              align="left"
-                            >
-                              KPI 3
-                            </Anchor>
-                          ),
-                          sortKey: 3,
-                        },
-                        { content: 57, sortKey: 57 },
-                      ],
-                    ],
-                  }}
-                </Table>
+                <KpiTable
+                  projectID={projectID as string}
+                  kpiID={kpiID as string}
+                />
               </CardBody>
             </Card>
           </Sidebar>
           <Card width="99%">
             <CardTitle>
-              {`Project ${projectID}`}
-              <Anchor
-                href={`/analytics/projects/${projectID}`}
+              {`${project?.name}`}
+              <Button
+                action={() => router.push(`/analytics/projects/${project?.id}`)}
                 context="neutral"
               >
                 <Icon>{IconName.keyboardArrowUp}</Icon>
-              </Anchor>
+              </Button>
             </CardTitle>
-            <CardSubTitle>{`<Project URL>`}</CardSubTitle>
+            <CardSubTitle>{project?.url as string}</CardSubTitle>
             <CardBody>
-              <SectionTitle>{`KPI ${kpiID}`}</SectionTitle>
-              <Grid>
-                <LineChart data={timeline()} width="500px" height="500px" />
-                <LineChart data={cluster()} width="500px" height="500px" />
-              </Grid>
+              <SectionTitle>{`${kpi?.name}`}</SectionTitle>
+              Description: {kpi?.description}
+              <br />
+              Calculation: {kpi?.calculation}
+              <br />
+              Children: {kpi?.children}
+              <br />
+              {kpi?.data && (
+                <Grid>
+                  <LineChart
+                    data={timeline(kpi.data)}
+                    width="500px"
+                    height="500px"
+                  />
+                  <LineChart
+                    data={cluster(kpi.data)}
+                    width="500px"
+                    height="500px"
+                  />
+                </Grid>
+              )}
             </CardBody>
           </Card>
         </Page>
