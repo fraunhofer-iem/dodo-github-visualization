@@ -8,6 +8,44 @@ export type Pagination = {
   pageNumber: number
 }
 
+export type Sort = {
+  asc: boolean
+  sortKey: string
+}
+
+const SortableTableKeys = ["NAME", "RATING"]
+
+export function getSortedTablePagination(
+  query: NextApiRequestQuery,
+): Pagination & Sort {
+  return { ...getSortedPagination(query), ...getTableSortKey(query) }
+}
+
+function getSortedPagination(query: NextApiRequestQuery) {
+  return { ...getPagination(query), asc: isAsc(query) }
+}
+
+const isAsc = (query: NextApiRequestQuery) => {
+  if (query.hasOwnProperty("asc") && isNumber(query["asc"])) {
+    return +query["asc"] === 1 ? true : false
+  }
+  return true
+}
+
+function getTableSortKey(query: NextApiRequestQuery) {
+  if (hasSortKey(query)) {
+    const key = query["sortKey"] as string
+    if (SortableTableKeys.includes(key)) {
+      return { sortKey: key }
+    }
+  }
+  return { sortKey: SortableTableKeys[0] }
+}
+
+function hasSortKey(query: NextApiRequestQuery) {
+  return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
+}
+
 export const getPagination = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
     if (hasValidPageSize(query)) {
