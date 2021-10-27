@@ -19,7 +19,7 @@ const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
     const cy = useRef<cytoscape.Core | null>()
-
+    const { setTippy } = props
     const elements: cytoscape.ElementDefinition[] = []
 
     kpis.forEach((kpi) => {
@@ -34,28 +34,31 @@ const Hierarchy: NextPage = requireAuthorization(
       })
     })
 
-    const cytoscapeControl = useCallback((c: cytoscape.Core) => {
-      if (cy.current == c) {
-        return
-      }
+    const cytoscapeControl = useCallback(
+      (c: cytoscape.Core) => {
+        if (cy.current == c) {
+          return
+        }
 
-      c.on("mouseover", "node", (event) => {
-        const node: cytoscape.NodeSingular = event.target
-        props.setTippy(node.id(), {
-          content: <Card width="250px">{node.data("description")}</Card>,
-          popperRef: node.popperRef(),
-          dispose: () => node.data("hover", "false"),
-          tippyProps: { placement: "right" },
+        c.on("mouseover", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          setTippy(node.id(), {
+            content: <Card width="250px">{node.data("description")}</Card>,
+            popperRef: node.popperRef(),
+            dispose: () => node.data("hover", "false"),
+            tippyProps: { placement: "right" },
+          })
+          node.data("hover", "true")
         })
-        node.data("hover", "true")
-      })
-      c.on("mouseout", "node", (event) => {
-        const node: cytoscape.NodeSingular = event.target
-        props.setTippy(node.id(), { content: undefined, popperRef: undefined })
-      })
+        c.on("mouseout", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          setTippy(node.id(), { content: undefined, popperRef: undefined })
+        })
 
-      cy.current = c
-    }, [])
+        cy.current = c
+      },
+      [setTippy],
+    )
 
     return (
       props.user?.isLoggedIn && (
