@@ -7,7 +7,7 @@ interface AnchorProps extends Omit<Props, "type"> {
 
 export default function Anchor(props: AnchorProps) {
   return (
-    <Link href={props.href}>
+    <Link href={props.href} passHref>
       <Button {...props}>{props.children}</Button>
     </Link>
   )
