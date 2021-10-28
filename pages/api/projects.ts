@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../lib/api/pagination"
-import { Project } from "../../lib/api/types"
+import { Project, getPagination } from "../../lib/api"
 import projects from "../../lib/data/projects.json"
 
 export default function handler(

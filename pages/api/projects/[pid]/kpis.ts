@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../../../lib/api/pagination"
-import { Kpi } from "../../../../lib/api/types"
+import { Kpi, getPagination } from "../../../../lib/api"
 import kpis from "../../../../lib/data/kpis.json"
 
 export default function handler(

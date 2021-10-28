@@ -7,7 +7,7 @@ import CardAction from "../components/card/CardAction"
 import CardBody from "../components/card/CardBody"
 import CardTitle from "../components/card/CardTitle"
 import Overlay from "../components/layout/Overlay"
-import fetchJson from "../lib/api/fetchJson"
+import { fetchJson } from "../lib/api"
 import useUser from "../lib/api/useUser"
 
 const Landing: NextPage = () => {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { KpiType } from "../../lib/api/types"
+import { KpiType } from "../../lib/api"
 import hierarchy from "../../lib/data/kpiExample.json"
 
 export default function handler(

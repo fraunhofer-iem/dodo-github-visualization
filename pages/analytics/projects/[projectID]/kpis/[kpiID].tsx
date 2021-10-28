@@ -16,13 +16,12 @@ import Page from "../../../../../components/layout/Page"
 import Sidebar from "../../../../../components/layout/Sidebar"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
+import { ProjectDetail, KpiDetail } from "../../../../../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../../../../lib/api/requireAuthorization"
 import { purple, turquoise } from "../../../../../lib/themes/Theme"
-import { ProjectDetail } from "../../../../api/projects/[pid]"
-import { KpiDetail } from "../../../../api/projects/[pid]/kpis/[kid]"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []

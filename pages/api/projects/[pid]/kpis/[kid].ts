@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { KpiDetail } from "../../../../../lib/api/types"
+import { KpiDetail } from "../../../../../lib/api"
 import kpis from "../../../../../lib/data/kpis.json"
 import data from "../../../../../lib/data/pullRequestData.json"
 

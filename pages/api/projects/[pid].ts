@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { ProjectDetail } from "../../../lib/api/types"
+import { ProjectDetail } from "../../../lib/api"
 import projects from "../../../lib/data/projects.json"
 
 export default function handler(

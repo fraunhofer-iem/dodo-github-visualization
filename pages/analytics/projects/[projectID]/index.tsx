@@ -15,13 +15,13 @@ import Page from "../../../../components/layout/Page"
 import Sidebar from "../../../../components/layout/Sidebar"
 import Icon from "../../../../components/rating/Icon"
 import { IconName } from "../../../../components/rating/IconName"
+import { ProjectDetail } from "../../../../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../../../lib/api/requireAuthorization"
 import prData from "../../../../lib/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
-import { ProjectDetail } from "../../../api/projects/[pid]"
 
 const count = (): ChartData<"pie"> => {
   const data = {

@@ -10,11 +10,11 @@ import SectionTitle from "../../components/heading/SectionTitle"
 import Page from "../../components/layout/Page"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
+import { Project } from "../../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../../lib/api/requireAuthorization"
-import { Project } from "../api/projects"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {

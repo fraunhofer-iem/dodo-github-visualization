@@ -9,12 +9,12 @@ import CytoscapeComponent, {
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
 import Page from "../components/layout/Page"
+import { KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../lib/api/requireAuthorization"
 import { useUIContext } from "../lib/uiContext"
-import { KpiType } from "./api/kpis"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
