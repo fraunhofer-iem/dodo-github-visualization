@@ -55,8 +55,8 @@ export default function KpiTable(props: Props) {
               },
               {
                 content:
-                  kpiID === kpi.id ? <strong>{kpi.score}</strong> : kpi.score,
-                sortKey: kpi.score,
+                  kpiID === kpi.id ? <strong>{kpi.rating}</strong> : kpi.rating,
+                sortKey: kpi.rating,
               },
             ])
           : [],

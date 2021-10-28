@@ -1,9 +1,49 @@
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
-import { Pagination } from "./types"
+import { Pagination, Sort } from "./types"
 
 export const PAGE_SIZE_LIMIT = 50
+export const FIRST_PAGE = 1
 
-export const getPagination = (query: NextApiRequestQuery): Pagination => {
+/**
+ *
+ * @param query
+ * @param validKeys the first key in the array is the default sorting key,
+ * which is used if no sorting is specified by the user's query
+ * @returns
+ */
+export function getPagination(
+  query: NextApiRequestQuery,
+  validKeys: string[],
+): Pagination & Sort {
+  return { ...getPaginationInfo(query), ...getSortKey(query, validKeys) }
+}
+
+function getPaginationInfo(query: NextApiRequestQuery) {
+  return { ...getPageNumberAndSize(query), asc: isAsc(query) }
+}
+
+const isAsc = (query: NextApiRequestQuery) => {
+  if (query.hasOwnProperty("asc") && isNumber(query["asc"])) {
+    return +query["asc"] === 1 ? true : false
+  }
+  return true
+}
+
+function getSortKey(query: NextApiRequestQuery, validKeys: string[]) {
+  if (hasSortKey(query)) {
+    const key = query["sortKey"] as string
+    if (validKeys.includes(key)) {
+      return { sortKey: key }
+    }
+  }
+  return { sortKey: validKeys[0] }
+}
+
+function hasSortKey(query: NextApiRequestQuery) {
+  return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
+}
+
+const getPageNumberAndSize = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
     if (hasValidPageSize(query)) {
       return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
@@ -11,17 +51,23 @@ export const getPagination = (query: NextApiRequestQuery): Pagination => {
       return { pageNumber: +query.pageNumber, pageSize: PAGE_SIZE_LIMIT }
     }
   } else {
-    return { pageSize: PAGE_SIZE_LIMIT, pageNumber: 1 }
+    return { pageSize: PAGE_SIZE_LIMIT, pageNumber: FIRST_PAGE }
   }
 }
 
 const hasValidPageNumber = (query: NextApiRequestQuery) => {
-  return query.hasOwnProperty("pageNumber") && isNumber(query["pageNumber"])
+  return (
+    query.hasOwnProperty("pageNumber") &&
+    isNumber(query["pageNumber"]) &&
+    +query["pageNumber"] >= FIRST_PAGE
+  )
 }
 
 const hasValidPageSize = (query: NextApiRequestQuery) => {
-  if (query.hasOwnProperty("pageSize")) {
-    return isNumber(query["pageSize"])
+  if (query.hasOwnProperty("pageSize") && isNumber(query["pageSize"])) {
+    const pageSize = +query["pageSize"]
+    // check if pageSize is in a valid range
+    return pageSize >= FIRST_PAGE && pageSize <= PAGE_SIZE_LIMIT
   }
   return false
 }

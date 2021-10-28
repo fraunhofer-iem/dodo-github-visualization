@@ -4,6 +4,11 @@ export type Project = {
   id: string
 }
 
+export type Sort = {
+  asc: boolean
+  sortKey: string
+}
+
 export type User = {
   name: string
   admin: boolean
@@ -25,7 +30,7 @@ export type ProjectDetail = Project & {
 
 export type Kpi = {
   name: string
-  score: number
+  rating: number
   id: string
 }
 
