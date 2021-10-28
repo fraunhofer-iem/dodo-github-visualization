@@ -23,91 +23,76 @@ const Hierarchy: NextPage = requireAuthorization(
     const { data: kpis } = useSWR<KpiType[]>(`/api/kpis`)
     const elements: cytoscape.ElementDefinition[] = []
 
-    kpis?.forEach((currKpi) => {
+    kpis?.forEach((currentKpi) => {
       elements.push(
-        nodeDefinition(currKpi.type, parseInt(currKpi.id), currKpi.name, {
-          description: currKpi.description,
-          hover: false,
-        }),
+        nodeDefinition(
+          currentKpi.type,
+          parseInt(currentKpi.id),
+          currentKpi.name,
+          {
+            children: currentKpi.children,
+            parents: currentKpi.parents,
+            description: currentKpi.description,
+            hidden: currentKpi.parents.length != 0,
+            expandable: currentKpi.children.length,
+            expanded: false,
+            hover: false,
+          },
+        ),
       )
-      currKpi.children.forEach((currChild) => {
-        elements.push(edgeDefinition(currKpi.id, currChild))
+      currentKpi.children.forEach((currentChild) => {
+        elements.push(
+          edgeDefinition(currentKpi.id, currentChild, true, { hidden: true }),
+        )
       })
     })
+
+    const expandNode = (node: cytoscape.NodeSingular) => {
+      node.data("expanded", true)
+      node.data("expandable", false)
+      node.data("children").forEach((currentChild: string) => {
+        if (cy.current) {
+          cy.current.getElementById(currentChild).data("hidden", false)
+          cy.current
+            .getElementById(`${node.id()}-${currentChild}`)
+            .data("hidden", false)
+        }
+      })
+    }
+
+    const collapseNode = (node: cytoscape.NodeSingular) => {
+      node.data("expanded", false)
+      node.data("children").forEach((currentChild: string) => {
+        node.data("expandable", true)
+
+        //hide child only if all of its parents are collapsed
+        if (cy.current) {
+          const childNode = cy.current.getElementById(currentChild)
+          childNode.data("hidden", true)
+          childNode.data("parents").forEach((currentParent: string) => {
+            if (cy.current) {
+              const parentNode = cy.current.getElementById(currentParent)
+              if (!node.same(parentNode)) {
+                if (parentNode.data("expanded")) {
+                  childNode.data("hidden", false)
+                }
+              }
+            }
+          })
+          // hide edge to child node
+          cy.current
+            .getElementById(`${node.id()}-${currentChild}`)
+            .data("hidden", true)
+
+          collapseNode(childNode)
+        }
+      })
+    }
 
     const cytoscapeControl = useCallback(
       (c: cytoscape.Core) => {
         if (cy.current == c) {
           return
-        }
-
-        const hierarchy = kpis
-          ? Object.fromEntries(
-              kpis.map((currentKpi) => {
-                return [currentKpi.id, currentKpi]
-              }),
-            )
-          : undefined
-
-        const expandNode = (node: cytoscape.NodeSingular) => {
-          node.data("expanded", true)
-          node.data("expandable", false)
-          if (hierarchy) {
-            hierarchy[node.id()].children.forEach((currentChild) => {
-              c.getElementById(currentChild).data("hidden", false)
-              c.getElementById(`${node.id()}-${currentChild}`).data(
-                "hidden",
-                false,
-              )
-            })
-          }
-        }
-
-        const collapseNode = (node: cytoscape.NodeSingular) => {
-          node.data("expanded", false)
-          if (hierarchy) {
-            hierarchy[node.id()].children.forEach((currentChild) => {
-              node.data("expandable", true)
-
-              //hide child only if all of its parents are collapsed
-              const childNode = c.getElementById(currentChild)
-              childNode.data("hidden", true)
-              hierarchy[currentChild].parents.forEach((currentParent) => {
-                const parentNode = c.getElementById(currentParent)
-                if (!node.same(parentNode)) {
-                  if (parentNode.data("expanded")) {
-                    childNode.data("hidden", false)
-                  }
-                }
-              })
-
-              c.getElementById(`${node.id()}-${currentChild}`).data(
-                "hidden",
-                true,
-              )
-
-              collapseNode(childNode)
-            })
-          }
-        }
-
-        //hide all nodes except root nodes
-        if (hierarchy) {
-          Object.entries(hierarchy).forEach(([_, currentKpi]) => {
-            const node = c.getElementById(currentKpi.id)
-            if (currentKpi.children.length) {
-              node.data("expandable", true)
-              currentKpi.children.forEach((currentChild) => {
-                c.getElementById(`${node.id()}-${currentChild}`).data(
-                  "hidden",
-                  true,
-                )
-              })
-            }
-            if (currentKpi.parents.length) {
-              node.data("hidden", true)
-            }
-          })
         }
 
         c.on("tap", "node", (event) => {
@@ -138,7 +123,7 @@ const Hierarchy: NextPage = requireAuthorization(
 
         cy.current = c
       },
-      [setTippy, kpis],
+      [setTippy, expandNode, collapseNode],
     )
 
     return (
