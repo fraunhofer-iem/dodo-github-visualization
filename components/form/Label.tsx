@@ -5,7 +5,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export default function Label(props: Props) {
+export function Label(props: Props) {
   const { theme } = useUIContext()
 
   return (

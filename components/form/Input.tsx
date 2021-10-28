@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react"
 import styles from "../../styles/components/Input.module.scss"
 import { useUIContext } from "../../lib/uiContext"
-import Label from "./Label"
+import { Label } from "./Label"
 
 interface Props {
   id?: string
@@ -11,7 +11,7 @@ interface Props {
   changeHandler: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function Input(props: Props) {
+export function Input(props: Props) {
   const { theme } = useUIContext()
 
   return (

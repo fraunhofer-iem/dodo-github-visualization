@@ -3,7 +3,7 @@ import Head from "next/head"
 import React from "react"
 import Button from "../components/action/Button"
 import { Card, CardTitle, CardBody, CardAction } from "../components/card"
-import Overlay from "../components/layout/Overlay"
+import { Overlay } from "../components/layout"
 import { fetchJson } from "../lib/api"
 import useUser from "../lib/api/useUser"
 

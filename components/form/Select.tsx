@@ -15,7 +15,7 @@ interface Props {
   changeHandler: (selection: number | number[]) => void
 }
 
-export default function Select(props: Props) {
+export function Select(props: Props) {
   const { theme } = useUIContext()
   const { id, options, multiple, width, changeHandler } = props
 

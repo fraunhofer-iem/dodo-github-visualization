@@ -7,7 +7,7 @@ import CytoscapeComponent, {
   edgeDefinition,
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
-import Page from "../components/layout/Page"
+import { Page } from "../components/layout"
 import { KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
