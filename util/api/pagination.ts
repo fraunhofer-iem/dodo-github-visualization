@@ -13,6 +13,14 @@ export type Sort = {
   sortKey: string
 }
 
+/**
+ *
+ *
+ * @param query
+ * @param validKeys the first key in the array is the default sorting key,
+ * which is used if no sorting is specified by the user's query
+ * @returns
+ */
 export function getSortedEntityPagination(
   query: NextApiRequestQuery,
   validKeys: string[],

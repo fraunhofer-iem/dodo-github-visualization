@@ -8,6 +8,8 @@ export type Kpi = {
   id: string
 }
 
+// the first key is the default sorting key, which is
+// used if no sorting is specified by the user's  request
 const SortableTableKeys = ["NAME", "RATING"]
 
 export default function handler(
