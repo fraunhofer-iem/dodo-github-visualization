@@ -10,7 +10,7 @@ import {
   CardBody,
   CardSubTitle,
 } from "../../../../components/card"
-import PieChart from "../../../../components/chart/PieChart"
+import { PieChart } from "../../../../components/chart"
 import KpiTable from "../../../../components/KpiTable"
 import Grid from "../../../../components/layout/Grid"
 import Page from "../../../../components/layout/Page"

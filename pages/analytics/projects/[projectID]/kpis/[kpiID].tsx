@@ -10,7 +10,7 @@ import {
   CardBody,
   CardSubTitle,
 } from "../../../../../components/card"
-import LineChart from "../../../../../components/chart/LineChart"
+import { LineChart } from "../../../../../components/chart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
 import KpiTable from "../../../../../components/KpiTable"
 import Grid from "../../../../../components/layout/Grid"
