@@ -4,6 +4,11 @@ export type Project = {
   id: string
 }
 
+export type Sort = {
+  asc: boolean
+  sortKey: string
+}
+
 export type User = {
   name: string
   admin: boolean
