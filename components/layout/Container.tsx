@@ -1,5 +1,5 @@
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   children?: React.ReactNode
@@ -7,7 +7,7 @@ interface Props {
   height?: string
 }
 
-export default function Container(props: Props) {
+export function Container(props: Props) {
   const { theme } = useUIContext()
   const css = theme.layout.container.css()
   css.width = props.width ?? css.width

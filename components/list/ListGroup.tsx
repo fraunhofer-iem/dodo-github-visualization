@@ -1,5 +1,5 @@
 import styles from "../../styles/components/List.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   children?: React.ReactNode

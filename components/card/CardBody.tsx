@@ -4,6 +4,6 @@ interface Props {
     children: React.ReactNode
 }
 
-export default function CardBody(props: Props) {
+export function CardBody(props: Props) {
     return <div className={styles.cardBody}>{props.children}</div>
 }

@@ -1,11 +1,4 @@
-import withSession from "../../util/api/session"
-
-export type User = {
-  name: string
-  admin: boolean
-  id: string
-  isLoggedIn: boolean
-}
+import { withSession } from "../../lib/api"
 
 export default withSession(async (req, res) => {
   const { username, password } = await req.body

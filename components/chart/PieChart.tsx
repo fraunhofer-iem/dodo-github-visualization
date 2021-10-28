@@ -1,5 +1,5 @@
 import { ChartData, ChartOptions } from "chart.js"
-import ChartComponent from "./ChartComponent"
+import { ChartComponent } from "./ChartComponent"
 
 interface Props {
   data: ChartData<"pie">
@@ -8,7 +8,7 @@ interface Props {
   height?: string
 }
 
-export default function PieChart(props: Props) {
+export function PieChart(props: Props) {
   return (
     <ChartComponent
       type="pie"

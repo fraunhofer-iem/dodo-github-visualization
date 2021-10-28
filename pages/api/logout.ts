@@ -1,4 +1,4 @@
-import withSession from "../../util/api/session"
+import { withSession } from "../../lib/api"
 
 export default withSession(async (req, res) => {
   req.session.destroy()

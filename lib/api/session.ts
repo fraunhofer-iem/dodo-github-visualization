@@ -11,7 +11,7 @@ export type NextIronHandler = (
   res: NextApiResponse,
 ) => void | Promise<void>
 
-const withSession = (handler: NextIronHandler) =>
+export const withSession = (handler: NextIronHandler) =>
   withIronSession(handler, {
     password:
       process.env.NODE_ENV === "production"
@@ -24,5 +24,3 @@ const withSession = (handler: NextIronHandler) =>
       secure: process.env.NODE_ENV === "production",
     },
   })
-
-export default withSession

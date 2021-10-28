@@ -1,5 +1,5 @@
 import styles from "../../styles/components/Select.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 export interface Option {
   id: number
@@ -15,7 +15,7 @@ interface Props {
   changeHandler: (selection: number | number[]) => void
 }
 
-export default function Select(props: Props) {
+export function Select(props: Props) {
   const { theme } = useUIContext()
   const { id, options, multiple, width, changeHandler } = props
 

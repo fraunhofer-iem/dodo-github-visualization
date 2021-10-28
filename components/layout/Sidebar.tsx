@@ -1,7 +1,7 @@
 import { useState } from "react"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../util/uiContext"
-import { useMediaQuery } from "../../util/uiHooks"
+import { useUIContext } from "../../lib/uiContext"
+import { useMediaQuery } from "../../lib/uiHooks"
 
 interface Props {
   control: (control: () => void) => void
@@ -13,7 +13,7 @@ export enum SidebarState {
   requestedByUser,
 }
 
-export default function Sidebar(props: Props) {
+export function Sidebar(props: Props) {
   const { theme } = useUIContext()
   const [state, setState] = useState(SidebarState.dependOnScreen)
   const wideScreen = useMediaQuery("(min-width: 1200px)", () => {

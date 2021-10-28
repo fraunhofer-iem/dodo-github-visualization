@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app"
 import React, { useState } from "react"
 import "../styles/globals.css"
-import { locales, themes, UIContext } from "../util/uiContext"
-import myFetch from "../util/api/fetchJson"
+import { locales, themes, UIContext } from "../lib/uiContext"
+import { fetchJson } from "../lib/api"
 import { SWRConfig } from "swr"
 
 export default function KPIDashboard({ Component, pageProps }: AppProps) {
@@ -12,7 +12,7 @@ export default function KPIDashboard({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig
       value={{
-        fetcher: myFetch,
+        fetcher: fetchJson,
         onError: (err: any) => {
           console.error(err)
         },
