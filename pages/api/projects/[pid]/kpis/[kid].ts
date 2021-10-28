@@ -1,16 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { KpiDetail } from "../../../../../lib/api/types"
 import kpis from "../../../../../lib/data/kpis.json"
 import data from "../../../../../lib/data/pullRequestData.json"
-import { Kpi } from "../kpis"
-
-export type KpiDetail = Kpi & {
-  description: string
-  children: Kpi[]
-  calculation: string
-  // this is custom for each KPI, I guess we need to define a type for each KPI
-  // and cast the KPI_Detail as needed
-  data?: any
-}
 
 export default function handler(
   req: NextApiRequest,
@@ -20,7 +11,7 @@ export default function handler(
     query: { kid },
   } = req
 
-  const kpi = kpis.find((kpi) => kpi.id === (kid as string))
+  const kpi = kpis.find((currentKpi) => currentKpi.id === (kid as string))
 
   if (kpi) {
     res.status(200).json({

@@ -1,11 +1,7 @@
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
+import { Pagination } from "./types"
 
 export const PAGE_SIZE_LIMIT = 50
-
-export type Pagination = {
-  pageSize: number
-  pageNumber: number
-}
 
 export const getPagination = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {

@@ -4,7 +4,7 @@ import React from "react"
 import Card from "../../components/card/Card"
 import CardBody from "../../components/card/CardBody"
 import Overlay from "../../components/layout/Overlay"
-import { User } from "../../pages/api/login"
+import { User } from "./types"
 import useUser from "./useUser"
 
 export interface AuthorizationDetails {
