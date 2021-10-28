@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSortedTablePagination } from "../../util/api/pagination"
+import { getSortedEntityPagination } from "../../util/api/pagination"
 import projects from "../../util/data/projects.json"
+import { SortableTableKeys } from "./projects/[pid]/kpis"
 
 export type Project = {
   name: string
@@ -12,8 +13,9 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Project[]>,
 ) {
-  const { pageNumber, pageSize, sortKey, asc } = getSortedTablePagination(
+  const { pageNumber, pageSize, sortKey, asc } = getSortedEntityPagination(
     req.query,
+    SortableTableKeys,
   )
   console.log({ pageNumber, pageSize, sortKey, asc })
   if (sortKey) {
