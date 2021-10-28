@@ -6,7 +6,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export default function Bar(props: Props) {
+export function Bar(props: Props) {
   const { theme } = useUIContext()
 
   return (

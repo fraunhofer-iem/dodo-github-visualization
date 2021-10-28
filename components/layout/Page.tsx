@@ -1,7 +1,7 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
-import Bar from "../../components/layout/Bar"
-import Container from "../../components/layout/Container"
+import { Bar } from "../../components/layout/Bar"
+import { Container } from "../../components/layout/Container"
 import Button from "../action/Button"
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export default function Page(props: Props) {
+export function Page(props: Props) {
   const router = useRouter()
 
   return (

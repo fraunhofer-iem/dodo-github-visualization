@@ -13,16 +13,15 @@ import {
 import { LineChart } from "../../../../../components/chart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
 import KpiTable from "../../../../../components/KpiTable"
-import Grid from "../../../../../components/layout/Grid"
-import Page from "../../../../../components/layout/Page"
-import Sidebar from "../../../../../components/layout/Sidebar"
+import { Page, Sidebar, Grid } from "../../../../../components/layout"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
-import { ProjectDetail, KpiDetail } from "../../../../../lib/api"
 import {
+  ProjectDetail,
+  KpiDetail,
   AuthorizationDetails,
   requireAuthorization,
-} from "../../../../../lib/api/requireAuthorization"
+} from "../../../../../lib/api"
 import { purple, turquoise } from "../../../../../lib/themes/Theme"
 
 const timeline = (prData: number[]): ChartData<"line"> => {

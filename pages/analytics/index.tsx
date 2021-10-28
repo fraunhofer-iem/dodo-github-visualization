@@ -5,7 +5,7 @@ import useSWR from "swr"
 import Button from "../../components/action/Button"
 import { Card, CardTitle, CardBody } from "../../components/card"
 import SectionTitle from "../../components/heading/SectionTitle"
-import Page from "../../components/layout/Page"
+import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
 import {

@@ -8,7 +8,7 @@ interface Props {
   dismiss?: () => void
 }
 
-export default function Overlay(props: Props) {
+export function Overlay(props: Props) {
   const { theme } = useUIContext()
   const dismiss = props.dismiss ?? (() => {})
 

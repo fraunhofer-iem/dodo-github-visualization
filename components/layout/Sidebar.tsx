@@ -13,7 +13,7 @@ export enum SidebarState {
   requestedByUser,
 }
 
-export default function Sidebar(props: Props) {
+export function Sidebar(props: Props) {
   const { theme } = useUIContext()
   const [state, setState] = useState(SidebarState.dependOnScreen)
   const wideScreen = useMediaQuery("(min-width: 1200px)", () => {

@@ -7,7 +7,7 @@ interface Props {
   height?: string
 }
 
-export default function Container(props: Props) {
+export function Container(props: Props) {
   const { theme } = useUIContext()
   const css = theme.layout.container.css()
   css.width = props.width ?? css.width
