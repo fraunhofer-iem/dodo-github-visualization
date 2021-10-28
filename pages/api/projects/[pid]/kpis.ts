@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSortedEntityPagination } from "../../../../util/api/pagination"
+import { getPagination } from "../../../../util/api/pagination"
 import kpis from "../../../../util/data/kpis.json"
 
 export type Kpi = {
@@ -16,10 +16,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Kpi[]>,
 ) {
-  const { pageNumber, pageSize } = getSortedEntityPagination(
-    req.query,
-    SortableTableKeys,
-  )
+  const { pageNumber, pageSize } = getPagination(req.query, SortableTableKeys)
 
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
