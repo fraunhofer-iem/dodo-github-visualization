@@ -30,7 +30,7 @@ export type ProjectDetail = Project & {
 
 export type Kpi = {
   name: string
-  score: number
+  rating: number
   id: string
 }
 
