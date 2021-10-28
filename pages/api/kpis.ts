@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import hierarchy from "../../util/data/kpiExample.json"
+import hierarchy from "../../lib/data/kpiExample.json"
 
 export type KpiType = {
   id: string

@@ -12,8 +12,8 @@ import Page from "../components/layout/Page"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../util/api/requireAuthorization"
-import { useUIContext } from "../util/uiContext"
+} from "../lib/api/requireAuthorization"
+import { useUIContext } from "../lib/uiContext"
 import { KpiType } from "./api/kpis"
 
 const Hierarchy: NextPage = requireAuthorization(

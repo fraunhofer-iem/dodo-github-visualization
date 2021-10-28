@@ -13,7 +13,7 @@ import Table from "../../components/table/Table"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../../util/api/requireAuthorization"
+} from "../../lib/api/requireAuthorization"
 import { Project } from "../api/projects"
 
 const Analytics: NextPage = requireAuthorization(

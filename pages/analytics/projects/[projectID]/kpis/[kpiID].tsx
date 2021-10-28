@@ -19,8 +19,8 @@ import { IconName } from "../../../../../components/rating/IconName"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../../../../../util/api/requireAuthorization"
-import { purple, turquoise } from "../../../../../util/themes/Theme"
+} from "../../../../../lib/api/requireAuthorization"
+import { purple, turquoise } from "../../../../../lib/themes/Theme"
 import { ProjectDetail } from "../../../../api/projects/[pid]"
 import { KpiDetail } from "../../../../api/projects/[pid]/kpis/[kid]"
 

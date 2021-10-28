@@ -1,4 +1,4 @@
-import withSession from "../../util/api/session"
+import withSession from "../../lib/api/session"
 
 export type User = {
   name: string

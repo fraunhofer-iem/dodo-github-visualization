@@ -1,6 +1,6 @@
 import { useState } from "react"
 import styles from "../../styles/components/Table.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 import Button from "../action/Button"
 import Select from "../form/Select"
 import Icon from "../rating/Icon"

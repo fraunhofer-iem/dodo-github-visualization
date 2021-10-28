@@ -18,9 +18,9 @@ import { IconName } from "../../../../components/rating/IconName"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../../../../util/api/requireAuthorization"
-import prData from "../../../../util/data/pullRequestData.json"
-import { Color, lime, purple, red, yellow } from "../../../../util/themes/Theme"
+} from "../../../../lib/api/requireAuthorization"
+import prData from "../../../../lib/data/pullRequestData.json"
+import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
 import { ProjectDetail } from "../../../api/projects/[pid]"
 
 const count = (): ChartData<"pie"> => {

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../../../util/api/pagination"
-import kpis from "../../../../util/data/kpis.json"
+import { getPagination } from "../../../../lib/api/pagination"
+import kpis from "../../../../lib/data/kpis.json"
 
 export type Kpi = {
   name: string

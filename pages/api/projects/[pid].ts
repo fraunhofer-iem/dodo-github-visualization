@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import projects from "../../../util/data/projects.json"
+import projects from "../../../lib/data/projects.json"
 import { Project } from "../projects"
 
 export type ProjectDetail = Project & {

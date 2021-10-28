@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import kpis from "../../../../../util/data/kpis.json"
-import data from "../../../../../util/data/pullRequestData.json"
+import kpis from "../../../../../lib/data/kpis.json"
+import data from "../../../../../lib/data/pullRequestData.json"
 import { Kpi } from "../kpis"
 
 export type KpiDetail = Kpi & {

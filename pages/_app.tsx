@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app"
 import React, { useState } from "react"
 import "../styles/globals.css"
-import { locales, themes, UIContext } from "../util/uiContext"
-import myFetch from "../util/api/fetchJson"
+import { locales, themes, UIContext } from "../lib/uiContext"
+import myFetch from "../lib/api/fetchJson"
 import { SWRConfig } from "swr"
 
 export default function KPIDashboard({ Component, pageProps }: AppProps) {

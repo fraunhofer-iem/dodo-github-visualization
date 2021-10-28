@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react"
 import styles from "../../styles/components/Input.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 import Label from "./Label"
 
 interface Props {
