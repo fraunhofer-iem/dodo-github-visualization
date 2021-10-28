@@ -21,6 +21,7 @@ export type KpiType = {
   type: string
   name: string
   children: string[]
+  parents: string[]
   description: string
 }
 

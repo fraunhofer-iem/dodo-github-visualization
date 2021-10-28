@@ -27,7 +27,7 @@ const Hierarchy: NextPage = requireAuthorization(
       elements.push(
         nodeDefinition(currKpi.type, parseInt(currKpi.id), currKpi.name, {
           description: currKpi.description,
-          hover: "false",
+          hover: false,
         }),
       )
       currKpi.children.forEach((currChild) => {
@@ -41,56 +41,84 @@ const Hierarchy: NextPage = requireAuthorization(
           return
         }
 
-        const showNode = (node: cytoscape.NodeSingular) => {
-          node.data("hidden", "false")
-          node.incomers("edge").forEach((currEdge) => {
-            currEdge.data("hidden", "false")
-            showNode(currEdge.source())
-          })
-        }
+        const hierarchy = kpis
+          ? Object.fromEntries(
+              kpis.map((currentKpi) => {
+                return [currentKpi.id, currentKpi]
+              }),
+            )
+          : undefined
 
-        const hideNode = (node: cytoscape.NodeSingular) => {
-          node.data("hidden", "true")
-          node.data("expanded", false)
-          node.incomers("edge").forEach((currEdge) => {
-            currEdge.data("hidden", "true")
-            collapseNode(currEdge.source())
-          })
+        const expandNode = (node: cytoscape.NodeSingular) => {
+          node.data("expanded", true)
+          node.data("expandable", false)
+          if (hierarchy) {
+            hierarchy[node.id()].children.forEach((currentChild) => {
+              c.getElementById(currentChild).data("hidden", false)
+              c.getElementById(`${node.id()}-${currentChild}`).data(
+                "hidden",
+                false,
+              )
+            })
+          }
         }
 
         const collapseNode = (node: cytoscape.NodeSingular) => {
           node.data("expanded", false)
-          node.outgoers("edge").forEach((currEdge) => {
-            currEdge.data("hidden", "true")
-            currEdge.target().data("hidden", "true")
+          if (hierarchy) {
+            hierarchy[node.id()].children.forEach((currentChild) => {
+              node.data("expandable", true)
+
+              //hide child only if all of its parents are collapsed
+              const childNode = c.getElementById(currentChild)
+              childNode.data("hidden", true)
+              hierarchy[currentChild].parents.forEach((currentParent) => {
+                const parentNode = c.getElementById(currentParent)
+                if (!node.same(parentNode)) {
+                  if (parentNode.data("expanded")) {
+                    childNode.data("hidden", false)
+                  }
+                }
+              })
+
+              c.getElementById(`${node.id()}-${currentChild}`).data(
+                "hidden",
+                true,
+              )
+
+              collapseNode(childNode)
+            })
+          }
+        }
+
+        //hide all nodes except root nodes
+        if (hierarchy) {
+          Object.entries(hierarchy).forEach(([_, currentKpi]) => {
+            const node = c.getElementById(currentKpi.id)
+            if (currentKpi.children.length) {
+              node.data("expandable", true)
+              currentKpi.children.forEach((currentChild) => {
+                c.getElementById(`${node.id()}-${currentChild}`).data(
+                  "hidden",
+                  true,
+                )
+              })
+            }
+            if (currentKpi.parents.length) {
+              node.data("hidden", true)
+            }
           })
         }
 
-        c.nodes().forEach((currNode: cytoscape.NodeSingular) => {
-          if (!currNode.predecessors().length) {
-            currNode.successors().forEach((currSuccessor) => {
-              currSuccessor.data("hidden", "true")
-            })
-          }
-        })
-
         c.on("tap", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
-          if (node.data("expanded")) {
-            node
-              .outgoers("edge")
-              .forEach((currEdge: cytoscape.EdgeSingular) => {
-                hideNode(currEdge.target())
-              })
+          if (!node.data("expanded")) {
+            if (node.data("expandable")) {
+              expandNode(node)
+            }
           } else {
-            node
-              .outgoers("edge")
-              .forEach((currEdge: cytoscape.EdgeSingular) => {
-                showNode(currEdge.target())
-              })
+            collapseNode(node)
           }
-
-          node.data("expanded", !node.data("expanded"))
         })
 
         c.on("mouseover", "node", (event) => {
@@ -98,10 +126,10 @@ const Hierarchy: NextPage = requireAuthorization(
           setTippy(node.id(), {
             content: <Card width="250px">{node.data("description")}</Card>,
             popperRef: node.popperRef(),
-            dispose: () => node.data("hover", "false"),
+            dispose: () => node.data("hover", false),
             tippyProps: { placement: "right" },
           })
-          node.data("hover", "true")
+          node.data("hover", true)
         })
         c.on("mouseout", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
@@ -110,7 +138,7 @@ const Hierarchy: NextPage = requireAuthorization(
 
         cy.current = c
       },
-      [setTippy],
+      [setTippy, kpis],
     )
 
     return (
