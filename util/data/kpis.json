@@ -1,6 +1,6 @@
 [
-  { "id": "41Kjd1", "name": "Quality", "score": 2 },
-  { "id": "efad32", "name": "Performance", "score": 3 },
-  { "id": "asdf1", "name": "Deployment", "score": 3 },
-  { "id": "fads", "name": "Security", "score": 1 }
+  { "id": "41Kjd1", "name": "Quality", "rating": 2 },
+  { "id": "efad32", "name": "Performance", "rating": 3 },
+  { "id": "asdf1", "name": "Deployment", "rating": 3 },
+  { "id": "fads", "name": "Security", "rating": 1 }
 ]

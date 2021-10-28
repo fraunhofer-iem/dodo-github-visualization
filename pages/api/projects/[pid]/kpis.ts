@@ -4,7 +4,7 @@ import kpis from "../../../../util/data/kpis.json"
 
 export type Kpi = {
   name: string
-  score: number
+  rating: number
   id: string
 }
 

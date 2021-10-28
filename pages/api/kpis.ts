@@ -8,7 +8,7 @@ export default function handler(
   res.status(200).json([
     {
       id: "1234kl",
-      score: -1,
+      rating: -1,
       name: "Quality",
       description: "quality is important",
       calculation: "a + b ",
