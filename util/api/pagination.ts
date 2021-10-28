@@ -13,12 +13,11 @@ export type Sort = {
   sortKey: string
 }
 
-const SortableTableKeys = ["NAME", "RATING"]
-
-export function getSortedTablePagination(
+export function getSortedEntityPagination(
   query: NextApiRequestQuery,
+  validKeys: string[],
 ): Pagination & Sort {
-  return { ...getSortedPagination(query), ...getTableSortKey(query) }
+  return { ...getSortedPagination(query), ...getTableSortKey(query, validKeys) }
 }
 
 function getSortedPagination(query: NextApiRequestQuery) {
@@ -32,14 +31,14 @@ const isAsc = (query: NextApiRequestQuery) => {
   return true
 }
 
-function getTableSortKey(query: NextApiRequestQuery) {
+function getTableSortKey(query: NextApiRequestQuery, validKeys: string[]) {
   if (hasSortKey(query)) {
     const key = query["sortKey"] as string
-    if (SortableTableKeys.includes(key)) {
+    if (validKeys.includes(key)) {
       return { sortKey: key }
     }
   }
-  return { sortKey: SortableTableKeys[0] }
+  return { sortKey: validKeys[0] }
 }
 
 function hasSortKey(query: NextApiRequestQuery) {
