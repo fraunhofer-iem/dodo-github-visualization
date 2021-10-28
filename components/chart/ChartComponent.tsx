@@ -18,7 +18,7 @@ const equals = (prev: Props | null | undefined, curr: Props) => {
     return deepEqual(prev, curr, { strict: true })
 }
 
-export default function ChartComponent(props: Props) {
+export function ChartComponent(props: Props) {
     const container = useRef(null)
     const prevProps = useRef<Props | null>()
     const chart = useRef<Chart | null>()

@@ -1,13 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../util/api/pagination"
-import projects from "../../util/data/projects.json"
+import { Project, getPagination } from "../../lib/api"
+import projects from "../../lib/data/projects.json"
 import { SortableTableKeys } from "./projects/[pid]/kpis"
-
-export type Project = {
-  name: string
-  maturityIndex: number
-  id: string
-}
 
 export default function handler(
   req: NextApiRequest,

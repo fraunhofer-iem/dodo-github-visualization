@@ -1,20 +1,19 @@
 import { NextPage } from "next"
-import { useCallback, useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import Card from "../components/card/Card"
-import CardTitle from "../components/card/CardTitle"
+import { Card, CardTitle } from "../components/card"
 import CytoscapeComponent, {
   edgeDefinition,
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
-import Page from "../components/layout/Page"
+import { Page } from "../components/layout"
+import { KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../util/api/requireAuthorization"
-import { useUIContext } from "../util/uiContext"
-import { KpiType } from "./api/kpis"
+} from "../lib/api/requireAuthorization"
+import { useUIContext } from "../lib/uiContext"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {

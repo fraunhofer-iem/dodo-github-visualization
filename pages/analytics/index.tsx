@@ -1,20 +1,18 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import React, { useState } from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
-import Card from "../../components/card/Card"
-import CardBody from "../../components/card/CardBody"
-import CardTitle from "../../components/card/CardTitle"
+import { Card, CardTitle, CardBody } from "../../components/card"
 import SectionTitle from "../../components/heading/SectionTitle"
-import Page from "../../components/layout/Page"
+import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
 import {
   AuthorizationDetails,
+  Project,
   requireAuthorization,
-} from "../../util/api/requireAuthorization"
-import { Project } from "../api/projects"
+} from "../../lib/api"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {

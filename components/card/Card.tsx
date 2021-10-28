@@ -1,12 +1,12 @@
 import styles from "../../styles/components/Card.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 interface Props {
   width: string
   height?: string
   children: React.ReactNode
 }
 
-export default function Card(props: Props) {
+export function Card(props: Props) {
   const { theme } = useUIContext()
 
   const css = theme.card.card.css()

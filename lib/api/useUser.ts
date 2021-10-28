@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useSWR from "swr"
-import { User } from "../../pages/api/login"
+import { User } from "./types"
 
 export default function useUser({
   redirectTo = "",

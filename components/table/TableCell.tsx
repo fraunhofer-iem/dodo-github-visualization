@@ -1,4 +1,4 @@
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
 import { TableContext } from "./Table"

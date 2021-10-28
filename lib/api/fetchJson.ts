@@ -1,4 +1,4 @@
-export default async function fetchJson(...args) {
+export async function fetchJson(...args) {
   try {
     const response = await fetch(...args)
 

@@ -1,12 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../../../util/api/pagination"
-import kpis from "../../../../util/data/kpis.json"
-
-export type Kpi = {
-  name: string
-  rating: number
-  id: string
-}
+import { Kpi, getPagination } from "../../../../lib/api"
+import kpis from "../../../../lib/data/kpis.json"
 
 // the first key is the default sorting key, which is
 // used if no sorting is specified by the user's  request

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import styles from "../../styles/components/Button.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 export interface Props {
   context: "primary" | "neutral"

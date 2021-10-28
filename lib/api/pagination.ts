@@ -1,17 +1,8 @@
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
+import { Pagination, Sort } from "./types"
 
 export const PAGE_SIZE_LIMIT = 50
 export const FIRST_PAGE = 1
-
-export type Pagination = {
-  pageSize: number
-  pageNumber: number
-}
-
-export type Sort = {
-  asc: boolean
-  sortKey: string
-}
 
 /**
  *
@@ -24,11 +15,11 @@ export function getPagination(
   query: NextApiRequestQuery,
   validKeys: string[],
 ): Pagination & Sort {
-  return { ...getSortedPagination(query), ...getSortKey(query, validKeys) }
+  return { ...getPaginationInfo(query), ...getSortKey(query, validKeys) }
 }
 
-function getSortedPagination(query: NextApiRequestQuery) {
-  return { ...getPageSizeAndLimit(query), asc: isAsc(query) }
+function getPaginationInfo(query: NextApiRequestQuery) {
+  return { ...getPageNumberAndSize(query), asc: isAsc(query) }
 }
 
 const isAsc = (query: NextApiRequestQuery) => {
@@ -52,7 +43,7 @@ function hasSortKey(query: NextApiRequestQuery) {
   return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
 }
 
-const getPageSizeAndLimit = (query: NextApiRequestQuery): Pagination => {
+const getPageNumberAndSize = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
     if (hasValidPageSize(query)) {
       return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
