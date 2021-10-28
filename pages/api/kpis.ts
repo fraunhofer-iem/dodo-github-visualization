@@ -1,18 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { KpiDetail } from "./projects/[pid]/kpis/[kid]"
+import hierarchy from "../../util/data/kpiExample.json"
+
+export type KpiType = {
+  id: string
+  type: string
+  name: string
+  children: string[]
+  description: string
+}
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<KpiDetail[]>,
+  res: NextApiResponse<KpiType[]>,
 ) {
-  res.status(200).json([
-    {
-      id: "1234kl",
-      rating: -1,
-      name: "Quality",
-      description: "quality is important",
-      calculation: "a + b ",
-      children: [],
-    },
-  ])
+  res.status(200).json(hierarchy)
 }

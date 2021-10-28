@@ -1,5 +1,6 @@
 import { NextPage } from "next"
 import { useCallback, useRef } from "react"
+import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import Card from "../components/card/Card"
 import CardTitle from "../components/card/CardTitle"
@@ -12,50 +13,106 @@ import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../util/api/requireAuthorization"
-import kpis from "../util/data/kpiExample.json"
 import { useUIContext } from "../util/uiContext"
+import { KpiType } from "./api/kpis"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
     const cy = useRef<cytoscape.Core | null>()
-
+    const { setTippy } = props
+    const { data: kpis } = useSWR<KpiType[]>(`/api/kpis`)
     const elements: cytoscape.ElementDefinition[] = []
 
-    kpis.forEach((kpi) => {
+    kpis?.forEach((currKpi) => {
       elements.push(
-        nodeDefinition(kpi.type, parseInt(kpi.id), kpi.name, {
-          description: kpi.description,
+        nodeDefinition(currKpi.type, parseInt(currKpi.id), currKpi.name, {
+          description: currKpi.description,
           hover: "false",
         }),
       )
-      kpi.children.forEach((child) => {
-        elements.push(edgeDefinition(kpi.id, child))
+      currKpi.children.forEach((currChild) => {
+        elements.push(edgeDefinition(currKpi.id, currChild))
       })
     })
 
-    const cytoscapeControl = useCallback((c: cytoscape.Core) => {
-      if (cy.current == c) {
-        return
-      }
+    const cytoscapeControl = useCallback(
+      (c: cytoscape.Core) => {
+        if (cy.current == c) {
+          return
+        }
 
-      c.on("mouseover", "node", (event) => {
-        const node: cytoscape.NodeSingular = event.target
-        props.setTippy(node.id(), {
-          content: <Card width="250px">{node.data("description")}</Card>,
-          popperRef: node.popperRef(),
-          dispose: () => node.data("hover", "false"),
-          tippyProps: { placement: "right" },
+        const showNode = (node: cytoscape.NodeSingular) => {
+          node.data("hidden", "false")
+          node.incomers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "false")
+            showNode(currEdge.source())
+          })
+        }
+
+        const hideNode = (node: cytoscape.NodeSingular) => {
+          node.data("hidden", "true")
+          node.data("expanded", false)
+          node.incomers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "true")
+            collapseNode(currEdge.source())
+          })
+        }
+
+        const collapseNode = (node: cytoscape.NodeSingular) => {
+          node.data("expanded", false)
+          node.outgoers("edge").forEach((currEdge) => {
+            currEdge.data("hidden", "true")
+            currEdge.target().data("hidden", "true")
+          })
+        }
+
+        c.nodes().forEach((currNode: cytoscape.NodeSingular) => {
+          if (!currNode.predecessors().length) {
+            currNode.successors().forEach((currSuccessor) => {
+              currSuccessor.data("hidden", "true")
+            })
+          }
         })
-        node.data("hover", "true")
-      })
-      c.on("mouseout", "node", (event) => {
-        const node: cytoscape.NodeSingular = event.target
-        props.setTippy(node.id(), { content: undefined, popperRef: undefined })
-      })
 
-      cy.current = c
-    }, [])
+        c.on("tap", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          if (node.data("expanded")) {
+            node
+              .outgoers("edge")
+              .forEach((currEdge: cytoscape.EdgeSingular) => {
+                hideNode(currEdge.target())
+              })
+          } else {
+            node
+              .outgoers("edge")
+              .forEach((currEdge: cytoscape.EdgeSingular) => {
+                showNode(currEdge.target())
+              })
+          }
+
+          node.data("expanded", !node.data("expanded"))
+        })
+
+        c.on("mouseover", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          setTippy(node.id(), {
+            content: <Card width="250px">{node.data("description")}</Card>,
+            popperRef: node.popperRef(),
+            dispose: () => node.data("hover", "false"),
+            tippyProps: { placement: "right" },
+          })
+          node.data("hover", "true")
+        })
+        c.on("mouseout", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          setTippy(node.id(), { content: undefined, popperRef: undefined })
+        })
+
+        cy.current = c
+      },
+      [setTippy],
+    )
 
     return (
       props.user?.isLoggedIn && (
