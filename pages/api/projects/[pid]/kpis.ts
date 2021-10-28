@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { Kpi, getPagination } from "../../../../lib/api"
+import { Kpi, getPagination, SortableTableKeys } from "../../../../lib/api"
 import kpis from "../../../../lib/data/kpis.json"
-
-// the first key is the default sorting key, which is
-// used if no sorting is specified by the user's  request
-export const SortableTableKeys = ["NAME", "RATING"]
 
 export default function handler(
   req: NextApiRequest,

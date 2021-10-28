@@ -21,12 +21,15 @@ import {
   KpiDetail,
   AuthorizationDetails,
   requireAuthorization,
+  getKpiForProjectApiRoute,
+  getProjectApiRoute,
+  getAnalyticsForProjectRoute,
 } from "../../../../../lib/api"
 import { purple, turquoise } from "../../../../../lib/themes/Theme"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
-  prData.forEach((v, i) => labels.push(i))
+  prData.forEach((_, i) => labels.push(i))
   const chartData: ChartData<"line"> = {
     datasets: [
       {
@@ -72,12 +75,13 @@ const cluster = (prData: number[]): ChartData<"line"> => {
 const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
+    //TODO: proper type cast needed
     const { projectID, kpiID } = router.query
     const { data: project } = useSWR<ProjectDetail>(
-      `/api/projects/${projectID}`,
+      getProjectApiRoute(projectID as string),
     )
     const { data: kpi } = useSWR<KpiDetail>(
-      `/api/projects/${projectID}/kpis/${kpiID}`,
+      getKpiForProjectApiRoute(projectID as string, kpiID as string),
     )
     const toggleSidebar = useRef<() => void>(() => {})
 
@@ -113,7 +117,11 @@ const KPIDetail: NextPage = requireAuthorization(
             <CardTitle>
               {`${project?.name}`}
               <Button
-                action={() => router.push(`/analytics/projects/${project?.id}`)}
+                action={() =>
+                  project
+                    ? router.push(getAnalyticsForProjectRoute(project.id))
+                    : router.push("/")
+                }
                 context="neutral"
               >
                 <Icon>{IconName.keyboardArrowUp}</Icon>

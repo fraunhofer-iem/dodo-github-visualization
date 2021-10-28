@@ -4,12 +4,12 @@ import React from "react"
 import Button from "../components/action/Button"
 import { Card, CardTitle, CardBody, CardAction } from "../components/card"
 import { Overlay } from "../components/layout"
-import { fetchJson } from "../lib/api"
+import { ApiRoutes, fetchJson, PageRoutes } from "../lib/api"
 import useUser from "../lib/api/useUser"
 
 const Landing: NextPage = () => {
   const { mutateUser } = useUser({
-    redirectTo: "/analytics",
+    redirectTo: PageRoutes.ANALYTICS,
     redirectIfFound: true,
   })
   const handleClick = async () => {
@@ -20,7 +20,7 @@ const Landing: NextPage = () => {
 
     try {
       mutateUser(
-        await fetchJson("/api/login", {
+        await fetchJson(ApiRoutes.LOGIN, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),

@@ -10,6 +10,8 @@ import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
 import {
   AuthorizationDetails,
+  getAnalyticsForProjectRoute,
+  getProjectsApiRoute,
   Project,
   requireAuthorization,
 } from "../../lib/api"
@@ -20,7 +22,7 @@ const Analytics: NextPage = requireAuthorization(
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(5)
     const { data: projects, error: error } = useSWR<Project[]>(
-      `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+      getProjectsApiRoute(pageSize, pageNumber),
     )
     if (error) {
       setPageNumber(pageNumber - 1)
@@ -49,7 +51,9 @@ const Analytics: NextPage = requireAuthorization(
                           content: (
                             <Button
                               action={() =>
-                                router.push(`/analytics/projects/${project.id}`)
+                                router.push(
+                                  getAnalyticsForProjectRoute(project.id),
+                                )
                               }
                               context="neutral"
                               width="100%"

@@ -50,7 +50,7 @@ export const useMediaQuery = (
     }
     media.addEventListener("change", listener)
     return () => media.removeEventListener("change", listener)
-  }, [matches, query])
+  }, [callback, matches, query])
 
   return matches
 }
