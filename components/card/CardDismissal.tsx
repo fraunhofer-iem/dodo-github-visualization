@@ -6,7 +6,7 @@ interface Props {
   dismiss: () => void
 }
 
-export default function CardDismissal(props: Props) {
+export function CardDismissal(props: Props) {
   const { theme } = useUIContext()
   return (
     <div className={styles.cardDismissal} style={theme.card.dismissal.css()}>

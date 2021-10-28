@@ -1,9 +1,8 @@
 import { NextPage } from "next"
-import { useCallback, useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import Card from "../components/card/Card"
-import CardTitle from "../components/card/CardTitle"
+import { Card, CardTitle } from "../components/card"
 import CytoscapeComponent, {
   edgeDefinition,
   nodeDefinition,

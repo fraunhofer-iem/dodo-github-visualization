@@ -1,13 +1,15 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useRef } from "react"
+import React, { useRef } from "react"
 import useSWR from "swr"
 import Button from "../../../../components/action/Button"
-import Card from "../../../../components/card/Card"
-import CardBody from "../../../../components/card/CardBody"
-import CardSubTitle from "../../../../components/card/CardSubTitle"
-import CardTitle from "../../../../components/card/CardTitle"
+import {
+  Card,
+  CardTitle,
+  CardBody,
+  CardSubTitle,
+} from "../../../../components/card"
 import PieChart from "../../../../components/chart/PieChart"
 import KpiTable from "../../../../components/KpiTable"
 import Grid from "../../../../components/layout/Grid"

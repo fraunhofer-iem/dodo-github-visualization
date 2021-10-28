@@ -5,7 +5,7 @@ interface Props {
   children: string
 }
 
-export default function CardSubTitle(props: Props) {
+export function CardSubTitle(props: Props) {
   const { theme } = useUIContext()
 
   return (

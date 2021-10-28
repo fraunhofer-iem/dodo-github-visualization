@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function CardTitle(props: Props) {
+export function CardTitle(props: Props) {
   const { theme } = useUIContext()
 
   return (

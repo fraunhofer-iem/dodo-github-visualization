@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Card(props: Props) {
+export function Card(props: Props) {
   const { theme } = useUIContext()
 
   const css = theme.card.card.css()
