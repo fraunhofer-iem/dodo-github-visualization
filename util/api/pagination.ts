@@ -52,7 +52,7 @@ function hasSortKey(query: NextApiRequestQuery) {
   return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
 }
 
-export const getPageSizeAndLimit = (query: NextApiRequestQuery): Pagination => {
+const getPageSizeAndLimit = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
     if (hasValidPageSize(query)) {
       return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
