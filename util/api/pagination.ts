@@ -15,21 +15,20 @@ export type Sort = {
 
 /**
  *
- *
  * @param query
  * @param validKeys the first key in the array is the default sorting key,
  * which is used if no sorting is specified by the user's query
  * @returns
  */
-export function getSortedEntityPagination(
+export function getPagination(
   query: NextApiRequestQuery,
   validKeys: string[],
 ): Pagination & Sort {
-  return { ...getSortedPagination(query), ...getTableSortKey(query, validKeys) }
+  return { ...getSortedPagination(query), ...getSortKey(query, validKeys) }
 }
 
 function getSortedPagination(query: NextApiRequestQuery) {
-  return { ...getPagination(query), asc: isAsc(query) }
+  return { ...getPageSizeAndLimit(query), asc: isAsc(query) }
 }
 
 const isAsc = (query: NextApiRequestQuery) => {
@@ -39,7 +38,7 @@ const isAsc = (query: NextApiRequestQuery) => {
   return true
 }
 
-function getTableSortKey(query: NextApiRequestQuery, validKeys: string[]) {
+function getSortKey(query: NextApiRequestQuery, validKeys: string[]) {
   if (hasSortKey(query)) {
     const key = query["sortKey"] as string
     if (validKeys.includes(key)) {
@@ -53,7 +52,7 @@ function hasSortKey(query: NextApiRequestQuery) {
   return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
 }
 
-export const getPagination = (query: NextApiRequestQuery): Pagination => {
+export const getPageSizeAndLimit = (query: NextApiRequestQuery): Pagination => {
   if (hasValidPageNumber(query)) {
     if (hasValidPageSize(query)) {
       return { pageNumber: +query.pageNumber, pageSize: +query.pageSize }
