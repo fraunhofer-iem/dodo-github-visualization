@@ -1,8 +1,7 @@
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
-import { Pagination, Sort } from "./types"
 
-export const PAGE_SIZE_LIMIT = 50
-export const FIRST_PAGE = 1
+import { PAGE_SIZE_LIMIT, FIRST_PAGE, PaginationQueryParams } from "./constants"
+import { Pagination, Sort } from "./types"
 
 /**
  *
@@ -23,15 +22,18 @@ function getPaginationInfo(query: NextApiRequestQuery) {
 }
 
 const isAsc = (query: NextApiRequestQuery) => {
-  if (query.hasOwnProperty("asc") && isNumber(query["asc"])) {
-    return +query["asc"] === 1 ? true : false
+  if (
+    query.hasOwnProperty(PaginationQueryParams.ASC) &&
+    isNumber(query[PaginationQueryParams.ASC])
+  ) {
+    return +query[PaginationQueryParams.ASC] === 1 ? true : false
   }
   return true
 }
 
 function getSortKey(query: NextApiRequestQuery, validKeys: string[]) {
   if (hasSortKey(query)) {
-    const key = query["sortKey"] as string
+    const key = query[PaginationQueryParams.SORT_KEY] as string
     if (validKeys.includes(key)) {
       return { sortKey: key }
     }
@@ -40,7 +42,10 @@ function getSortKey(query: NextApiRequestQuery, validKeys: string[]) {
 }
 
 function hasSortKey(query: NextApiRequestQuery) {
-  return query.hasOwnProperty("sortKey") && typeof query["sortKey"] == "string"
+  return (
+    query.hasOwnProperty(PaginationQueryParams.SORT_KEY) &&
+    typeof query[PaginationQueryParams.SORT_KEY] == "string"
+  )
 }
 
 const getPageNumberAndSize = (query: NextApiRequestQuery): Pagination => {
@@ -57,15 +62,18 @@ const getPageNumberAndSize = (query: NextApiRequestQuery): Pagination => {
 
 const hasValidPageNumber = (query: NextApiRequestQuery) => {
   return (
-    query.hasOwnProperty("pageNumber") &&
-    isNumber(query["pageNumber"]) &&
-    +query["pageNumber"] >= FIRST_PAGE
+    query.hasOwnProperty(PaginationQueryParams.PAGE_NUMBER) &&
+    isNumber(query[PaginationQueryParams.PAGE_NUMBER]) &&
+    +query[PaginationQueryParams.PAGE_NUMBER] >= FIRST_PAGE
   )
 }
 
 const hasValidPageSize = (query: NextApiRequestQuery) => {
-  if (query.hasOwnProperty("pageSize") && isNumber(query["pageSize"])) {
-    const pageSize = +query["pageSize"]
+  if (
+    query.hasOwnProperty(PaginationQueryParams.PAGE_SIZE) &&
+    isNumber(query[PaginationQueryParams.PAGE_SIZE])
+  ) {
+    const pageSize = +query[PaginationQueryParams.PAGE_SIZE]
     // check if pageSize is in a valid range
     return pageSize >= FIRST_PAGE && pageSize <= PAGE_SIZE_LIMIT
   }
