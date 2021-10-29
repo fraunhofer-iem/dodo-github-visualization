@@ -1,7 +1,7 @@
-import { withSession } from "../../lib/api"
+import { USER_COOKIE, withSession } from "../../lib/api"
 
 export default withSession(async (req, res) => {
-  const user = req.session.get("user")
+  const user = req.session.get(USER_COOKIE)
   if (user) {
     // in a real world application you might read the user id from the session and then do a database request
     // to get more information on the user if needed

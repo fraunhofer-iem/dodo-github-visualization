@@ -8,7 +8,7 @@ import CytoscapeComponent, {
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
 import { Page } from "../components/layout"
-import { KpiType } from "../lib/api"
+import { ApiRoutes, KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
@@ -20,7 +20,7 @@ const Hierarchy: NextPage = requireAuthorization(
     const { theme } = useUIContext()
     const cy = useRef<cytoscape.Core | null>()
     const { setTippy } = props
-    const { data: kpis } = useSWR<KpiType[]>(`/api/kpis`)
+    const { data: kpis } = useSWR<KpiType[]>(ApiRoutes.KPIS)
     const elements: cytoscape.ElementDefinition[] = []
 
     kpis?.forEach((currentKpi) => {

@@ -19,6 +19,7 @@ import {
   ProjectDetail,
   AuthorizationDetails,
   requireAuthorization,
+  getProjectApiRoute,
 } from "../../../../lib/api"
 import prData from "../../../../lib/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
@@ -72,7 +73,9 @@ const count = (): ChartData<"pie"> => {
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
   const { projectID } = router.query
-  const { data: project } = useSWR<ProjectDetail>(`/api/projects/${projectID}`)
+  const { data: project } = useSWR<ProjectDetail>(
+    getProjectApiRoute(projectID as string),
+  )
   const toggleSidebar = useRef<() => void>(() => {})
 
   return (
