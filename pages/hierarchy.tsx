@@ -47,7 +47,7 @@ const Hierarchy: NextPage = requireAuthorization(
       })
     })
 
-    const expandNode = (node: cytoscape.NodeSingular) => {
+    const expandNode = useCallback((node: cytoscape.NodeSingular) => {
       node.data("expanded", true)
       node.data("expandable", false)
       node.data("children").forEach((currentChild: string) => {
@@ -58,9 +58,9 @@ const Hierarchy: NextPage = requireAuthorization(
             .data("hidden", false)
         }
       })
-    }
+    }, [])
 
-    const collapseNode = (node: cytoscape.NodeSingular) => {
+    const collapseNode = useCallback((node: cytoscape.NodeSingular) => {
       node.data("expanded", false)
       node.data("children").forEach((currentChild: string) => {
         node.data("expandable", true)
@@ -87,7 +87,7 @@ const Hierarchy: NextPage = requireAuthorization(
           collapseNode(childNode)
         }
       })
-    }
+    }, [])
 
     const cytoscapeControl = useCallback(
       (c: cytoscape.Core) => {
@@ -123,7 +123,7 @@ const Hierarchy: NextPage = requireAuthorization(
 
         cy.current = c
       },
-      [setTippy, expandNode, collapseNode],
+      [collapseNode, expandNode, setTippy],
     )
 
     return (
