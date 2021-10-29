@@ -1,20 +1,20 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import React, { useState } from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
-import Card from "../../components/card/Card"
-import CardBody from "../../components/card/CardBody"
-import CardTitle from "../../components/card/CardTitle"
+import { Card, CardTitle, CardBody } from "../../components/card"
 import SectionTitle from "../../components/heading/SectionTitle"
-import Page from "../../components/layout/Page"
+import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
 import {
   AuthorizationDetails,
+  getAnalyticsForProjectRoute,
+  getProjectsApiRoute,
+  Project,
   requireAuthorization,
-} from "../../util/api/requireAuthorization"
-import { Project } from "../api/projects"
+} from "../../lib/api"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -22,7 +22,7 @@ const Analytics: NextPage = requireAuthorization(
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(5)
     const { data: projects, error: error } = useSWR<Project[]>(
-      `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+      getProjectsApiRoute(pageSize, pageNumber),
     )
     if (error) {
       setPageNumber(pageNumber - 1)
@@ -51,7 +51,9 @@ const Analytics: NextPage = requireAuthorization(
                           content: (
                             <Button
                               action={() =>
-                                router.push(`/analytics/projects/${project.id}`)
+                                router.push(
+                                  getAnalyticsForProjectRoute(project.id),
+                                )
                               }
                               context="neutral"
                               width="100%"

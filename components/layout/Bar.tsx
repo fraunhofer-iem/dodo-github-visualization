@@ -1,12 +1,12 @@
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   title: React.ReactNode
   children?: React.ReactNode
 }
 
-export default function Bar(props: Props) {
+export function Bar(props: Props) {
   const { theme } = useUIContext()
 
   return (

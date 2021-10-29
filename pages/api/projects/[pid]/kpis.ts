@@ -1,19 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../../../util/api/pagination"
-import kpis from "../../../../util/data/kpis.json"
-
-export type Kpi = {
-  name: string
-  score: number
-  id: string
-}
+import { Kpi, getPagination, SortableTableKeys } from "../../../../lib/api"
+import kpis from "../../../../lib/data/kpis.json"
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Kpi[]>,
 ) {
-  const { pageNumber, pageSize } = getPagination(req.query)
-  console.log({ pageNumber, pageSize })
+  const { pageNumber, pageSize } = getPagination(req.query, SortableTableKeys)
+
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
   if (startOfChunk >= kpis.length) {

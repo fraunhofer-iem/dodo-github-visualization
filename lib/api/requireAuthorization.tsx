@@ -1,10 +1,9 @@
 import { NextPage } from "next"
 import Head from "next/head"
 import React from "react"
-import Card from "../../components/card/Card"
-import CardBody from "../../components/card/CardBody"
-import Overlay from "../../components/layout/Overlay"
-import { User } from "../../pages/api/login"
+import { Card, CardBody } from "../../components/card"
+import { Overlay } from "../../components/layout"
+import { User } from "./types"
 import useUser from "./useUser"
 
 export interface AuthorizationDetails {

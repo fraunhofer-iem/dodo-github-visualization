@@ -1,32 +1,35 @@
 import { ChartData } from "chart.js"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useRef } from "react"
+import React, { useRef } from "react"
 import useSWR from "swr"
 import Button from "../../../../../components/action/Button"
-import Card from "../../../../../components/card/Card"
-import CardBody from "../../../../../components/card/CardBody"
-import CardSubTitle from "../../../../../components/card/CardSubTitle"
-import CardTitle from "../../../../../components/card/CardTitle"
-import LineChart from "../../../../../components/chart/LineChart"
+import {
+  Card,
+  CardTitle,
+  CardBody,
+  CardSubTitle,
+} from "../../../../../components/card"
+import { LineChart } from "../../../../../components/chart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
 import KpiTable from "../../../../../components/KpiTable"
-import Grid from "../../../../../components/layout/Grid"
-import Page from "../../../../../components/layout/Page"
-import Sidebar from "../../../../../components/layout/Sidebar"
+import { Page, Sidebar, Grid } from "../../../../../components/layout"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
 import {
+  ProjectDetail,
+  KpiDetail,
   AuthorizationDetails,
   requireAuthorization,
-} from "../../../../../util/api/requireAuthorization"
-import { purple, turquoise } from "../../../../../util/themes/Theme"
-import { ProjectDetail } from "../../../../api/projects/[pid]"
-import { KpiDetail } from "../../../../api/projects/[pid]/kpis/[kid]"
+  getKpiForProjectApiRoute,
+  getProjectApiRoute,
+  getAnalyticsForProjectRoute,
+} from "../../../../../lib/api"
+import { purple, turquoise } from "../../../../../lib/themes/Theme"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
-  prData.forEach((v, i) => labels.push(i))
+  prData.forEach((_, i) => labels.push(i))
   const chartData: ChartData<"line"> = {
     datasets: [
       {
@@ -72,12 +75,13 @@ const cluster = (prData: number[]): ChartData<"line"> => {
 const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
+    //TODO: proper type cast needed
     const { projectID, kpiID } = router.query
     const { data: project } = useSWR<ProjectDetail>(
-      `/api/projects/${projectID}`,
+      getProjectApiRoute(projectID as string),
     )
     const { data: kpi } = useSWR<KpiDetail>(
-      `/api/projects/${projectID}/kpis/${kpiID}`,
+      getKpiForProjectApiRoute(projectID as string, kpiID as string),
     )
     const toggleSidebar = useRef<() => void>(() => {})
 
@@ -113,7 +117,11 @@ const KPIDetail: NextPage = requireAuthorization(
             <CardTitle>
               {`${project?.name}`}
               <Button
-                action={() => router.push(`/analytics/projects/${project?.id}`)}
+                action={() =>
+                  project
+                    ? router.push(getAnalyticsForProjectRoute(project.id))
+                    : router.push("/")
+                }
                 context="neutral"
               >
                 <Icon>{IconName.keyboardArrowUp}</Icon>

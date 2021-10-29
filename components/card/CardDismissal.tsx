@@ -1,12 +1,12 @@
 import styles from "../../styles/components/Card.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 import Button from "../action/Button"
 
 interface Props {
   dismiss: () => void
 }
 
-export default function CardDismissal(props: Props) {
+export function CardDismissal(props: Props) {
   const { theme } = useUIContext()
   return (
     <div className={styles.cardDismissal} style={theme.card.dismissal.css()}>

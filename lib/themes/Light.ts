@@ -117,13 +117,32 @@ const LightTheme: Theme = {
         },
       },
       {
-        selector: "node[hover = 'true']",
+        selector: "node[?expandable]",
+        style: {
+          shape: "diamond",
+        },
+      },
+      {
+        selector: "[?hidden]",
+        style: {
+          visibility: "hidden",
+        },
+      },
+      {
+        selector: "[!hidden]",
+        style: {
+          visibility: "visible",
+        },
+      },
+
+      {
+        selector: "node[?hover]",
         style: {
           backgroundColor: black.rgba(),
         },
       },
       {
-        selector: "node[hover = 'false']",
+        selector: "node[!hover]",
         style: {
           backgroundColor: gray.rgba(),
         },

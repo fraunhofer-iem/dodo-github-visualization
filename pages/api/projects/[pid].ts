@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import projects from "../../../util/data/projects.json"
-import { Project } from "../projects"
-
-export type ProjectDetail = Project & {
-  url: string
-}
+import { ProjectDetail } from "../../../lib/api"
+import projects from "../../../lib/data/projects.json"
 
 export default function handler(
   req: NextApiRequest,
@@ -14,7 +10,9 @@ export default function handler(
     query: { pid },
   } = req
 
-  const project = projects.find((project) => project.id === (pid as string))
+  const project = projects.find(
+    (currentProject) => currentProject.id === (pid as string),
+  )
 
   if (project) {
     res.status(200).json({

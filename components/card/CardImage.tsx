@@ -7,7 +7,7 @@ interface Props {
   alt?: string
 }
 
-export default function CardImage(props: Props) {
+export function CardImage(props: Props) {
   return (
     <div className={styles.cardImage}>
       <Image

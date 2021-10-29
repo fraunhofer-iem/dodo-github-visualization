@@ -1,19 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../util/api/pagination"
-import projects from "../../util/data/projects.json"
-
-export type Project = {
-  name: string
-  maturityIndex: number
-  id: string
-}
+import { Project, getPagination, SortableTableKeys } from "../../lib/api"
+import projects from "../../lib/data/projects.json"
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Project[]>,
 ) {
-  const { pageNumber, pageSize } = getPagination(req.query)
-  console.log({ pageNumber, pageSize })
+  const { pageNumber, pageSize, sortKey, asc } = getPagination(
+    req.query,
+    SortableTableKeys,
+  )
+  console.log({ pageNumber, pageSize, sortKey, asc })
+  if (sortKey) {
+    projects.sort((a: any, b: any) => {
+      if (a[sortKey] < b[sortKey]) {
+        return -1
+      } else if (a[sortKey] > b[sortKey]) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+    if (!asc) {
+      projects.reverse()
+    }
+  }
+  console.log(projects)
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
   if (startOfChunk >= projects.length) {

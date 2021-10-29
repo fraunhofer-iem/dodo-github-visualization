@@ -1,6 +1,6 @@
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../util/uiContext"
-import { useKey } from "../../util/uiHooks"
+import { useUIContext } from "../../lib/uiContext"
+import { useKey } from "../../lib/uiHooks"
 
 interface Props {
   context: "opaque" | "translucent"
@@ -8,7 +8,7 @@ interface Props {
   dismiss?: () => void
 }
 
-export default function Overlay(props: Props) {
+export function Overlay(props: Props) {
   const { theme } = useUIContext()
   const dismiss = props.dismiss ?? (() => {})
 

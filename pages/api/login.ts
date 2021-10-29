@@ -1,11 +1,4 @@
-import withSession from "../../util/api/session"
-
-export type User = {
-  name: string
-  admin: boolean
-  id: string
-  isLoggedIn: boolean
-}
+import { USER_COOKIE, withSession } from "../../lib/api"
 
 export default withSession(async (req, res) => {
   const { username, password } = await req.body
@@ -15,7 +8,7 @@ export default withSession(async (req, res) => {
     // we check that the user exists on GitHub and store some data in session
     // const { login, avatar_url: avatarUrl } = await fetchJson(url)
     // const user = { isLoggedIn: true, login, avatarUrl }
-    req.session.set("user", user)
+    req.session.set(USER_COOKIE, user)
     await req.session.save()
     res.json(user)
   } catch (error: any) {

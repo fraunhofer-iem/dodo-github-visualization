@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
 import useSWR from "swr"
-import { Kpi } from "../pages/api/projects/[pid]/kpis"
+import { Kpi } from "../lib/api"
 import Button from "./action/Button"
 import Table from "./table/Table"
 
@@ -55,8 +55,8 @@ export default function KpiTable(props: Props) {
               },
               {
                 content:
-                  kpiID === kpi.id ? <strong>{kpi.score}</strong> : kpi.score,
-                sortKey: kpi.score,
+                  kpiID === kpi.id ? <strong>{kpi.rating}</strong> : kpi.rating,
+                sortKey: kpi.rating,
               },
             ])
           : [],

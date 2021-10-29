@@ -1,11 +1,11 @@
 import styles from "../../styles/components/Card.module.scss"
-import { useUIContext } from "../../util/uiContext"
+import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   children: string
 }
 
-export default function CardSubTitle(props: Props) {
+export function CardSubTitle(props: Props) {
   const { theme } = useUIContext()
 
   return (

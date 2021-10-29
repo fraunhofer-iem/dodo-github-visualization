@@ -1,13 +1,14 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useSWR from "swr"
-import { User } from "../../pages/api/login"
+import { ApiRoutes } from "."
+import { User } from "./types"
 
 export default function useUser({
   redirectTo = "",
   redirectIfFound = false,
 } = {}) {
-  const { data: user, mutate: mutateUser } = useSWR<User>("/api/user")
+  const { data: user, mutate: mutateUser } = useSWR<User>(ApiRoutes.USER)
   const router = useRouter()
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)

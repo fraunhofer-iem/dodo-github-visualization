@@ -1,40 +1,93 @@
 import { NextPage } from "next"
-import { useCallback, useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import Card from "../components/card/Card"
-import CardTitle from "../components/card/CardTitle"
+import { Card, CardTitle } from "../components/card"
 import CytoscapeComponent, {
   edgeDefinition,
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
-import Page from "../components/layout/Page"
+import { Page } from "../components/layout"
+import { ApiRoutes, KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
-} from "../util/api/requireAuthorization"
-import { useUIContext } from "../util/uiContext"
-import { KpiType } from "./api/kpis"
+} from "../lib/api/requireAuthorization"
+import { useUIContext } from "../lib/uiContext"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
     const cy = useRef<cytoscape.Core | null>()
     const { setTippy } = props
-    const { data: kpis } = useSWR<KpiType[]>(`/api/kpis`)
+    const { data: kpis } = useSWR<KpiType[]>(ApiRoutes.KPIS)
     const elements: cytoscape.ElementDefinition[] = []
 
-    kpis?.forEach((currKpi) => {
+    kpis?.forEach((currentKpi) => {
       elements.push(
-        nodeDefinition(currKpi.type, parseInt(currKpi.id), currKpi.name, {
-          description: currKpi.description,
-          hover: "false",
-        }),
+        nodeDefinition(
+          currentKpi.type,
+          parseInt(currentKpi.id),
+          currentKpi.name,
+          {
+            children: currentKpi.children,
+            parents: currentKpi.parents,
+            description: currentKpi.description,
+            hidden: currentKpi.parents.length != 0,
+            expandable: currentKpi.children.length,
+            expanded: false,
+            hover: false,
+          },
+        ),
       )
-      currKpi.children.forEach((currChild) => {
-        elements.push(edgeDefinition(currKpi.id, currChild))
+      currentKpi.children.forEach((currentChild) => {
+        elements.push(
+          edgeDefinition(currentKpi.id, currentChild, true, { hidden: true }),
+        )
       })
     })
+
+    const expandNode = useCallback((node: cytoscape.NodeSingular) => {
+      node.data("expanded", true)
+      node.data("expandable", false)
+      node.data("children").forEach((currentChild: string) => {
+        if (cy.current) {
+          cy.current.getElementById(currentChild).data("hidden", false)
+          cy.current
+            .getElementById(`${node.id()}-${currentChild}`)
+            .data("hidden", false)
+        }
+      })
+    }, [])
+
+    const collapseNode = useCallback((node: cytoscape.NodeSingular) => {
+      node.data("expanded", false)
+      node.data("children").forEach((currentChild: string) => {
+        node.data("expandable", true)
+
+        //hide child only if all of its parents are collapsed
+        if (cy.current) {
+          const childNode = cy.current.getElementById(currentChild)
+          childNode.data("hidden", true)
+          childNode.data("parents").forEach((currentParent: string) => {
+            if (cy.current) {
+              const parentNode = cy.current.getElementById(currentParent)
+              if (!node.same(parentNode)) {
+                if (parentNode.data("expanded")) {
+                  childNode.data("hidden", false)
+                }
+              }
+            }
+          })
+          // hide edge to child node
+          cy.current
+            .getElementById(`${node.id()}-${currentChild}`)
+            .data("hidden", true)
+
+          collapseNode(childNode)
+        }
+      })
+    }, [])
 
     const cytoscapeControl = useCallback(
       (c: cytoscape.Core) => {
@@ -42,15 +95,26 @@ const Hierarchy: NextPage = requireAuthorization(
           return
         }
 
+        c.on("tap", "node", (event) => {
+          const node: cytoscape.NodeSingular = event.target
+          if (!node.data("expanded")) {
+            if (node.data("expandable")) {
+              expandNode(node)
+            }
+          } else {
+            collapseNode(node)
+          }
+        })
+
         c.on("mouseover", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
           setTippy(node.id(), {
             content: <Card width="250px">{node.data("description")}</Card>,
             popperRef: node.popperRef(),
-            dispose: () => node.data("hover", "false"),
+            dispose: () => node.data("hover", false),
             tippyProps: { placement: "right" },
           })
-          node.data("hover", "true")
+          node.data("hover", true)
         })
         c.on("mouseout", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
@@ -59,7 +123,7 @@ const Hierarchy: NextPage = requireAuthorization(
 
         cy.current = c
       },
-      [setTippy],
+      [collapseNode, expandNode, setTippy],
     )
 
     return (
