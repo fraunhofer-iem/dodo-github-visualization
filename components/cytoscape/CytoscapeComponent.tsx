@@ -95,9 +95,7 @@ export default function CytoscapeComponent(props: Props) {
         style: stylesheet,
       })
       cy.current.fit()
-      cy.current.nodes().forEach((currentNode) => {
-        currentNode.collapse()
-      })
+
       if (!Object.getPrototypeOf(cy.current).popper) {
         cytoscape.use(popper)
       }
@@ -107,7 +105,7 @@ export default function CytoscapeComponent(props: Props) {
       if (!Object.getPrototypeOf(cy.current).edgehandles) {
         cytoscape.use(edgehandles)
       }
-      if (!Object.getPrototypeOf(cy.current.nodes()).expand) {
+      if (!Object.getPrototypeOf(cy.current).nodeExpansion) {
         cytoscape.use(nodeExpansion)
       }
 

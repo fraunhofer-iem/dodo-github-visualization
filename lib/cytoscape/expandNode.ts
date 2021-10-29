@@ -4,6 +4,32 @@ const register = function (cytoscape: any) {
     return
   } // can't register if cytoscape unspecified
 
+  // In the future, this function might take some options object,
+  // in order to set the desired visual style of expandable nodes
+  // and if collapsed nodes are actually hidden or just styled differently
+  cytoscape("core", "nodeExpansion", function (this: cytoscape.Core) {
+    this.nodes().forEach((currentNode) => {
+      currentNode.data("expanded", false)
+      if (currentNode.incomers().length) {
+        currentNode.style("visibility", "hidden")
+      }
+      if (currentNode.outgoers().length) {
+        currentNode.style("shape", "diamond")
+      }
+    })
+    this.edges().forEach((currentEdge) => {
+      currentEdge.style("visibility", "hidden")
+    })
+  })
+
+  cytoscape("collection", "expanded", function (this: cytoscape.Collection) {
+    const node = this[0]
+    if (node.isNode()) {
+      return node.data("expanded")
+    }
+    return false
+  })
+
   // register with cytoscape.js
   cytoscape("collection", "expand", function (this: cytoscape.Collection) {
     const node = this[0]
@@ -56,6 +82,11 @@ declare global {
     interface NodeSingular {
       expand: () => void
       collapse: () => void
+      expanded: () => boolean
+    }
+
+    interface Core {
+      nodeExpansion: () => void
     }
   }
 }

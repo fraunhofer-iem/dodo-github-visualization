@@ -31,7 +31,6 @@ const Hierarchy: NextPage = requireAuthorization(
           currentKpi.name,
           {
             description: currentKpi.description,
-            expanded: false,
             hover: false,
           },
         ),
@@ -47,9 +46,12 @@ const Hierarchy: NextPage = requireAuthorization(
           return
         }
 
+        // Initializes nodeExpansion plugin, setting the 'expanded' attribute and hiding all child nodes and their edges
+        c.nodeExpansion()
+
         c.on("tap", "node", (event) => {
           const node: cytoscape.NodeSingular = event.target
-          if (!node.data("expanded")) {
+          if (!node.expanded()) {
             node.expand()
           } else {
             node.collapse()
