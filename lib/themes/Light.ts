@@ -122,18 +122,6 @@ const LightTheme: Theme = {
           shape: "diamond",
         },
       },
-      {
-        selector: "[?hidden]",
-        style: {
-          visibility: "hidden",
-        },
-      },
-      {
-        selector: "[!hidden]",
-        style: {
-          visibility: "visible",
-        },
-      },
 
       {
         selector: "node[?hover]",

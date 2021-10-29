@@ -9,6 +9,7 @@ import edgehandles from "cytoscape-edgehandles"
 import popper from "cytoscape-popper"
 import deepEqual from "deep-equal"
 import { useEffect, useRef } from "react"
+import { nodeExpansion } from "../../lib/cytoscape/expandNode"
 
 interface Props {
   cy?: (cy: cytoscape.Core) => void | undefined
@@ -41,6 +42,9 @@ export const nodeDefinition = (
       entity: `${id}`,
       ...additionalAttributes,
     },
+    style: {
+      visibility: additionalAttributes.parents.length ? "hidden" : "visible",
+    },
   }
   return node
 }
@@ -61,6 +65,9 @@ export const edgeDefinition = (
       target: target,
       directed: directed,
       ...additionalAttributes,
+    },
+    style: {
+      visibility: "hidden",
     },
   }
 }
@@ -102,6 +109,9 @@ export default function CytoscapeComponent(props: Props) {
       }
       if (!Object.getPrototypeOf(cy.current).edgehandles) {
         cytoscape.use(edgehandles)
+      }
+      if (!Object.getPrototypeOf(cy.current).expand) {
+        cytoscape.use(nodeExpansion)
       }
 
       prevProps.current = props

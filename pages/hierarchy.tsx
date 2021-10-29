@@ -99,10 +99,10 @@ const Hierarchy: NextPage = requireAuthorization(
           const node: cytoscape.NodeSingular = event.target
           if (!node.data("expanded")) {
             if (node.data("expandable")) {
-              expandNode(node)
+              node.expand()
             }
           } else {
-            collapseNode(node)
+            node.collapse()
           }
         })
 
