@@ -42,9 +42,6 @@ export const nodeDefinition = (
       entity: `${id}`,
       ...additionalAttributes,
     },
-    style: {
-      visibility: additionalAttributes.parents.length ? "hidden" : "visible",
-    },
   }
   return node
 }
@@ -65,9 +62,6 @@ export const edgeDefinition = (
       target: target,
       directed: directed,
       ...additionalAttributes,
-    },
-    style: {
-      visibility: "hidden",
     },
   }
 }
@@ -101,6 +95,9 @@ export default function CytoscapeComponent(props: Props) {
         style: stylesheet,
       })
       cy.current.fit()
+      cy.current.nodes().forEach((currentNode) => {
+        currentNode.collapse()
+      })
       if (!Object.getPrototypeOf(cy.current).popper) {
         cytoscape.use(popper)
       }
@@ -110,7 +107,7 @@ export default function CytoscapeComponent(props: Props) {
       if (!Object.getPrototypeOf(cy.current).edgehandles) {
         cytoscape.use(edgehandles)
       }
-      if (!Object.getPrototypeOf(cy.current).expand) {
+      if (!Object.getPrototypeOf(cy.current.nodes()).expand) {
         cytoscape.use(nodeExpansion)
       }
 

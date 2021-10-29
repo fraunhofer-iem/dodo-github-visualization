@@ -1,35 +1,30 @@
 // registers the extension on a cytoscape lib ref
-let register = function (cytoscape: any) {
+const register = function (cytoscape: any) {
   if (!cytoscape) {
     return
   } // can't register if cytoscape unspecified
 
   // register with cytoscape.js
-  cytoscape("core", "expand", () => {
-    return
-  })
-  cytoscape("collection", "expand", function (this: cytoscape.NodeCollection) {
-    const node: cytoscape.NodeSingular = this[0]
-    node.data("expanded", true)
-    node.data("expandable", false)
-    node.outgoers("edge").forEach((currentEdge: cytoscape.EdgeSingular) => {
-      currentEdge.style("visibility", "visible")
-      currentEdge.target().style("visibility", "visible")
-    })
-  }) //Cytoscape Collections
-  cytoscape("core", "collapse", () => {
-    return
+  cytoscape("collection", "expand", function (this: cytoscape.Collection) {
+    const node = this[0]
+    if (node.isNode()) {
+      if (node.outgoers().length) {
+        node.data("expanded", true)
+        node.style("shape", "ellipse")
+        node.outgoers("edge").forEach((currentEdge: cytoscape.EdgeSingular) => {
+          currentEdge.style("visibility", "visible")
+          currentEdge.target().style("visibility", "visible")
+        })
+      }
+    }
   })
 
-  cytoscape(
-    "collection",
-    "collapse",
-    function (this: cytoscape.NodeCollection) {
-      const node: cytoscape.NodeSingular = this[0]
-      console.log("collapse")
+  cytoscape("collection", "collapse", function (this: cytoscape.Collection) {
+    const node = this[0]
+    if (node.isNode()) {
       node.data("expanded", false)
       node.outgoers("edge").forEach((currentEdge: cytoscape.EdgeSingular) => {
-        node.data("expandable", true)
+        node.style("shape", "diamond")
 
         const childNode = currentEdge.target()
         childNode.style("visibility", "hidden")
@@ -45,8 +40,8 @@ let register = function (cytoscape: any) {
         currentEdge.style("visibility", "hidden")
         childNode.collapse()
       })
-    },
-  ) //Cytoscape Collections for References
+    }
+  })
 }
 
 if (typeof cytoscape !== "undefined") {

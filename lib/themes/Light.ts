@@ -117,13 +117,6 @@ const LightTheme: Theme = {
         },
       },
       {
-        selector: "node[?expandable]",
-        style: {
-          shape: "diamond",
-        },
-      },
-
-      {
         selector: "node[?hover]",
         style: {
           backgroundColor: black.rgba(),
