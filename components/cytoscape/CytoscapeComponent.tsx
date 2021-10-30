@@ -9,7 +9,7 @@ import edgehandles from "cytoscape-edgehandles"
 import popper from "cytoscape-popper"
 import deepEqual from "deep-equal"
 import { useEffect, useRef } from "react"
-import { nodeExpansion } from "../../lib/cytoscape/nodeExpansion"
+import { nodeExpansion } from "../../lib/cytoscape"
 
 interface Props {
   cy?: (cy: cytoscape.Core) => void | undefined
