@@ -15,7 +15,6 @@ import {
   getProjectsApiRoute,
   Project,
   requireAuthorization,
-  SortableTableKeys,
 } from "../../lib/api"
 
 const Analytics: NextPage = requireAuthorization(
@@ -26,13 +25,7 @@ const Analytics: NextPage = requireAuthorization(
     const [sortInformation, setSortInformation] = useState<{
       sortKey: string
       ordering: Ordering
-    }>({ sortKey: SortableTableKeys[0], ordering: Ordering.ascending })
-    const [ordering, setOrdering] = useState<Ordering>(Ordering.ascending)
-    const [sortKey, setSortKey] = useState<string | undefined>(
-      SortableTableKeys[0],
-    )
-    // console.log(ordering == Ordering.ascending ? "asc" : "desc")
-    console.log(sortInformation)
+    }>({ sortKey: "name", ordering: Ordering.ascending })
     const { data: projects, error: error } = useSWR<Project[]>(
       getProjectsApiRoute(
         pageSize,
@@ -70,12 +63,12 @@ const Analytics: NextPage = requireAuthorization(
                     {
                       content: "Project",
                       sortable: true,
-                      sortKey: SortableTableKeys[0],
+                      sortKey: "name",
                     },
                     {
                       content: "Rating",
                       sortable: true,
-                      sortKey: SortableTableKeys[1],
+                      sortKey: "maturityIndex",
                     },
                   ],
                   rows: projects

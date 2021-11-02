@@ -61,10 +61,16 @@ export default function Table(props: Props) {
               context={context}
               scope="col"
               key={i}
-              sortKey={column.sortKey}
-              sortedBy={column.sortKey == sortKey}
-              ordering={column.sortKey == sortKey ? ordering : Ordering.given}
-              setSortInformation={setSortInformation}
+              sortKey={column.sortable ? column.sortKey : undefined}
+              sortedBy={column.sortable && column.sortKey == sortKey}
+              ordering={
+                column.sortable && column.sortKey == sortKey
+                  ? ordering
+                  : Ordering.given
+              }
+              setSortInformation={
+                column.sortable ? setSortInformation : undefined
+              }
             >
               {column.content}
             </TableCell>

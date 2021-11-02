@@ -26,42 +26,20 @@ export enum Ordering {
 
 export default function TableCell(props: Props) {
   const { theme } = useUIContext()
-  // const [ordering, setOrdering] = [
-  //   props.ordering ?? Ordering.given,
-  //   props.setOrdering ?? (() => {}),
-  // ]
-  // const [sortKey, setSortKey] = [props.sortKey, props.setSortKey ?? (() => {})]
-
   const [sortKey, ordering, setSortInformation] = [
     props.sortKey ?? undefined,
     props.ordering ?? Ordering.given,
     props.setSortInformation ?? (() => {}),
   ]
 
-  // const toggleOrdering = () => {
-  //   switch (ordering) {
-  //     case Ordering.ascending:
-  //       setOrdering(Ordering.descending)
-  //       break
-  //     case Ordering.descending:
-  //       setOrdering(Ordering.ascending)
-  //       break
-  //     default:
-  //       setOrdering(Ordering.ascending)
-  //       break
-  //   }
-  // }
-
   return props.scope ? (
     <th
       onClick={() => {
         if (sortKey) {
-          // toggleOrdering()
-          // setSortKey(sortKey)
           setSortInformation({
             sortKey: sortKey,
             ordering:
-              ordering == Ordering.given
+              ordering == Ordering.given || ordering == Ordering.descending
                 ? Ordering.ascending
                 : Ordering.descending,
           })

@@ -1,13 +1,25 @@
+import { reverse, sortBy } from "lodash"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getPagination, Kpi, SortableTableKeys } from "../../../../lib/api"
-import kpis from "../../../../lib/data/kpis.json"
+import { getPagination, Kpi } from "../../../../lib/api"
+import dummyKpis from "../../../../lib/data/kpis.json"
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Kpi[]>,
 ) {
-  const { pageNumber, pageSize } = getPagination(req.query, SortableTableKeys)
+  const { pageNumber, pageSize, sortKey, asc } = getPagination(req.query, [
+    "name",
+    "rating",
+  ])
+  console.log({ pageNumber, pageSize, sortKey, asc })
 
+  let kpis = dummyKpis
+  if (sortKey) {
+    kpis = sortBy(kpis, [(currentProject: any) => currentProject[sortKey]])
+    if (!asc) {
+      reverse(kpis)
+    }
+  }
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
   if (startOfChunk >= kpis.length) {
