@@ -3,17 +3,19 @@ import { useRouter } from "next/router"
 import React, { useState } from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
-import { Card, CardTitle, CardBody } from "../../components/card"
+import { Card, CardBody, CardTitle } from "../../components/card"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
+import { Ordering } from "../../components/table/TableCell"
 import {
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
   getProjectsApiRoute,
   Project,
   requireAuthorization,
+  SortableTableKeys,
 } from "../../lib/api"
 
 const Analytics: NextPage = requireAuthorization(
@@ -21,8 +23,23 @@ const Analytics: NextPage = requireAuthorization(
     const router = useRouter()
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(5)
+    const [sortInformation, setSortInformation] = useState<{
+      sortKey: string
+      ordering: Ordering
+    }>({ sortKey: SortableTableKeys[0], ordering: Ordering.ascending })
+    const [ordering, setOrdering] = useState<Ordering>(Ordering.ascending)
+    const [sortKey, setSortKey] = useState<string | undefined>(
+      SortableTableKeys[0],
+    )
+    // console.log(ordering == Ordering.ascending ? "asc" : "desc")
+    console.log(sortInformation)
     const { data: projects, error: error } = useSWR<Project[]>(
-      getProjectsApiRoute(pageSize, pageNumber),
+      getProjectsApiRoute(
+        pageSize,
+        pageNumber,
+        sortInformation.sortKey,
+        sortInformation.ordering,
+      ),
     )
     if (error) {
       setPageNumber(pageNumber - 1)
@@ -38,12 +55,28 @@ const Analytics: NextPage = requireAuthorization(
                 width="50%"
                 context={"striped"}
                 paginate={true}
-                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+                {...{
+                  pageSize,
+                  setPageSize,
+                  pageNumber,
+                  setPageNumber,
+                  ordering: sortInformation.ordering,
+                  sortKey: sortInformation.sortKey,
+                  setSortInformation,
+                }}
               >
                 {{
                   columns: [
-                    { content: "Project", sortable: true },
-                    { content: "Rating", sortable: true },
+                    {
+                      content: "Project",
+                      sortable: true,
+                      sortKey: SortableTableKeys[0],
+                    },
+                    {
+                      content: "Rating",
+                      sortable: true,
+                      sortKey: SortableTableKeys[1],
+                    },
                   ],
                   rows: projects
                     ? projects.map((project) => [

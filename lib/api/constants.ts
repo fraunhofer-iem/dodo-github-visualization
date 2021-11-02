@@ -25,10 +25,17 @@ export function getAnalyticsForProjectRoute(projectId: string) {
   return `/analytics/projects/${projectId}`
 }
 
-export function getProjectsApiRoute(pageSize?: number, pageNumber?: number) {
+export function getProjectsApiRoute(
+  pageSize?: number,
+  pageNumber?: number,
+  sortKey?: string,
+  asc?: number,
+) {
   pageSize = pageSize ? pageSize : PAGE_SIZE_LIMIT
   pageNumber = pageNumber ? pageNumber : FIRST_PAGE
-  return `/api/projects?pageSize=${pageSize}&pageNumber=${pageNumber}`
+  sortKey = sortKey ? sortKey : SortableTableKeys[0]
+  asc = asc == 0 ? 0 : 1
+  return `/api/projects?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
 
 export function getProjectApiRoute(projectId: string) {

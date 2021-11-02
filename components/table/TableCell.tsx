@@ -7,50 +7,64 @@ interface Props {
   scope?: "col" | "row"
   children?: React.ReactNode
   context: TableContext
-  column?: number
+  sortKey?: string
   sortedBy?: boolean
   ordering?: Ordering
   setOrdering?: (ordering: Ordering) => void
-  setSortColumn?: (column: number) => void
+  setSortKey?: (sortKey: string) => void
+  setSortInformation?: (sortInformation: {
+    sortKey: string
+    ordering: Ordering
+  }) => void
 }
 
 export enum Ordering {
-  ascending,
-  descending,
-  given,
+  ascending = 1,
+  descending = 0,
+  given = 2,
 }
 
 export default function TableCell(props: Props) {
   const { theme } = useUIContext()
-  const [ordering, setOrdering] = [
+  // const [ordering, setOrdering] = [
+  //   props.ordering ?? Ordering.given,
+  //   props.setOrdering ?? (() => {}),
+  // ]
+  // const [sortKey, setSortKey] = [props.sortKey, props.setSortKey ?? (() => {})]
+
+  const [sortKey, ordering, setSortInformation] = [
+    props.sortKey ?? undefined,
     props.ordering ?? Ordering.given,
-    props.setOrdering ?? (() => {}),
-  ]
-  const [column, setSortColumn] = [
-    props.column,
-    props.setSortColumn ?? (() => {}),
+    props.setSortInformation ?? (() => {}),
   ]
 
-  const toggleOrdering = () => {
-    switch (ordering) {
-      case Ordering.ascending:
-        setOrdering(Ordering.descending)
-        break
-      case Ordering.descending:
-        setOrdering(Ordering.ascending)
-        break
-      default:
-        setOrdering(Ordering.ascending)
-        break
-    }
-  }
+  // const toggleOrdering = () => {
+  //   switch (ordering) {
+  //     case Ordering.ascending:
+  //       setOrdering(Ordering.descending)
+  //       break
+  //     case Ordering.descending:
+  //       setOrdering(Ordering.ascending)
+  //       break
+  //     default:
+  //       setOrdering(Ordering.ascending)
+  //       break
+  //   }
+  // }
 
   return props.scope ? (
     <th
       onClick={() => {
-        if (column) {
-          toggleOrdering()
-          setSortColumn(column - 1)
+        if (sortKey) {
+          // toggleOrdering()
+          // setSortKey(sortKey)
+          setSortInformation({
+            sortKey: sortKey,
+            ordering:
+              ordering == Ordering.given
+                ? Ordering.ascending
+                : Ordering.descending,
+          })
         }
       }}
       scope={props.scope}

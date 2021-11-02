@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { Kpi, getPagination, SortableTableKeys } from "../../../../lib/api"
+import { getPagination, Kpi, SortableTableKeys } from "../../../../lib/api"
 import kpis from "../../../../lib/data/kpis.json"
 
 export default function handler(
@@ -16,7 +16,6 @@ export default function handler(
   }
   if (endOfChunk >= kpis.length) {
     endOfChunk = kpis.length
-    startOfChunk = kpis.length - pageSize
   }
   if (startOfChunk < 0) {
     startOfChunk = 0
