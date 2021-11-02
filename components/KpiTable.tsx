@@ -1,14 +1,13 @@
 import { useRouter } from "next/router"
-import { useState } from "react"
 import useSWR from "swr"
 import {
   getKpiForProjectRoute,
   getKpisForProjectApiRoute,
   Kpi,
 } from "../lib/api"
+import usePagination from "../lib/api/usePagination"
 import Button from "./action/Button"
 import Table from "./table/Table"
-import { Ordering } from "./table/TableCell"
 
 interface Props {
   projectID: string
@@ -18,12 +17,14 @@ interface Props {
 export default function KpiTable(props: Props) {
   const { projectID, kpiID } = props
   const router = useRouter()
-  const [pageNumber, setPageNumber] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(5)
-  const [sortInformation, setSortInformation] = useState<{
-    sortKey: string
-    ordering: Ordering
-  }>({ sortKey: "name", ordering: Ordering.ascending })
+  const {
+    pageNumber,
+    setPageNumber,
+    pageSize,
+    setPageSize,
+    sortInformation,
+    setSortInformation,
+  } = usePagination("name")
   const { data: kpis, error: error } = useSWR<Kpi[]>(
     getKpisForProjectApiRoute(
       projectID,
@@ -39,7 +40,8 @@ export default function KpiTable(props: Props) {
 
   return (
     <Table
-      context="striped"
+      width="50%"
+      context={"striped"}
       paginate={true}
       {...{
         pageSize,

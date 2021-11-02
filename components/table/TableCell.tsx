@@ -7,11 +7,9 @@ interface Props {
   scope?: "col" | "row"
   children?: React.ReactNode
   context: TableContext
-  sortKey?: string
   sortedBy?: boolean
+  sortKey?: string
   ordering?: Ordering
-  setOrdering?: (ordering: Ordering) => void
-  setSortKey?: (sortKey: string) => void
   setSortInformation?: (sortInformation: {
     sortKey: string
     ordering: Ordering
