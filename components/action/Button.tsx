@@ -1,9 +1,9 @@
 import { useState } from "react"
-import styles from "../../styles/components/Button.module.scss"
 import { useUIContext } from "../../lib/uiContext"
+import styles from "../../styles/components/Button.module.scss"
 
 export interface Props {
-  context: "primary" | "neutral"
+  context: "primary" | "neutral" | "anchor"
   action?: () => void
   cxtAction?: () => void
   children: React.ReactNode
@@ -18,6 +18,7 @@ export interface Props {
 export const contexts = {
   primary: (hovered: boolean) => (hovered ? "primary:hover" : "primary"),
   neutral: (hovered: boolean) => (hovered ? "neutral:hover" : "neutral"),
+  anchor: (hovered: boolean) => (hovered ? "anchor:hover" : "anchor"),
 }
 
 export default function Button(props: Props) {

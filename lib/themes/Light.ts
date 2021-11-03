@@ -25,6 +25,7 @@ const LightTheme: Theme = {
       backgroundColor: white.darken(0.05),
     }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
+    breadcrumbs: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {
     card: new CSSProperties({
@@ -105,6 +106,15 @@ const LightTheme: Theme = {
     "neutral:hover": new CSSProperties({
       backgroundColor: transparent,
       color: "inherit",
+    }),
+    anchor: new CSSProperties({
+      backgroundColor: transparent,
+      color: "inherit",
+      textDecoration: "none",
+    }),
+    "anchor:hover": new CSSProperties({
+      backgroundColor: transparent,
+      textDecoration: "underline",
     }),
   },
   cytoscape: {

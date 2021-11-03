@@ -128,7 +128,10 @@ const Hierarchy: NextPage = requireAuthorization(
 
     return (
       props.user?.isLoggedIn && (
-        <Page title="Hierarchy- KPI Dashboard">
+        <Page
+          title="Hierarchy- KPI Dashboard"
+          crumbs={[{ name: "Hierarchy", route: "/hierarchy" }]}
+        >
           <Card width="99%">
             <CardTitle>KPI Hierarchy</CardTitle>
             <CytoscapeComponent

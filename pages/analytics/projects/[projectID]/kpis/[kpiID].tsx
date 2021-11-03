@@ -6,24 +6,24 @@ import useSWR from "swr"
 import Button from "../../../../../components/action/Button"
 import {
   Card,
-  CardTitle,
   CardBody,
   CardSubTitle,
+  CardTitle,
 } from "../../../../../components/card"
 import { LineChart } from "../../../../../components/chart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
 import KpiTable from "../../../../../components/KpiTable"
-import { Page, Sidebar, Grid } from "../../../../../components/layout"
+import { Grid, Page, Sidebar } from "../../../../../components/layout"
 import Icon from "../../../../../components/rating/Icon"
 import { IconName } from "../../../../../components/rating/IconName"
 import {
-  ProjectDetail,
-  KpiDetail,
   AuthorizationDetails,
-  requireAuthorization,
+  getAnalyticsForProjectRoute,
   getKpiForProjectApiRoute,
   getProjectApiRoute,
-  getAnalyticsForProjectRoute,
+  KpiDetail,
+  ProjectDetail,
+  requireAuthorization,
 } from "../../../../../lib/api"
 import { purple, turquoise } from "../../../../../lib/themes/Theme"
 
@@ -99,6 +99,20 @@ const KPIDetail: NextPage = requireAuthorization(
               <Icon>{IconName.menu}</Icon>
             </Button>
           }
+          crumbs={[
+            {
+              name: "Analytics",
+              route: "/analytics",
+            },
+            {
+              name: project?.name as string,
+              route: getAnalyticsForProjectRoute(projectID as string),
+            },
+            {
+              name: kpi?.name as string,
+              route: `/analytics/projects/${projectID}/kpis/${kpiID}`,
+            },
+          ]}
         >
           <Sidebar
             control={(control: () => void) => (toggleSidebar.current = control)}
