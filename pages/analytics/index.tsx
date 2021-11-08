@@ -3,9 +3,11 @@ import { useRouter } from "next/router"
 import React from "react"
 import { Card, CardBody, CardTitle } from "../../components/card"
 import { TrendComponent, TrendDirection } from "../../components/content"
+import { HealthComponent } from "../../components/content/HealthComponent"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import { AuthorizationDetails, requireAuthorization } from "../../lib/api"
+import { orange, red } from "../../lib/themes/Theme"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -110,6 +112,12 @@ const Analytics: NextPage = requireAuthorization(
                 name="Test3"
                 rating={95}
                 direction={TrendDirection.up}
+              />
+              <HealthComponent
+                colors={[red, orange]}
+                values={[50, 30]}
+                rating="50"
+                width="200px"
               />
             </CardBody>
           </Card>

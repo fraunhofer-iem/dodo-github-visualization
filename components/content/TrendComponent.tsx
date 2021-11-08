@@ -1,5 +1,5 @@
 import { useUIContext } from "../../lib/uiContext"
-import styles from "../../styles/components/Trend.module.scss"
+import styles from "../../styles/components/Content.module.scss"
 import { Card } from "../card"
 import { Grid } from "../layout"
 import Icon from "../rating/Icon"

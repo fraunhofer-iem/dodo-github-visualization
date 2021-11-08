@@ -4,3 +4,35 @@
   margin-top: 0;
   margin-bottom: 1rem;
 }
+
+.trendIcon {
+  display: flex;
+  align-items: center;
+}
+
+.trendIcon span {
+  border-radius: 25px;
+}
+
+.trendInfo {
+  padding-left: 15px;
+}
+
+.trendInfo strong {
+  font-size: 1.15em;
+}
+
+.health {
+  position: relative;
+}
+
+.health .healthRating {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
