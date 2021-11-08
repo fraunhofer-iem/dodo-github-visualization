@@ -1,7 +1,11 @@
 import { useRouter } from "next/router"
-import { useState } from "react"
 import useSWR from "swr"
-import { Kpi } from "../lib/api"
+import {
+  getKpiForProjectRoute,
+  getKpisForProjectApiRoute,
+  Kpi,
+} from "../lib/api"
+import usePagination from "../lib/api/usePagination"
 import Button from "./action/Button"
 import Table from "./table/Table"
 
@@ -13,10 +17,22 @@ interface Props {
 export default function KpiTable(props: Props) {
   const { projectID, kpiID } = props
   const router = useRouter()
-  const [pageNumber, setPageNumber] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(5)
+  const {
+    pageNumber,
+    setPageNumber,
+    pageSize,
+    setPageSize,
+    sortInformation,
+    setSortInformation,
+  } = usePagination("name")
   const { data: kpis, error: error } = useSWR<Kpi[]>(
-    `/api/projects/${projectID}/kpis?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    getKpisForProjectApiRoute(
+      projectID,
+      pageSize,
+      pageNumber,
+      sortInformation.sortKey,
+      sortInformation.ordering,
+    ),
   )
   if (error) {
     setPageNumber(pageNumber - 1)
@@ -24,14 +40,23 @@ export default function KpiTable(props: Props) {
 
   return (
     <Table
-      context="striped"
+      width="50%"
+      context={"striped"}
       paginate={true}
-      {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+      {...{
+        pageSize,
+        setPageSize,
+        pageNumber,
+        setPageNumber,
+        ordering: sortInformation.ordering,
+        sortKey: sortInformation.sortKey,
+        setSortInformation,
+      }}
     >
       {{
         columns: [
-          { content: "Name", sortable: true },
-          { content: "Score", sortable: true },
+          { content: "Name", sortable: true, sortKey: "name" },
+          { content: "Score", sortable: true, sortKey: "rating" },
         ],
         rows: kpis
           ? kpis.map((kpi) => [
@@ -39,9 +64,7 @@ export default function KpiTable(props: Props) {
                 content: (
                   <Button
                     action={() =>
-                      router.push(
-                        `/analytics/projects/${projectID}/kpis/${kpi.id}`,
-                      )
+                      router.push(getKpiForProjectRoute(projectID, kpi.id))
                     }
                     context="anchor"
                     width="100%"

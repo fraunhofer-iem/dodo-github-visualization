@@ -1,31 +1,27 @@
+import { reverse, sortBy } from "lodash"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { Project, getPagination, SortableTableKeys } from "../../lib/api"
-import projects from "../../lib/data/projects.json"
+import { getPagination, Project } from "../../lib/api"
+import dummyProjects from "../../lib/data/projects.json"
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Project[]>,
 ) {
-  const { pageNumber, pageSize, sortKey, asc } = getPagination(
-    req.query,
-    SortableTableKeys,
-  )
+  const { pageNumber, pageSize, sortKey, asc } = getPagination(req.query, [
+    "name",
+    "maturityIndex",
+  ])
   console.log({ pageNumber, pageSize, sortKey, asc })
+
+  let projects = dummyProjects
   if (sortKey) {
-    projects.sort((a: any, b: any) => {
-      if (a[sortKey] < b[sortKey]) {
-        return -1
-      } else if (a[sortKey] > b[sortKey]) {
-        return 1
-      } else {
-        return 0
-      }
-    })
+    projects = sortBy(projects, [
+      (currentProject: any) => currentProject[sortKey],
+    ])
     if (!asc) {
-      projects.reverse()
+      reverse(projects)
     }
   }
-  console.log(projects)
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
   if (startOfChunk >= projects.length) {
@@ -34,7 +30,6 @@ export default function handler(
   }
   if (endOfChunk >= projects.length) {
     endOfChunk = projects.length
-    startOfChunk = projects.length - pageSize
   }
   if (startOfChunk < 0) {
     startOfChunk = 0

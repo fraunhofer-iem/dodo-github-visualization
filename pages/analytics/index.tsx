@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useState } from "react"
+import React from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
 import { Card, CardBody, CardTitle } from "../../components/card"
@@ -15,14 +15,26 @@ import {
   Project,
   requireAuthorization,
 } from "../../lib/api"
+import usePagination from "../../lib/api/usePagination"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const [pageNumber, setPageNumber] = useState<number>(1)
-    const [pageSize, setPageSize] = useState<number>(5)
+    const {
+      pageNumber,
+      setPageNumber,
+      pageSize,
+      setPageSize,
+      sortInformation,
+      setSortInformation,
+    } = usePagination("name")
     const { data: projects, error: error } = useSWR<Project[]>(
-      getProjectsApiRoute(pageSize, pageNumber),
+      getProjectsApiRoute(
+        pageSize,
+        pageNumber,
+        sortInformation.sortKey,
+        sortInformation.ordering,
+      ),
     )
     if (error) {
       setPageNumber(pageNumber - 1)
@@ -41,12 +53,28 @@ const Analytics: NextPage = requireAuthorization(
                 width="50%"
                 context={"striped"}
                 paginate={true}
-                {...{ pageSize, setPageSize, pageNumber, setPageNumber }}
+                {...{
+                  pageSize,
+                  setPageSize,
+                  pageNumber,
+                  setPageNumber,
+                  ordering: sortInformation.ordering,
+                  sortKey: sortInformation.sortKey,
+                  setSortInformation,
+                }}
               >
                 {{
                   columns: [
-                    { content: "Project", sortable: true },
-                    { content: "Rating", sortable: true },
+                    {
+                      content: "Project",
+                      sortable: true,
+                      sortKey: "name",
+                    },
+                    {
+                      content: "Rating",
+                      sortable: true,
+                      sortKey: "maturityIndex",
+                    },
                   ],
                   rows: projects
                     ? projects.map((project) => [

@@ -1,6 +1,5 @@
-import { useState } from "react"
-import styles from "../../styles/components/Table.module.scss"
 import { useUIContext } from "../../lib/uiContext"
+import styles from "../../styles/components/Table.module.scss"
 import Button from "../action/Button"
 import { Select } from "../form"
 import Icon from "../rating/Icon"
@@ -14,7 +13,7 @@ export type TableContext = "neutral" | "striped"
 
 interface Props {
   children?: {
-    columns: { content: React.ReactNode; sortable: boolean }[]
+    columns: { content: React.ReactNode; sortable: boolean; sortKey?: string }[]
     rows: { content: React.ReactNode; sortKey: string | number }[][]
   }
   context?: TableContext
@@ -24,13 +23,19 @@ interface Props {
   setPageNumber?: (pageNumber: number) => void
   pageSize?: number
   setPageSize?: (pageSize: number) => void
+  sortKey?: string
+  setSortKey?: (sortKey: string) => void
+  ordering?: Ordering
+  setOrdering?: (ordering: Ordering) => void
+  setSortInformation?: (sortInformation: {
+    sortKey: string
+    ordering: Ordering
+  }) => void
 }
 
 export default function Table(props: Props) {
   const { theme } = useUIContext()
   const tableData = props.children ?? { columns: [], rows: [] }
-  const [sortColumn, setSortColumn] = useState<number>(-1)
-  const [ordering, setOrdering] = useState<Ordering>(Ordering.given)
   const context = props.context ?? "neutral"
   const width = props.width ?? "100%"
   const [pageNumber, setPageNumber] = [
@@ -41,21 +46,11 @@ export default function Table(props: Props) {
     props.pageSize ?? 0,
     props.setPageSize ?? (() => {}),
   ]
-
-  if (ordering != Ordering.given) {
-    tableData.rows.sort((a, b) => {
-      if (a[sortColumn].sortKey < b[sortColumn].sortKey) {
-        return -1
-      } else if (a[sortColumn].sortKey > b[sortColumn].sortKey) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-    if (ordering == Ordering.descending) {
-      tableData.rows.reverse()
-    }
-  }
+  const [sortKey, ordering, setSortInformation] = [
+    props.sortKey ?? undefined,
+    props.ordering ?? Ordering.given,
+    props.setSortInformation ?? (() => {}),
+  ]
 
   return (
     <div className={styles.tableContainer} style={{ width: width }}>
@@ -66,11 +61,16 @@ export default function Table(props: Props) {
               context={context}
               scope="col"
               key={i}
-              column={i + 1}
-              sortedBy={i == sortColumn}
-              setSortColumn={column.sortable ? setSortColumn : undefined}
-              ordering={i == sortColumn ? ordering : Ordering.given}
-              setOrdering={column.sortable ? setOrdering : undefined}
+              sortKey={column.sortable ? column.sortKey : undefined}
+              sortedBy={column.sortable && column.sortKey == sortKey}
+              ordering={
+                column.sortable && column.sortKey == sortKey
+                  ? ordering
+                  : Ordering.given
+              }
+              setSortInformation={
+                column.sortable ? setSortInformation : undefined
+              }
             >
               {column.content}
             </TableCell>
