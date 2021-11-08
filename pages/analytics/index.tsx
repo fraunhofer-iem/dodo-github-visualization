@@ -2,8 +2,11 @@ import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
 import { Card, CardBody, CardTitle } from "../../components/card"
-import { TrendComponent, TrendDirection } from "../../components/content"
-import { HealthComponent } from "../../components/content/HealthComponent"
+import {
+  HealthComponent,
+  TrendComponent,
+  TrendDirection,
+} from "../../components/content"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import { AuthorizationDetails, requireAuthorization } from "../../lib/api"
@@ -98,26 +101,34 @@ const Analytics: NextPage = requireAuthorization(
                     : [],
                 }}
               </Table> */}
-              <TrendComponent
-                name="Test1"
-                rating={95}
-                direction={TrendDirection.down}
-              />
-              <TrendComponent
-                name="Test2"
-                rating={95}
-                direction={TrendDirection.neutral}
-              />
-              <TrendComponent
-                name="Test3"
-                rating={95}
-                direction={TrendDirection.up}
-              />
+              <Card width="150px">
+                <TrendComponent
+                  name="Test1"
+                  rating={95}
+                  direction={TrendDirection.down}
+                />
+              </Card>
+              <Card width="150px">
+                <TrendComponent
+                  name="Test2"
+                  rating={95}
+                  direction={TrendDirection.neutral}
+                />
+              </Card>
+              <Card width="150px">
+                <TrendComponent
+                  name="Test3"
+                  rating={95}
+                  direction={TrendDirection.up}
+                />
+              </Card>
               <HealthComponent
                 colors={[red, orange]}
                 values={[50, 30]}
-                rating="50"
+                name={"Code Quality"}
+                rating={50}
                 width="200px"
+                direction={TrendDirection.neutral}
               />
             </CardBody>
           </Card>

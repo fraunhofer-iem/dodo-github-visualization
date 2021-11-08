@@ -1,19 +1,23 @@
 import { ChartDataset } from "chart.js"
+import { TrendComponent, TrendDirection } from "."
 import { Color, transparent } from "../../lib/themes/Theme"
 import styles from "../../styles/components/Content.module.scss"
 import { DoughnutChart } from "../chart/DoughnutChart"
 
 interface Props {
-  rating: string
+  name?: string
+  rating: number
   values: number[]
   colors: Color[]
+  direction: TrendDirection
   width?: string
 }
 
 export function HealthComponent(props: Props) {
-  const { rating, values, colors } = props
+  const { name, rating, direction, values, colors } = props
   const width = props.width ?? "500px"
 
+  const textboxSize = +width.substring(0, width.length - 2) * 0.6 + "px"
   const fontSize = +width.substring(0, width.length - 2) / 10 + "px"
 
   return (
@@ -43,7 +47,13 @@ export function HealthComponent(props: Props) {
         width={width}
       />
       <div className={styles.healthRating} style={{ fontSize: fontSize }}>
-        <strong>{rating} %</strong>
+        <TrendComponent
+          name={name}
+          rating={rating}
+          direction={direction}
+          width={width}
+          align={"center"}
+        />
       </div>
     </div>
   )
