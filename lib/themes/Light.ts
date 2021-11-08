@@ -1,9 +1,13 @@
+import { IconName } from "../../components/rating/IconName"
 import {
   black,
   blue,
   CSSProperties,
   fraunhoferGreen,
+  gold,
   gray,
+  green,
+  maroon,
   navy,
   Theme,
   transparent,
@@ -116,6 +120,27 @@ const LightTheme: Theme = {
       backgroundColor: transparent,
       textDecoration: "underline",
     }),
+  },
+  content: {
+    trend: {
+      icon: new CSSProperties({
+        backgroundColor: transparent,
+      }),
+    },
+  },
+  trends: {
+    down: {
+      color: maroon,
+      icon: IconName.keyboardArrowDown,
+    },
+    neutral: {
+      color: gold,
+      icon: IconName.remove,
+    },
+    up: {
+      color: green.darken(0.2),
+      icon: IconName.keyboardArrowUp,
+    },
   },
   cytoscape: {
     canvas: [

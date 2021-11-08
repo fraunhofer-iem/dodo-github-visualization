@@ -1,3 +1,5 @@
+import { IconName } from "../../components/rating/IconName"
+
 export type Theme = {
   name: string
   layout: {
@@ -47,6 +49,25 @@ export type Theme = {
     label: CSSProperties
     input: CSSProperties
     select: CSSProperties
+  }
+  content: {
+    trend: {
+      icon: CSSProperties
+    }
+  }
+  trends: {
+    down: {
+      color: Color
+      icon: IconName
+    }
+    neutral: {
+      color: Color
+      icon: IconName
+    }
+    up: {
+      color: Color
+      icon: IconName
+    }
   }
   cytoscape?: {
     canvas: cytoscape.Stylesheet[]

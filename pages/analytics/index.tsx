@@ -1,44 +1,34 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
-import useSWR from "swr"
-import Button from "../../components/action/Button"
 import { Card, CardBody, CardTitle } from "../../components/card"
+import { TrendComponent, TrendDirection } from "../../components/content"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
-import Rating from "../../components/rating/Rating"
-import Table from "../../components/table/Table"
-import {
-  AuthorizationDetails,
-  getAnalyticsForProjectRoute,
-  getProjectsApiRoute,
-  Project,
-  requireAuthorization,
-} from "../../lib/api"
-import usePagination from "../../lib/api/usePagination"
+import { AuthorizationDetails, requireAuthorization } from "../../lib/api"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const {
-      pageNumber,
-      setPageNumber,
-      pageSize,
-      setPageSize,
-      sortInformation,
-      setSortInformation,
-    } = usePagination("name")
-    const { data: projects, error: error } = useSWR<Project[]>(
-      getProjectsApiRoute(
-        pageSize,
-        pageNumber,
-        sortInformation.sortKey,
-        sortInformation.ordering,
-      ),
-    )
-    if (error) {
-      setPageNumber(pageNumber - 1)
-    }
+    // const {
+    //   pageNumber,
+    //   setPageNumber,
+    //   pageSize,
+    //   setPageSize,
+    //   sortInformation,
+    //   setSortInformation,
+    // } = usePagination("name")
+    // const { data: projects, error: error } = useSWR<Project[]>(
+    //   getProjectsApiRoute(
+    //     pageSize,
+    //     pageNumber,
+    //     sortInformation.sortKey,
+    //     sortInformation.ordering,
+    //   ),
+    // )
+    // if (error) {
+    //   setPageNumber(pageNumber - 1)
+    // }
     return (
       props.user?.isLoggedIn && (
         <Page
@@ -49,7 +39,7 @@ const Analytics: NextPage = requireAuthorization(
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
               <SectionTitle>Project Overview</SectionTitle>
-              <Table
+              {/* <Table
                 width="50%"
                 context={"striped"}
                 paginate={true}
@@ -105,7 +95,22 @@ const Analytics: NextPage = requireAuthorization(
                       ])
                     : [],
                 }}
-              </Table>
+              </Table> */}
+              <TrendComponent
+                name="Test1"
+                rating={95}
+                direction={TrendDirection.down}
+              />
+              <TrendComponent
+                name="Test2"
+                rating={95}
+                direction={TrendDirection.neutral}
+              />
+              <TrendComponent
+                name="Test3"
+                rating={95}
+                direction={TrendDirection.up}
+              />
             </CardBody>
           </Card>
         </Page>
