@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import React from "react"
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Layout.module.scss"
 import Button from "../action/Button"
@@ -23,9 +24,10 @@ export function Breadcrumbs(props: Props) {
     <div className={styles.breadcrumbs} style={theme.layout.breadcrumbs.css()}>
       You are here:
       {crumbs.map((currentCrumb, i) => (
-        <>
+        <React.Fragment key={i}>
           {i > 0 && <Icon>{IconName.chevronRight}</Icon>}
           <Button
+            key={i}
             type="button"
             context="anchor"
             display="inline-block"
@@ -33,7 +35,7 @@ export function Breadcrumbs(props: Props) {
           >
             {currentCrumb.name}
           </Button>
-        </>
+        </React.Fragment>
       ))}
     </div>
   )
