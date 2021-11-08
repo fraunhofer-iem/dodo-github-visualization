@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import React, { useState } from "react"
 import useSWR from "swr"
 import Button from "../../components/action/Button"
-import { Card, CardTitle, CardBody } from "../../components/card"
+import { Card, CardBody, CardTitle } from "../../components/card"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
@@ -29,7 +29,10 @@ const Analytics: NextPage = requireAuthorization(
     }
     return (
       props.user?.isLoggedIn && (
-        <Page title="Analytics - KPI Dashboard">
+        <Page
+          title="Analytics - KPI Dashboard"
+          crumbs={[{ name: "Analytics", route: "/analytics" }]}
+        >
           <Card width="99%">
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
@@ -55,7 +58,7 @@ const Analytics: NextPage = requireAuthorization(
                                   getAnalyticsForProjectRoute(project.id),
                                 )
                               }
-                              context="neutral"
+                              context="anchor"
                               width="100%"
                               display="block"
                               align="left"

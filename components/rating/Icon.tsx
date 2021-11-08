@@ -13,5 +13,9 @@ export default function Icon(props: Props) {
 
   const className = style ? `material-icons-${style}` : "material-icons"
 
-  return <span className={className}>{props.children.toString()}</span>
+  return (
+    <span className={className} style={{ verticalAlign: "middle" }}>
+      {props.children.toString()}
+    </span>
+  )
 }

@@ -43,7 +43,7 @@ export default function KpiTable(props: Props) {
                         `/analytics/projects/${projectID}/kpis/${kpi.id}`,
                       )
                     }
-                    context="neutral"
+                    context="anchor"
                     width="100%"
                     display="block"
                     align="left"
