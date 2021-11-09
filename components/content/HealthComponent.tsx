@@ -17,7 +17,6 @@ export function HealthComponent(props: Props) {
   const { name, rating, direction, values, colors } = props
   const width = props.width ?? "500px"
 
-  const textboxSize = +width.substring(0, width.length - 2) * 0.6 + "px"
   const fontSize = +width.substring(0, width.length - 2) / 10 + "px"
 
   return (
