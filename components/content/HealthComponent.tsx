@@ -1,7 +1,7 @@
 import { ChartDataset } from "chart.js/auto"
 import { TrendComponent, TrendDirection } from "."
 import tippyfy, { TooltipControl } from "../../.yalc/tooltip-component/dist"
-import { Color } from "../../lib/themes/Theme"
+import { Color, transparent } from "../../lib/themes/Theme"
 import styles from "../../styles/components/Content.module.scss"
 import { Card } from "../card"
 import { DoughnutChart } from "../chart/DoughnutChart"
@@ -29,8 +29,13 @@ const HealthComponent = tippyfy(function HealthComponent(
         data={{
           datasets: values.map((currentValue, i) => {
             const dataset: ChartDataset<"doughnut"> = {
-              data: [currentValue, 100 - currentValue],
-              backgroundColor: [colors[i].rgba(), colors[i].alph(0.1).rgba()],
+              data: [100 - currentValue, currentValue],
+              backgroundColor: [transparent.rgba(), colors[i].rgba()],
+              hoverBackgroundColor: [
+                transparent.rgba(),
+                colors[i].brighten(0.1).rgba(),
+              ],
+              borderWidth: 0,
               label: i == 0 ? "Technical Debt" : "Performance",
             }
             return dataset
@@ -49,6 +54,9 @@ const HealthComponent = tippyfy(function HealthComponent(
               })
             }
             elements.forEach((currentElement) => {
+              if (currentElement.index != 1) {
+                return
+              }
               const label = chart.getDatasetMeta(
                 currentElement.datasetIndex,
               ).label
