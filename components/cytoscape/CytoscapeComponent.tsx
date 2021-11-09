@@ -9,6 +9,7 @@ import edgehandles from "cytoscape-edgehandles"
 import popper from "cytoscape-popper"
 import deepEqual from "deep-equal"
 import { useEffect, useRef } from "react"
+import { nodeExpansion } from "../../lib/cytoscape"
 
 interface Props {
   cy?: (cy: cytoscape.Core) => void | undefined
@@ -94,6 +95,7 @@ export default function CytoscapeComponent(props: Props) {
         style: stylesheet,
       })
       cy.current.fit()
+
       if (!Object.getPrototypeOf(cy.current).popper) {
         cytoscape.use(popper)
       }
@@ -102,6 +104,9 @@ export default function CytoscapeComponent(props: Props) {
       }
       if (!Object.getPrototypeOf(cy.current).edgehandles) {
         cytoscape.use(edgehandles)
+      }
+      if (!Object.getPrototypeOf(cy.current).nodeExpansion) {
+        cytoscape.use(nodeExpansion)
       }
 
       prevProps.current = props

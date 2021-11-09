@@ -101,6 +101,20 @@ const KPIDetail: NextPage = requireAuthorization(
               <Icon>{IconName.menu}</Icon>
             </Button>
           }
+          crumbs={[
+            {
+              name: "Analytics",
+              route: "/analytics",
+            },
+            {
+              name: project?.name as string,
+              route: getAnalyticsForProjectRoute(projectID as string),
+            },
+            {
+              name: kpi?.name as string,
+              route: `/analytics/projects/${projectID}/kpis/${kpiID}`,
+            },
+          ]}
         >
           <Sidebar
             control={(control: () => void) => (toggleSidebar.current = control)}
