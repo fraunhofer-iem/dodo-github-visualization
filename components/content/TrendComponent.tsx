@@ -6,8 +6,8 @@ interface Props {
   name?: string
   rating: number
   direction: TrendDirection
-  width?: string
   align?: "left" | "center" | "right"
+  compact?: boolean
 }
 
 export enum TrendDirection {
@@ -18,19 +18,19 @@ export enum TrendDirection {
 
 export function TrendComponent(props: Props) {
   const { theme } = useUIContext()
-  const { name, rating, direction, align } = props
-  const width = props.width ?? "150px"
+  const { name, rating, direction, align, compact } = props
 
-  return (
-    <Grid width={width} align={align}>
-      <div className={styles.trendIcon}>
-        <Icon
-          color={theme.trends[direction].color}
-          styles={theme.content.trend.icon}
-        >
-          {theme.trends[direction].icon}
-        </Icon>
-      </div>
+  const indicator = (
+    <Icon
+      color={theme.trends[direction].color}
+      styles={theme.content.trend.icon}
+    >
+      {theme.trends[direction].icon}
+    </Icon>
+  )
+
+  if (compact) {
+    return (
       <div className={styles.trendInfo} style={{ textAlign: align }}>
         {name && (
           <>
@@ -38,6 +38,7 @@ export function TrendComponent(props: Props) {
             <br />
           </>
         )}
+        {indicator}
         <strong
           style={{
             color: theme.trends[direction].color.rgba(),
@@ -46,6 +47,27 @@ export function TrendComponent(props: Props) {
           {rating} %
         </strong>
       </div>
-    </Grid>
-  )
+    )
+  } else {
+    return (
+      <Grid>
+        <div className={styles.trendIcon}>{indicator}</div>
+        <div className={styles.trendInfo} style={{ textAlign: align }}>
+          {name && (
+            <>
+              {name}
+              <br />
+            </>
+          )}
+          <strong
+            style={{
+              color: theme.trends[direction].color.rgba(),
+            }}
+          >
+            {rating} %
+          </strong>
+        </div>
+      </Grid>
+    )
+  }
 }

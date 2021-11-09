@@ -8,14 +8,11 @@
 .trendIcon {
   display: flex;
   align-items: center;
+  padding-right: 15px;
 }
 
 .trendIcon span {
   border-radius: 25px;
-}
-
-.trendInfo {
-  padding-left: 15px;
 }
 
 .trendInfo strong {
@@ -28,11 +25,9 @@
 
 .health .healthRating {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+
+  transform: translate(-50%, -50%);
 }

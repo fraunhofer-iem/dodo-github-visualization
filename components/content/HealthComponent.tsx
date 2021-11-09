@@ -1,6 +1,6 @@
 import { ChartDataset } from "chart.js"
 import { TrendComponent, TrendDirection } from "."
-import { Color, transparent } from "../../lib/themes/Theme"
+import { Color } from "../../lib/themes/Theme"
 import styles from "../../styles/components/Content.module.scss"
 import { DoughnutChart } from "../chart/DoughnutChart"
 
@@ -17,6 +17,7 @@ export function HealthComponent(props: Props) {
   const { name, rating, direction, values, colors } = props
   const width = props.width ?? "500px"
 
+  const cutoutSize = +width.substring(0, width.length - 2) * 0.9 + "px"
   const fontSize = +width.substring(0, width.length - 2) / 10 + "px"
 
   return (
@@ -25,9 +26,10 @@ export function HealthComponent(props: Props) {
         data={{
           datasets: values.map((currentValue, i) => {
             const dataset: ChartDataset<"doughnut"> = {
-              data: [100 - currentValue, currentValue],
-              backgroundColor: [transparent.rgba(), colors[i].rgba()],
-              borderColor: [transparent.rgba(), colors[i].rgba()],
+              label: "Test",
+              data: [currentValue, 100 - currentValue],
+              backgroundColor: [colors[i].rgba(), colors[i].alph(0.1).rgba()],
+              borderColor: [colors[i].rgba(), colors[i].alph(0.1).rgba()],
             }
             return dataset
           }),
@@ -37,20 +39,20 @@ export function HealthComponent(props: Props) {
           animation: {
             animateRotate: true,
           },
-          plugins: {
-            tooltip: {
-              enabled: false,
-            },
-          },
         }}
         width={width}
       />
-      <div className={styles.healthRating} style={{ fontSize: fontSize }}>
+      <div
+        className={styles.healthRating}
+        style={{
+          fontSize: fontSize,
+        }}
+      >
         <TrendComponent
           name={name}
           rating={rating}
           direction={direction}
-          width={width}
+          compact={true}
           align={"center"}
         />
       </div>
