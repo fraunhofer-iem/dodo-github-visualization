@@ -24,7 +24,7 @@ export function ChartComponent(props: Props) {
   const chart = useRef<Chart | null>()
 
   useEffect(() => {
-    if (!equals(prevProps.current, props)) {
+    if (!equals(prevProps.current, props) && container.current !== null) {
       chart.current = new Chart(container.current, {
         type: props.type,
 
