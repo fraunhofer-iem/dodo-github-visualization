@@ -19,22 +19,31 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 ## Use Prod Build
-Run 
+
+Run
 
 ```bash
 npm run build
 # or
 yarn build
 ```
+
 to create a production ready build of your project. Create an environment file called '.env' in your top level directory. Inside this file set all needed environment variables (e.g. SECRET_COOKIE_PASSWORD=U7EgrfyiNWzL542URk4w7UKcD7viDCw2DL1tDyG).
 
-run 
+run
+
 ```bash
 npm run start
 # or
 yarn start
 ```
+
 to start the server.
+
+## Use Docker
+
+You can build your container with docker build . -t my-next-js-app and run it with docker run -p 3000:3000 my-next-js-app. As described [here](https://nextjs.org/docs/deployment)
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
