@@ -6,6 +6,7 @@ export type Theme = {
       translucent: CSSProperties
     }
     bar: CSSProperties
+    breadcrumbs: CSSProperties
     container: CSSProperties
     sidebar: CSSProperties
   }
@@ -20,6 +21,8 @@ export type Theme = {
     "primary:hover": CSSProperties
     neutral: CSSProperties
     "neutral:hover": CSSProperties
+    anchor: CSSProperties
+    "anchor:hover": CSSProperties
   }
   list: {
     list: CSSProperties

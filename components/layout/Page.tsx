@@ -1,11 +1,11 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { Bar } from "../../components/layout/Bar"
-import { Container } from "../../components/layout/Container"
+import { Bar, Breadcrumbs, Container, Crumb } from "../../components/layout"
 import Button from "../action/Button"
 
 interface Props {
   title: string
+  crumbs?: Crumb[]
   sidebar?: React.ReactNode
   children?: React.ReactNode
 }
@@ -33,6 +33,7 @@ export function Page(props: Props) {
           KPI Hierarchy
         </Button>
       </Bar>
+      {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />}
       <Container>{props.children}</Container>
     </>
   )

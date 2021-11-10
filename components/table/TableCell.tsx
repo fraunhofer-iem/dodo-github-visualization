@@ -7,50 +7,40 @@ interface Props {
   scope?: "col" | "row"
   children?: React.ReactNode
   context: TableContext
-  column?: number
   sortedBy?: boolean
+  sortKey?: string
   ordering?: Ordering
-  setOrdering?: (ordering: Ordering) => void
-  setSortColumn?: (column: number) => void
+  setSortInformation?: (sortInformation: {
+    sortKey: string
+    ordering: Ordering
+  }) => void
 }
 
 export enum Ordering {
-  ascending,
-  descending,
-  given,
+  ascending = 1,
+  descending = 0,
+  given = 2,
 }
 
 export default function TableCell(props: Props) {
   const { theme } = useUIContext()
-  const [ordering, setOrdering] = [
+  const [sortKey, ordering, setSortInformation] = [
+    props.sortKey ?? undefined,
     props.ordering ?? Ordering.given,
-    props.setOrdering ?? (() => {}),
+    props.setSortInformation ?? (() => {}),
   ]
-  const [column, setSortColumn] = [
-    props.column,
-    props.setSortColumn ?? (() => {}),
-  ]
-
-  const toggleOrdering = () => {
-    switch (ordering) {
-      case Ordering.ascending:
-        setOrdering(Ordering.descending)
-        break
-      case Ordering.descending:
-        setOrdering(Ordering.ascending)
-        break
-      default:
-        setOrdering(Ordering.ascending)
-        break
-    }
-  }
 
   return props.scope ? (
     <th
       onClick={() => {
-        if (column) {
-          toggleOrdering()
-          setSortColumn(column - 1)
+        if (sortKey) {
+          setSortInformation({
+            sortKey: sortKey,
+            ordering:
+              ordering == Ordering.given || ordering == Ordering.descending
+                ? Ordering.ascending
+                : Ordering.descending,
+          })
         }
       }}
       scope={props.scope}

@@ -25,6 +25,7 @@ const LightTheme: Theme = {
       backgroundColor: white.darken(0.05),
     }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
+    breadcrumbs: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {
     card: new CSSProperties({
@@ -106,6 +107,15 @@ const LightTheme: Theme = {
       backgroundColor: transparent,
       color: "inherit",
     }),
+    anchor: new CSSProperties({
+      backgroundColor: transparent,
+      color: "inherit",
+      textDecoration: "none",
+    }),
+    "anchor:hover": new CSSProperties({
+      backgroundColor: transparent,
+      textDecoration: "underline",
+    }),
   },
   cytoscape: {
     canvas: [
@@ -116,25 +126,6 @@ const LightTheme: Theme = {
           "text-valign": "bottom",
         },
       },
-      {
-        selector: "node[?expandable]",
-        style: {
-          shape: "diamond",
-        },
-      },
-      {
-        selector: "[?hidden]",
-        style: {
-          visibility: "hidden",
-        },
-      },
-      {
-        selector: "[!hidden]",
-        style: {
-          visibility: "visible",
-        },
-      },
-
       {
         selector: "node[?hover]",
         style: {
