@@ -27,7 +27,7 @@ export function TrendComponent(props: Props) {
     for (let i = 0; i <= rating; i++) {
       delay(() => {
         if (domRating.current) {
-          domRating.current.textContent = `${i}`
+          domRating.current.textContent = `${i} %`
         }
       }, i * (600 / rating))
     }

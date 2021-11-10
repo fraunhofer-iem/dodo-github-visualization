@@ -162,6 +162,7 @@ export const orange = new Color(255, 165, 0)
 export const gold = new Color(255, 215, 0)
 export const indigo = new Color(75, 0, 130)
 export const purple = new Color(128, 0, 128)
+export const fuchsia = new Color(255, 0, 255)
 export const cyan = new Color(0, 255, 255)
 export const turquoise = new Color(64, 224, 208)
 export const steelBlue = new Color(70, 130, 180)
@@ -171,6 +172,31 @@ export const maroon = new Color(128, 0, 0)
 export const silver = new Color(192, 192, 192)
 export const gray = new Color(128, 128, 128)
 export const transparent = new Color(0, 0, 0, 0)
+
+export const colors = {
+  white,
+  ghostWhite,
+  black,
+  red,
+  blue,
+  green,
+  lime,
+  yellow,
+  orange,
+  gold,
+  indigo,
+  purple,
+  fuchsia,
+  cyan,
+  turquoise,
+  steelBlue,
+  navy,
+  brown,
+  maroon,
+  silver,
+  gray,
+  transparent,
+}
 
 // IEM specific colors
 export const fraunhoferGreen = new Color(23, 156, 125)

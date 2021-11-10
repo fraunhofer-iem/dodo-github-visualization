@@ -2,15 +2,11 @@ import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
 import { Card, CardBody, CardTitle } from "../../components/card"
-import {
-  HealthComponent,
-  TrendComponent,
-  TrendDirection,
-} from "../../components/content"
+import { RingChart } from "../../components/chart/RingChart"
+import { TrendComponent, TrendDirection } from "../../components/content"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import { AuthorizationDetails, requireAuthorization } from "../../lib/api"
-import { orange, red } from "../../lib/themes/Theme"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -44,6 +40,40 @@ const Analytics: NextPage = requireAuthorization(
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
               <SectionTitle>Project Overview</SectionTitle>
+              <RingChart
+                rings={[
+                  {
+                    value: 20,
+                    tooltip: <Card>KPI 1</Card>,
+                  },
+                  {
+                    value: 50,
+                    tooltip: <Card>KPI 2</Card>,
+                  },
+                  {
+                    value: 35,
+                    tooltip: <Card>KPI 3</Card>,
+                  },
+                  {
+                    value: 72,
+                    tooltip: <Card>KPI 4</Card>,
+                  },
+                  {
+                    value: 92,
+                    tooltip: <Card>KPI 5</Card>,
+                    action: () => alert("KPI 5"),
+                  },
+                ]}
+                width="250px"
+              >
+                <TrendComponent
+                  name={"Health"}
+                  rating={34}
+                  direction={TrendDirection.down}
+                  compact={true}
+                  align={"center"}
+                />
+              </RingChart>
               {/* <Table
                 width="50%"
                 context={"striped"}
@@ -122,14 +152,6 @@ const Analytics: NextPage = requireAuthorization(
                   direction={TrendDirection.up}
                 />
               </Card>
-              <HealthComponent
-                colors={[red, orange]}
-                values={[50, 30]}
-                name={"Code Quality"}
-                rating={50}
-                width="200px"
-                direction={TrendDirection.neutral}
-              />
             </CardBody>
           </Card>
         </Page>
