@@ -54,6 +54,7 @@ export type Theme = {
     trend: {
       icon: CSSProperties
     }
+    spinner: CSSProperties
   }
   trends: {
     down: {

@@ -127,6 +127,10 @@ const LightTheme: Theme = {
         backgroundColor: transparent,
       }),
     },
+    spinner: new CSSProperties({
+      borderColor: black.brighten(0.25),
+      borderTopColor: transparent,
+    }),
   },
   trends: {
     down: {

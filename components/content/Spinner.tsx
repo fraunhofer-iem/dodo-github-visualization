@@ -1,11 +1,13 @@
-import { colors } from "../../lib/themes/Theme"
+import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Spinner.module.scss"
 interface Props {
   size?: string
 }
 
 export function Spinner(props: Props) {
+  const { theme } = useUIContext()
   const size = props.size ?? "500px"
+
   return (
     <div
       className={styles.spinner}
@@ -13,8 +15,7 @@ export function Spinner(props: Props) {
         display: "inline-block",
         width: size,
         height: size,
-        borderColor: colors.black.rgba(),
-        borderTopColor: colors.transparent.rgba(),
+        ...theme.content.spinner.css(),
       }}
     />
   )
