@@ -3,7 +3,11 @@ import { useRouter } from "next/router"
 import React from "react"
 import { Card, CardBody, CardTitle } from "../../components/card"
 import { RingChart } from "../../components/chart/RingChart"
-import { TrendComponent, TrendDirection } from "../../components/content"
+import {
+  Spinner,
+  TrendComponent,
+  TrendDirection,
+} from "../../components/content"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Page } from "../../components/layout"
 import { AuthorizationDetails, requireAuthorization } from "../../lib/api"
@@ -40,6 +44,7 @@ const Analytics: NextPage = requireAuthorization(
             <CardTitle>KPI Analytics</CardTitle>
             <CardBody>
               <SectionTitle>Project Overview</SectionTitle>
+              <Spinner size="100px" />
               <RingChart
                 rings={[
                   {
