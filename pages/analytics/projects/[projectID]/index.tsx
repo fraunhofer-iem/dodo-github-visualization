@@ -6,9 +6,9 @@ import useSWR from "swr"
 import Button from "../../../../components/action/Button"
 import {
   Card,
-  CardTitle,
   CardBody,
   CardSubTitle,
+  CardTitle,
 } from "../../../../components/card"
 import { PieChart } from "../../../../components/chart"
 import KpiTable from "../../../../components/KpiTable"
@@ -16,10 +16,11 @@ import { Grid, Page, Sidebar } from "../../../../components/layout"
 import Icon from "../../../../components/rating/Icon"
 import { IconName } from "../../../../components/rating/IconName"
 import {
-  ProjectDetail,
   AuthorizationDetails,
-  requireAuthorization,
+  getAnalyticsForProjectRoute,
   getProjectApiRoute,
+  ProjectDetail,
+  requireAuthorization,
 } from "../../../../lib/api"
 import prData from "../../../../lib/data/pullRequestData.json"
 import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
@@ -92,6 +93,16 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
             <Icon>{IconName.menu}</Icon>
           </Button>
         }
+        crumbs={[
+          {
+            name: "Analytics",
+            route: "/analytics",
+          },
+          {
+            name: project?.name as string,
+            route: getAnalyticsForProjectRoute(projectID as string),
+          },
+        ]}
       >
         <Sidebar
           control={(control: () => void) => (toggleSidebar.current = control)}
