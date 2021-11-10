@@ -1,9 +1,10 @@
-import { ChartDataset } from "chart.js"
+import { ActiveElement, Chart, ChartDataset, ChartEvent } from "chart.js"
+import deepEqual from "deep-equal"
+import { useCallback, useRef } from "react"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import { colors } from "../../lib/themes/Theme"
 import styles from "../../styles/components/RingChart.module.scss"
 import { DoughnutChart } from "./DoughnutChart"
-
 interface Props {
   rings: {
     tooltip?: React.ReactNode
@@ -29,16 +30,94 @@ const colorScheme = [
 
 const RingChart: (props: Props) => JSX.Element = tippyfy(
   (props: Props & TooltipControl) => {
-    const { rings, setTippy, children } = props
+    const { setTippy, children } = props
+
+    const rings = useRef<
+      {
+        tooltip?: React.ReactNode
+        value: number
+        action?: () => void
+      }[]
+    >([])
+
+    if (!deepEqual(rings.current, props.rings)) {
+      rings.current = props.rings
+    }
+
     const width = props.width ?? "500px"
 
     const fontSize = +width.substring(0, width.length - 2) / 10 + "px"
+
+    const handleHover = useCallback(
+      (
+        event: ChartEvent,
+        elements: ActiveElement[],
+        chart: Chart<"doughnut">,
+      ) => {
+        if (!elements.length) {
+          setTippy("tooltip", {
+            content: undefined,
+            popperRef: undefined,
+          })
+        }
+        elements.forEach((currentElement) => {
+          if (currentElement.index != 1) {
+            return
+          }
+          const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
+          setTippy("tooltip", {
+            content: rings.current[ring].tooltip,
+            popperRef: {
+              getBoundingClientRect: () => ({
+                width: 0,
+                height: 0,
+                bottom: (event.native as MouseEvent).clientY,
+                top: (event.native as MouseEvent).clientY,
+                left: (event.native as MouseEvent).clientX,
+                right: (event.native as MouseEvent).clientX,
+                x: (event.native as MouseEvent).clientX,
+                y: (event.native as MouseEvent).clientY,
+                toJSON: () => {},
+              }),
+            },
+            tippyProps: {
+              placement: "auto",
+            },
+          })
+        })
+      },
+      [setTippy],
+    )
+
+    const handleClick = useCallback(
+      (
+        event: ChartEvent,
+        elements: ActiveElement[],
+        chart: Chart<"doughnut">,
+      ) => {
+        elements.forEach((currentElement) => {
+          if (currentElement.index != 1) {
+            return
+          }
+          const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
+          const action = rings.current[ring].action
+          if (action) {
+            setTippy("tooltip", {
+              content: undefined,
+              popperRef: undefined,
+            })
+            action()
+          }
+        })
+      },
+      [setTippy],
+    )
 
     return (
       <div className={styles.ringChart} style={{ width: width }}>
         <DoughnutChart
           data={{
-            datasets: rings.map((currentRing, i) => {
+            datasets: rings.current.map((currentRing, i) => {
               const { value } = currentRing
 
               const dataset: ChartDataset<"doughnut"> = {
@@ -67,57 +146,8 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
                 enabled: false,
               },
             },
-            onHover: (event, elements, chart) => {
-              if (!elements.length) {
-                setTippy("tooltip", {
-                  content: undefined,
-                  popperRef: undefined,
-                })
-              }
-              elements.forEach((currentElement) => {
-                if (currentElement.index != 1) {
-                  return
-                }
-                const ring = +chart.getDatasetMeta(currentElement.datasetIndex)
-                  .label
-                setTippy("tooltip", {
-                  content: rings[ring].tooltip,
-                  popperRef: {
-                    getBoundingClientRect: () => ({
-                      width: 0,
-                      height: 0,
-                      bottom: (event.native as MouseEvent).clientY,
-                      top: (event.native as MouseEvent).clientY,
-                      left: (event.native as MouseEvent).clientX,
-                      right: (event.native as MouseEvent).clientX,
-                      x: (event.native as MouseEvent).clientX,
-                      y: (event.native as MouseEvent).clientY,
-                      toJSON: () => {},
-                    }),
-                  },
-                  tippyProps: {
-                    placement: "auto",
-                  },
-                })
-              })
-            },
-            onClick: (_, elements, chart) => {
-              elements.forEach((currentElement) => {
-                if (currentElement.index != 1) {
-                  return
-                }
-                const ring = +chart.getDatasetMeta(currentElement.datasetIndex)
-                  .label
-                const action = rings[ring].action
-                if (action) {
-                  setTippy("tooltip", {
-                    content: undefined,
-                    popperRef: undefined,
-                  })
-                  action()
-                }
-              })
-            },
+            onHover: handleHover,
+            onClick: handleClick,
           }}
           width={width}
         />

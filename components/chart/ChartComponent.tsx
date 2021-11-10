@@ -25,6 +25,7 @@ export function ChartComponent(props: Props) {
 
   useEffect(() => {
     if (!equals(prevProps.current, props) && container.current !== null) {
+      chart.current?.destroy()
       chart.current = new Chart(container.current, {
         type: props.type,
 
