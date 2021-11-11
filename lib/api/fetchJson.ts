@@ -13,6 +13,6 @@ export async function fetchJson(
   }
 
   const error = new Error(response.statusText)
-  error.stack = data
+  error.stack = { status: response.status, ...data }
   throw error
 }

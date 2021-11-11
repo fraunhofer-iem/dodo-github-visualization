@@ -34,7 +34,7 @@ export default function KpiTable(props: Props) {
       sortInformation.ordering,
     ),
   )
-  if (error) {
+  if (error && error.stack.status == 404) {
     setPageNumber(pageNumber - 1)
   }
 

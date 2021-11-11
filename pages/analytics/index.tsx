@@ -6,6 +6,7 @@ import useSWR from "swr"
 import { Card } from "../../components/card"
 import { RingChart } from "../../components/chart/RingChart"
 import {
+  ProjectHealth,
   Spinner,
   TrendComponent,
   TrendDirection,
@@ -49,8 +50,8 @@ const Analytics: NextPage = requireAuthorization(
           title="Analytics - KPI Dashboard"
           crumbs={[{ name: "Analytics", route: "/analytics" }]}
         >
-          <Grid>
-            <Card width="250px">
+          <Grid align="center">
+            <Card>
               {projects ? (
                 <RingChart
                   rings={projects.map((currentProject) => ({
@@ -80,6 +81,19 @@ const Analytics: NextPage = requireAuthorization(
                 <Spinner size="250px" />
               )}
             </Card>
+          </Grid>
+          <Grid align="center">
+            {projects &&
+              projects.map((currentProject) => {
+                return (
+                  <Card key={currentProject.id}>
+                    <ProjectHealth
+                      projectId={currentProject.id}
+                      width={"250px"}
+                    />
+                  </Card>
+                )
+              })}
           </Grid>
         </Page>
       )

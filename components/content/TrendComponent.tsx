@@ -31,7 +31,7 @@ export function TrendComponent(props: Props) {
         }
       }, i * (600 / rating))
     }
-  }, [domRating, rating])
+  }, [domRating, rating, direction])
 
   const jsxIndicator = (
     <Icon
