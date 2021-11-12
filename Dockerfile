@@ -18,7 +18,6 @@ FROM node:alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV SECRET_COOKIE_PASSWORD U7EgrfyiNWzL542URk4w7UKcD7viDCw2DL1tDyG
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -39,6 +38,6 @@ ENV PORT 3000
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 CMD ["node_modules/.bin/next", "start"]

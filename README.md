@@ -42,7 +42,7 @@ to start the server.
 
 ## Use Docker
 
-You can build your container with docker build . -t my-next-js-app and run it with docker run -p 3000:3000 my-next-js-app. As described [here](https://nextjs.org/docs/deployment)
+You can build your container with docker build . -t my-next-js-app and run it with `docker run -e SECRET_COOKIE_PASSWORD=32CHARACTERS-LONG-PASSWORD -p 3000:3000 my-next-js-app`. As described [here](https://nextjs.org/docs/deployment)
 
 ## Learn More
 
