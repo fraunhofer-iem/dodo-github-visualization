@@ -3,6 +3,15 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
 import { NextApiRequest, NextApiResponse } from "next"
 import { Session, withIronSession } from "next-iron-session"
+import fs from "fs"
+
+const readFileContent = (path: string) => {
+  try {
+    return fs.readFileSync(path, "utf8")
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 // optionally add stronger typing for next-specific implementation
 export type NextIronRequest = NextApiRequest & { session: Session }
@@ -14,7 +23,9 @@ export type NextIronHandler = (
 export const withSession = (handler: NextIronHandler) =>
   withIronSession(handler, {
     password: isProductionEnvironment()
-      ? (process.env.SECRET_COOKIE_PASSWORD as string)
+      ? (readFileContent(
+          process.env.SECRET_COOKIE_PASSWORD_FILE as string,
+        ) as string)
       : "U7EgrfyiNWzL542URk4w7UKcD7viDCw2DL1tDyG",
     cookieName: "next-iron-session/examples/next.js",
     cookieOptions: {
