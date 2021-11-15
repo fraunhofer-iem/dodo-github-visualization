@@ -35,11 +35,7 @@ export default function KpiTable(props: Props) {
       sortInformation.ordering,
     ),
   )
-<<<<<<< HEAD
-  if (error && error.stack.status == 404) {
-=======
   if (error && error.statusCode == 404) {
->>>>>>> feature/tableOverflow
     setPageNumber(pageNumber - 1)
   }
 

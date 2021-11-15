@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import useSWR from "swr"
 import { Spinner, TrendComponent, TrendDirection } from "."
 import {
+  getAnalyticsForProjectRoute,
   getKpiForProjectRoute,
   getKpisForProjectApiRoute,
   getProjectApiRoute,
@@ -36,6 +37,7 @@ export function ProjectHealth(props: Props) {
       <TrendComponent
         compact={true}
         name={project.name}
+        action={() => router.push(getAnalyticsForProjectRoute(project.id))}
         rating={project.maturityIndex}
         direction={
           [TrendDirection.up, TrendDirection.down, TrendDirection.neutral][

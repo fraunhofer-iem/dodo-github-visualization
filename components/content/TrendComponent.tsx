@@ -2,10 +2,12 @@ import { delay } from "lodash"
 import { useEffect, useRef } from "react"
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Content.module.scss"
+import Button from "../action/Button"
 import { Grid } from "../layout"
 import Icon from "../rating/Icon"
 interface Props {
   name?: string
+  action?: () => void
   rating: number
   direction: TrendDirection
   align?: "left" | "center" | "right"
@@ -44,7 +46,12 @@ export function TrendComponent(props: Props) {
 
   const jsxName = name && (
     <>
-      {name}
+      <Button
+        context="neutral"
+        action={() => (props.action ? props.action() : () => {})}
+      >
+        {name}
+      </Button>
       <br />
     </>
   )

@@ -14,11 +14,6 @@ export async function fetchJson(
     return data
   }
 
-<<<<<<< HEAD
-  const error = new Error(response.statusText)
-  error.stack = { status: response.status, ...data }
-=======
   const error = new ApiError(response.status, response.statusText)
->>>>>>> feature/tableOverflow
   throw error
 }
