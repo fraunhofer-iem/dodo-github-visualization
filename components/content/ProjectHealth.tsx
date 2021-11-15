@@ -39,11 +39,12 @@ export function ProjectHealth(props: Props) {
         name={project.name}
         action={() => router.push(getAnalyticsForProjectRoute(project.id))}
         rating={project.maturityIndex}
-        direction={
-          [TrendDirection.up, TrendDirection.down, TrendDirection.neutral][
-            Math.floor(Math.random() * 3)
-          ]
-        }
+        // direction={
+        //   [TrendDirection.up, TrendDirection.down, TrendDirection.neutral][
+        //     Math.floor(Math.random() * 3)
+        //   ]
+        // }
+        direction={TrendDirection.up}
       />
     </RingChart>
   ) : (

@@ -150,6 +150,7 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
             onClick: handleClick,
           }}
           width={width}
+          height={width}
         />
         <div
           className={styles.cutout}

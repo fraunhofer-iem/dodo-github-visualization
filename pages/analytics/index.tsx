@@ -92,16 +92,23 @@ const Analytics: NextPage = requireAuthorization(
           <Section>
             <SectionTitle>Projects</SectionTitle>
             <Gallery<Project>
-              generator={(currentProject: Project) => (
-                <Card key={currentProject.id}>
+              rows={1}
+              boxSize={250}
+              sortKeys={["name", "maturity Index"]}
+              generator={(
+                currentProject: Project,
+                size: number,
+                key: number,
+              ) => (
+                <Card key={key}>
                   <ProjectHealth
                     projectId={currentProject.id}
-                    width={"250px"}
+                    width={`${size}px`}
                   />
                 </Card>
               )}
               route={getProjectsApiRoute}
-            ></Gallery>
+            />
           </Section>
         </Page>
       )
