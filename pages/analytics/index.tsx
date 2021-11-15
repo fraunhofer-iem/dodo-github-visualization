@@ -16,6 +16,7 @@ import {
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Grid, Page } from "../../components/layout"
 import {
+  ApiError,
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
   getProjectsApiRoute,
@@ -34,8 +35,13 @@ const Analytics: NextPage = requireAuthorization(
       setPageSize,
       sortInformation,
       setSortInformation,
+<<<<<<< HEAD
     } = usePagination("name", 9)
     const { data: projects, error: error } = useSWR<Project[]>(
+=======
+    } = usePagination("name")
+    const { data: projects, error: error } = useSWR<Project[], ApiError>(
+>>>>>>> feature/tableOverflow
       getProjectsApiRoute(
         pageSize,
         pageNumber,
@@ -43,8 +49,13 @@ const Analytics: NextPage = requireAuthorization(
         sortInformation.ordering,
       ),
     )
+<<<<<<< HEAD
     if (error) {
       console.log(error)
+=======
+    if (error && error.statusCode == 404) {
+      setPageNumber(pageNumber - 1)
+>>>>>>> feature/tableOverflow
     }
 
     return (
