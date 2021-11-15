@@ -5,5 +5,5 @@ interface Props {
 }
 
 export default function SectionTitle(props: Props) {
-  return <h6 className={styles.section}>{props.children}</h6>
+  return <h6 className={styles.sectionTitle}>{props.children}</h6>
 }

@@ -1,5 +1,5 @@
-.section {
-  font-size: 1.1rem;
+.sectionTitle {
+  font-size: 1.25rem;
   font-weight: bold;
   margin-top: 0;
   margin-bottom: 1rem;
@@ -17,4 +17,34 @@
 
 .trendInfo strong {
   font-size: 1.15em;
+}
+
+.section {
+  width: 100%;
+  padding: 0.5rem;
+  border-top: 4px solid;
+}
+
+.section h2 {
+  padding: 0;
+  margin: 0;
+}
+
+.gallery {
+  width: 100%;
+  position: relative;
+}
+
+.gallery .previous {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.gallery .forward {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

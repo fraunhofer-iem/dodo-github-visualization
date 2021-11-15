@@ -6,11 +6,14 @@ import useSWR from "swr"
 import { Card } from "../../components/card"
 import { RingChart } from "../../components/chart/RingChart"
 import {
+  Gallery,
   ProjectHealth,
+  Section,
   Spinner,
   TrendComponent,
   TrendDirection,
 } from "../../components/content"
+import SectionTitle from "../../components/heading/SectionTitle"
 import { Grid, Page } from "../../components/layout"
 import {
   AuthorizationDetails,
@@ -50,51 +53,55 @@ const Analytics: NextPage = requireAuthorization(
           title="Analytics - KPI Dashboard"
           crumbs={[{ name: "Analytics", route: "/analytics" }]}
         >
-          <Grid align="center">
-            <Card>
-              {projects ? (
-                <RingChart
-                  rings={projects.map((currentProject) => ({
-                    value: currentProject.maturityIndex,
-                    tooltip: <Card>{currentProject.name}</Card>,
-                    action: () =>
-                      router.push(
-                        getAnalyticsForProjectRoute(currentProject.id),
-                      ),
-                  }))}
-                  width="250px"
-                >
-                  <TrendComponent
-                    name="Health"
-                    rating={
-                      sum(
-                        projects.map(
-                          (currentProject) => currentProject.maturityIndex,
+          <Section>
+            <SectionTitle>Organization</SectionTitle>
+            <Grid align="center">
+              <Card>
+                {projects ? (
+                  <RingChart
+                    rings={projects.map((currentProject) => ({
+                      value: currentProject.maturityIndex,
+                      tooltip: <Card>{currentProject.name}</Card>,
+                      action: () =>
+                        router.push(
+                          getAnalyticsForProjectRoute(currentProject.id),
                         ),
-                      ) / projects.length
-                    }
-                    direction={TrendDirection.up}
-                    compact={true}
-                  />
-                </RingChart>
-              ) : (
-                <Spinner size="250px" />
-              )}
-            </Card>
-          </Grid>
-          <Grid align="center">
-            {projects &&
-              projects.map((currentProject) => {
-                return (
-                  <Card key={currentProject.id}>
-                    <ProjectHealth
-                      projectId={currentProject.id}
-                      width={"250px"}
+                    }))}
+                    width="250px"
+                  >
+                    <TrendComponent
+                      name="Health"
+                      rating={
+                        sum(
+                          projects.map(
+                            (currentProject) => currentProject.maturityIndex,
+                          ),
+                        ) / projects.length
+                      }
+                      direction={TrendDirection.up}
+                      compact={true}
                     />
-                  </Card>
-                )
-              })}
-          </Grid>
+                  </RingChart>
+                ) : (
+                  <Spinner size="250px" />
+                )}
+              </Card>
+            </Grid>
+          </Section>
+          <Section>
+            <SectionTitle>Projects</SectionTitle>
+            <Gallery<Project>
+              generator={(currentProject: Project) => (
+                <Card key={currentProject.id}>
+                  <ProjectHealth
+                    projectId={currentProject.id}
+                    width={"250px"}
+                  />
+                </Card>
+              )}
+              route={getProjectsApiRoute}
+            ></Gallery>
+          </Section>
         </Page>
       )
     )

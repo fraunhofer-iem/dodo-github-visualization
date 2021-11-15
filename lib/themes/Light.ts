@@ -127,6 +127,9 @@ const LightTheme: Theme = {
         backgroundColor: transparent,
       }),
     },
+    section: new CSSProperties({
+      borderColor: gray,
+    }),
     spinner: new CSSProperties({
       borderColor: black.brighten(0.25),
       borderTopColor: transparent,
