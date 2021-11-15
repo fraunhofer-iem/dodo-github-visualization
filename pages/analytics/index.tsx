@@ -9,6 +9,7 @@ import { Page } from "../../components/layout"
 import Rating from "../../components/rating/Rating"
 import Table from "../../components/table/Table"
 import {
+  ApiError,
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
   getProjectsApiRoute,
@@ -28,7 +29,7 @@ const Analytics: NextPage = requireAuthorization(
       sortInformation,
       setSortInformation,
     } = usePagination("name")
-    const { data: projects, error: error } = useSWR<Project[]>(
+    const { data: projects, error: error } = useSWR<Project[], ApiError>(
       getProjectsApiRoute(
         pageSize,
         pageNumber,
@@ -36,7 +37,7 @@ const Analytics: NextPage = requireAuthorization(
         sortInformation.ordering,
       ),
     )
-    if (error) {
+    if (error && error.statusCode == 404) {
       setPageNumber(pageNumber - 1)
     }
     return (
