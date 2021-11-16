@@ -20,10 +20,12 @@ import {
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
   getProjectsApiRoute,
+  PaginationQueryParams,
   Project,
   requireAuthorization,
 } from "../../lib/api"
 import usePagination from "../../lib/api/usePagination"
+import { Trend } from "../api/trends"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -87,6 +89,23 @@ const Analytics: NextPage = requireAuthorization(
                   <Spinner size="250px" />
                 )}
               </Card>
+              <Gallery<Trend>
+                rows={3}
+                width={"50%"}
+                boxSize={150}
+                sortKeys={["name", "direction", "value"]}
+                route={getTrendsApiRoute}
+                generator={(currentTrend: Trend, size: number, key: number) => (
+                  <Card key={key} width={`${size}px`}>
+                    <TrendComponent
+                      direction={currentTrend.direction}
+                      name={currentTrend.name}
+                      rating={currentTrend.value}
+                      align="left"
+                    />
+                  </Card>
+                )}
+              />
             </Grid>
           </Section>
           <Section>
@@ -115,5 +134,18 @@ const Analytics: NextPage = requireAuthorization(
     )
   },
 )
+
+function getTrendsApiRoute(
+  pageSize?: number,
+  pageNumber?: number,
+  sortKey?: string,
+  asc?: number,
+) {
+  pageSize = pageSize ? pageSize : 9
+  pageNumber = pageNumber ? pageNumber : 1
+  sortKey = sortKey ? sortKey : "name"
+  asc = asc == 0 ? 0 : 1
+  return `/api/trends?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+}
 
 export default Analytics

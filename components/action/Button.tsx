@@ -11,6 +11,7 @@ export interface Props {
   width?: string
   display?: string
   align?: "left" | "right" | "center"
+  padding?: string
   href?: string
   disabled?: boolean
 }
@@ -37,6 +38,9 @@ export default function Button(props: Props) {
   }
   if (props.align) {
     css["textAlign"] = props.align
+  }
+  if (props.padding) {
+    css["padding"] = props.padding
   }
 
   return props.href ? (

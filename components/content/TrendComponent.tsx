@@ -49,6 +49,8 @@ export function TrendComponent(props: Props) {
       <Button
         context="neutral"
         action={() => (props.action ? props.action() : () => {})}
+        align={props.align}
+        padding="0.375rem 0"
       >
         {name}
       </Button>
