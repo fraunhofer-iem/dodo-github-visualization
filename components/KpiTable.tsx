@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
 import {
+  ApiError,
   getKpiForProjectRoute,
   getKpisForProjectApiRoute,
   Kpi,
@@ -25,7 +26,7 @@ export default function KpiTable(props: Props) {
     sortInformation,
     setSortInformation,
   } = usePagination("name")
-  const { data: kpis, error: error } = useSWR<Kpi[]>(
+  const { data: kpis, error: error } = useSWR<Kpi[], ApiError>(
     getKpisForProjectApiRoute(
       projectID,
       pageSize,
@@ -34,7 +35,7 @@ export default function KpiTable(props: Props) {
       sortInformation.ordering,
     ),
   )
-  if (error) {
+  if (error && error.statusCode == 404) {
     setPageNumber(pageNumber - 1)
   }
 
