@@ -27,7 +27,7 @@ export const withSession = (handler: NextIronHandler) =>
           process.env.SECRET_COOKIE_PASSWORD_FILE as string,
         ) as string)
       : "U7EgrfyiNWzL542URk4w7UKcD7viDCw2DL1tDyG",
-    cookieName: "next-iron-session/examples/next.js",
+    cookieName: "dodo-visualization-user",
     cookieOptions: {
       // the next line allows to use the session in non-https environments like
       // Next.js dev mode (http://localhost:3000)
