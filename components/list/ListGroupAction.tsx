@@ -8,7 +8,7 @@ interface Props {
   cxtAction?: () => void
 }
 
-export default function ListGroupAction(props: Props) {
+export function ListGroupAction(props: Props) {
   const { theme } = useUIContext()
 
   return (

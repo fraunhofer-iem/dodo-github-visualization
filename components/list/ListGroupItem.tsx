@@ -5,7 +5,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export default function ListGroupItem(props: Props) {
+export function ListGroupItem(props: Props) {
   const { theme } = useUIContext()
 
   return (
