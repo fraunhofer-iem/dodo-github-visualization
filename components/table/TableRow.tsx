@@ -1,4 +1,4 @@
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 import { TableContext } from "./Table"
 
 interface Props {

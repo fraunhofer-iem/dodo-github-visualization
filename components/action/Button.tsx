@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Button.module.scss"
 
 interface Props {

@@ -1,13 +1,9 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useSWR from "swr"
-import { ApiRoutes } from "."
-import { User } from "./types"
+import { ApiRoutes, User } from "../api"
 
-export default function useUser({
-  redirectTo = "",
-  redirectIfFound = false,
-} = {}) {
+export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
   const { data: user, mutate: mutateUser } = useSWR<User>(ApiRoutes.USER)
   const router = useRouter()
   useEffect(() => {

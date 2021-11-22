@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import React from "react"
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
 import { Button } from "../action"
 import Icon from "../rating/Icon"

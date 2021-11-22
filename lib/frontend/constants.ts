@@ -51,3 +51,9 @@ export enum TrendDirection {
   NEUTRAL = "neutral",
   UP = "up",
 }
+
+export enum Ordering {
+  ASCENDING = 1,
+  DESCENDING = 0,
+  GIVEN = 2,
+}

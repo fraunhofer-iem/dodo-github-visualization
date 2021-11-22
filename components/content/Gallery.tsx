@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react"
 import { useSwipeable } from "react-swipeable"
 import useSWR from "swr"
 import { ApiError } from "../../lib/api"
-import usePagination from "../../lib/api/usePagination"
-import { useUIContext } from "../../lib/uiContext"
+import { Ordering } from "../../lib/frontend"
+import { usePagination, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
 import { Button } from "../action"
 import { Grid } from "../layout"
@@ -12,7 +12,6 @@ import ListGroup from "../list/ListGroup"
 import ListGroupAction from "../list/ListGroupAction"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
-import { Ordering } from "../table/TableCell"
 interface Props<EntityType> {
   /**
    * Number of rows within the gallery
@@ -172,14 +171,14 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
             setSortInformation({
               sortKey: "" + sortInformation.sortKey,
               ordering:
-                sortInformation.ordering == Ordering.ascending
-                  ? Ordering.descending
-                  : Ordering.ascending,
+                sortInformation.ordering == Ordering.ASCENDING
+                  ? Ordering.DESCENDING
+                  : Ordering.ASCENDING,
             })
           }
         >
           <Icon>
-            {sortInformation.ordering == Ordering.ascending
+            {sortInformation.ordering == Ordering.ASCENDING
               ? IconName.sort
               : IconName.segment}
           </Icon>

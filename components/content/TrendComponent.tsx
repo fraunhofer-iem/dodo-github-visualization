@@ -1,7 +1,7 @@
 import { delay } from "lodash"
 import { useEffect, useRef } from "react"
 import { TrendDirection } from "../../lib/frontend"
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
 import { Button } from "../action"
 import { Grid } from "../layout"

@@ -15,7 +15,7 @@ import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../lib/api/requireAuthorization"
-import { useUIContext } from "../lib/uiContext"
+import { useUIContext } from "../lib/hooks"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {

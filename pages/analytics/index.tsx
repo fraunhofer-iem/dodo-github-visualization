@@ -23,8 +23,8 @@ import {
   Project,
   requireAuthorization,
 } from "../../lib/api"
-import usePagination from "../../lib/api/usePagination"
 import { TrendDirection } from "../../lib/frontend"
+import { usePagination } from "../../lib/hooks"
 import { Trend } from "../api/trends"
 
 const Analytics: NextPage = requireAuthorization(

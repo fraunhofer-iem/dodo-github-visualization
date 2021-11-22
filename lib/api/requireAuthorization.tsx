@@ -1,11 +1,11 @@
 import { NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+import { User } from "."
 import { Card, CardBody } from "../../components/card"
 import { Spinner } from "../../components/content"
 import { Overlay } from "../../components/layout"
-import { User } from "./types"
-import useUser from "./useUser"
+import { useUser } from "../hooks"
 
 export interface AuthorizationDetails {
   user: User

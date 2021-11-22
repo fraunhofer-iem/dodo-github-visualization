@@ -1,4 +1,4 @@
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Card.module.scss"
 import { Button } from "../action"
 

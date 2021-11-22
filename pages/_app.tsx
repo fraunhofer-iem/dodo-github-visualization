@@ -1,9 +1,9 @@
 import type { AppProps } from "next/app"
 import React, { useState } from "react"
-import "../styles/globals.css"
-import { locales, themes, UIContext } from "../lib/uiContext"
-import { fetchJson } from "../lib/api"
 import { SWRConfig } from "swr"
+import { fetchJson } from "../lib/api"
+import { locales, themes, UIContext } from "../lib/hooks"
+import "../styles/globals.css"
 
 export default function KPIDashboard({ Component, pageProps }: AppProps) {
   const [theme, setTheme] = useState(themes.light)

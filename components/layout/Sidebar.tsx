@@ -1,7 +1,6 @@
 import { useState } from "react"
+import { useMediaQuery, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../lib/uiContext"
-import { useMediaQuery } from "../../lib/uiHooks"
 
 interface Props {
   control: (control: () => void) => void

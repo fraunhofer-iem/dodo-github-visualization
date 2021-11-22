@@ -6,7 +6,7 @@ import {
   getKpisForProjectApiRoute,
   Kpi,
 } from "../lib/api"
-import usePagination from "../lib/api/usePagination"
+import { usePagination } from "../lib/hooks"
 import { Button } from "./action"
 import Table from "./table/Table"
 

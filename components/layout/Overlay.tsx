@@ -1,6 +1,5 @@
+import { useKey, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../lib/uiContext"
-import { useKey } from "../../lib/uiHooks"
 
 interface Props {
   context: "opaque" | "translucent"

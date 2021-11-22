@@ -1,5 +1,5 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
-import { useUIContext } from "../../lib/uiContext"
 import { TableContext } from "./Table"
 
 interface Props {

@@ -1,5 +1,5 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Card.module.scss"
-import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   children: React.ReactNode

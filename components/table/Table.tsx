@@ -1,11 +1,12 @@
-import { useUIContext } from "../../lib/uiContext"
+import { Ordering } from "../../lib/frontend"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
 import { Button } from "../action"
 import { Select } from "../form"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
 import TableBody from "./TableBody"
-import TableCell, { Ordering } from "./TableCell"
+import TableCell from "./TableCell"
 import TableHead from "./TableHead"
 import TableRow from "./TableRow"
 
@@ -48,7 +49,7 @@ export default function Table(props: Props) {
   ]
   const [sortKey, ordering, setSortInformation] = [
     props.sortKey ?? undefined,
-    props.ordering ?? Ordering.given,
+    props.ordering ?? Ordering.GIVEN,
     props.setSortInformation ?? (() => {}),
   ]
 
@@ -66,7 +67,7 @@ export default function Table(props: Props) {
               ordering={
                 column.sortable && column.sortKey == sortKey
                   ? ordering
-                  : Ordering.given
+                  : Ordering.GIVEN
               }
               setSortInformation={
                 column.sortable ? setSortInformation : undefined
