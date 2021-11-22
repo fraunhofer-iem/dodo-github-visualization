@@ -1,13 +1,13 @@
+import { TableContexts } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
-import { TableContext } from "./Table"
 
 interface Props {
   children?: React.ReactNode
-  context: TableContext
+  context: TableContexts
 }
 
-export default function TableFoot(props: Props) {
+export function TableFoot(props: Props) {
   const { theme } = useUIContext()
 
   return (

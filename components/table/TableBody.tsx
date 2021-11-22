@@ -4,6 +4,6 @@ interface Props {
   children?: React.ReactNode
 }
 
-export default function TableBody(props: Props) {
+export function TableBody(props: Props) {
   return <tbody className={styles.tableBody}>{props.children}</tbody>
 }

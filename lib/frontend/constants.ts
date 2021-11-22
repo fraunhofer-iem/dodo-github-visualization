@@ -62,3 +62,8 @@ export enum SidebarState {
   DEPEND_ON_SCREEN,
   REQUESTED_BY_USER,
 }
+
+export enum TableContexts {
+  NEUTRAL = "neutral",
+  STRIPED = "striped",
+}

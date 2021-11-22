@@ -1,23 +1,17 @@
-import { Ordering } from "../../lib/frontend"
+import { TableBody, TableCell, TableHead, TableRow } from "."
+import { IconName, Ordering, TableContexts } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
 import { Button } from "../action"
 import { Select } from "../form"
-import Icon from "../rating/Icon"
-import { IconName } from "../rating/IconName"
-import TableBody from "./TableBody"
-import TableCell from "./TableCell"
-import TableHead from "./TableHead"
-import TableRow from "./TableRow"
-
-export type TableContext = "neutral" | "striped"
+import { Icon } from "../rating"
 
 interface Props {
   children?: {
     columns: { content: React.ReactNode; sortable: boolean; sortKey?: string }[]
     rows: { content: React.ReactNode; sortKey: string | number }[][]
   }
-  context?: TableContext
+  context?: TableContexts
   width?: string
   paginate?: boolean
   pageNumber?: number
@@ -37,7 +31,7 @@ interface Props {
 export default function Table(props: Props) {
   const { theme } = useUIContext()
   const tableData = props.children ?? { columns: [], rows: [] }
-  const context = props.context ?? "neutral"
+  const context = props.context ?? TableContexts.NEUTRAL
   const width = props.width ?? "100%"
   const [pageNumber, setPageNumber] = [
     props.pageNumber ?? 0,
@@ -81,10 +75,10 @@ export default function Table(props: Props) {
           {tableData.rows.map((cells, i) => (
             <TableRow
               context={
-                context === "striped"
+                context === TableContexts.STRIPED
                   ? i % 2 == 0
                     ? context
-                    : "neutral"
+                    : TableContexts.NEUTRAL
                   : context
               }
               key={i}

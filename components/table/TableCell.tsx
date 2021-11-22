@@ -1,13 +1,11 @@
-import { Ordering } from "../../lib/frontend"
+import { IconName, Ordering, TableContexts } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
-import Icon from "../rating/Icon"
-import { IconName } from "../rating/IconName"
-import { TableContext } from "./Table"
+import { Icon } from "../rating"
 
 interface Props {
   scope?: "col" | "row"
   children?: React.ReactNode
-  context: TableContext
+  context: TableContexts
   sortedBy?: boolean
   sortKey?: string
   ordering?: Ordering
@@ -17,7 +15,7 @@ interface Props {
   }) => void
 }
 
-export default function TableCell(props: Props) {
+export function TableCell(props: Props) {
   const { theme } = useUIContext()
   const [sortKey, ordering, setSortInformation] = [
     props.sortKey ?? undefined,

@@ -18,3 +18,5 @@ export type Crumb = {
   name: string
   route: string
 }
+
+export type TableContext = "neutral" | "striped"

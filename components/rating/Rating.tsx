@@ -1,5 +1,5 @@
-import Icon from "./Icon"
-import { IconName } from "./IconName"
+import { Icon } from "."
+import { IconName } from "../../lib/frontend"
 
 interface Props {
   children?: string

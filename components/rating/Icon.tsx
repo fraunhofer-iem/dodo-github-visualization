@@ -1,5 +1,4 @@
-import { Color, CSSProperties } from "../../lib/themes/Theme"
-import { IconName } from "./IconName"
+import { Color, CSSProperties, IconName } from "../../lib/frontend"
 
 interface Props {
   style?: "outlined" | "rounded" | "filled" | "sharp" | undefined
@@ -8,7 +7,7 @@ interface Props {
   children: IconName
 }
 
-export default function Icon(props: Props) {
+export function Icon(props: Props) {
   let style: string = props.style ?? ""
   if (style === "filled") {
     style = ""
