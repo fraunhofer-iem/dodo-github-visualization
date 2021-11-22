@@ -13,3 +13,8 @@ export type Ring = {
    */
   action?: () => void
 }
+
+export type Crumb = {
+  name: string
+  route: string
+}

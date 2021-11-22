@@ -57,3 +57,8 @@ export enum Ordering {
   DESCENDING = 0,
   GIVEN = 2,
 }
+
+export enum SidebarState {
+  DEPEND_ON_SCREEN,
+  REQUESTED_BY_USER,
+}

@@ -7,6 +7,9 @@ interface Props {
   dismiss?: () => void
 }
 
+/**
+ * Fills the whole screen centering its children both horizontally and vertically.
+ */
 export function Overlay(props: Props) {
   const { theme } = useUIContext()
   const dismiss = props.dismiss ?? (() => {})

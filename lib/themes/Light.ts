@@ -30,7 +30,6 @@ const LightTheme: Theme = {
       backgroundColor: white.darken(0.05),
     }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
-    breadcrumbs: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {
     card: new CSSProperties({

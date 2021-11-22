@@ -12,7 +12,7 @@ import {
   Spinner,
   TrendComponent,
 } from "../../components/content"
-import SectionTitle from "../../components/heading/SectionTitle"
+import { SectionTitle } from "../../components/heading"
 import { Grid, Page } from "../../components/layout"
 import {
   ApiError,

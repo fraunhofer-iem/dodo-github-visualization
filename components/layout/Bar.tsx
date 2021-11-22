@@ -6,6 +6,9 @@ interface Props {
   children?: React.ReactNode
 }
 
+/**
+ * Title bar
+ */
 export function Bar(props: Props) {
   const { theme } = useUIContext()
 

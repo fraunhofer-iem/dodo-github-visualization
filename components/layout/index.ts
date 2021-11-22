@@ -1,5 +1,4 @@
 export * from "./Bar"
-export * from "./Breadcrumbs"
 export * from "./Container"
 export * from "./Grid"
 export * from "./Overlay"

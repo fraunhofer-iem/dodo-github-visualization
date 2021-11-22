@@ -5,6 +5,9 @@ interface Props {
   children?: React.ReactNode
 }
 
+/**
+ * Simple Grid layout using `display: flex` and `flex-direction: flex-wrap`.
+ */
 export function Grid(props: Props) {
   return (
     <div className={styles.grid} style={{ justifyContent: props.align }}>
