@@ -1,12 +1,16 @@
 import { delay } from "lodash"
 import { useEffect, useRef } from "react"
+import { TrendDirection } from "../../lib/frontend"
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Content.module.scss"
 import { Button } from "../action"
 import { Grid } from "../layout"
 import Icon from "../rating/Icon"
 interface Props {
-  name?: string
+  /**
+   * The label of the
+   */
+  label?: string
   action?: () => void
   rating: number
   direction: TrendDirection
@@ -14,15 +18,9 @@ interface Props {
   compact?: boolean
 }
 
-export enum TrendDirection {
-  down = "down",
-  neutral = "neutral",
-  up = "up",
-}
-
 export function TrendComponent(props: Props) {
   const { theme } = useUIContext()
-  const { name, rating, direction, align, compact } = props
+  const { label, rating, direction, align, compact } = props
   const domRating = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -44,7 +42,7 @@ export function TrendComponent(props: Props) {
     </Icon>
   )
 
-  const jsxName = name && (
+  const jsxLabel = label && (
     <>
       <Button
         context="neutral"
@@ -52,7 +50,7 @@ export function TrendComponent(props: Props) {
         align={props.align}
         padding="0.375rem 0"
       >
-        {name}
+        {label}
       </Button>
       <br />
     </>
@@ -72,7 +70,7 @@ export function TrendComponent(props: Props) {
   if (compact) {
     return (
       <div className={styles.trendInfo} style={{ textAlign: align }}>
-        {jsxName}
+        {jsxLabel}
         {jsxIndicator}
         {jsxRating}
       </div>
@@ -82,7 +80,7 @@ export function TrendComponent(props: Props) {
       <Grid>
         <div className={styles.trendIcon}>{jsxIndicator}</div>
         <div className={styles.trendInfo} style={{ textAlign: align }}>
-          {jsxName}
+          {jsxLabel}
           {jsxRating}
         </div>
       </Grid>

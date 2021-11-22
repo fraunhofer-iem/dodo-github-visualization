@@ -14,19 +14,43 @@ import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"
 import { Ordering } from "../table/TableCell"
 interface Props<EntityType> {
+  /**
+   * Number of rows within the gallery
+   */
   rows: number
+  /**
+   * Width of a single gallery item
+   */
   boxSize: number
+  /**
+   * Width of the gallery
+   */
   width?: string
+  /**
+   * Function that, given a database entity, returns a JSX element
+   * that is displayed as one of the gallery's items
+   */
   generator: (entity: EntityType, size: number, key: number) => JSX.Element
+  /**
+   * Function that returns a paginated API route
+   */
   route: (
     pageSize?: number,
     pageNumber?: number,
     sortKey?: string,
     asc?: number,
   ) => string
+  /**
+   * Names of the database entities props that can be used for sorting
+   */
   sortKeys?: string[]
 }
 
+/**
+ * Asynchronous, responsive carousel component.
+ *
+ * Displays paginated API endpoints in custom components.
+ */
 export function Gallery<EntityType>(props: Props<EntityType>) {
   const { theme } = useUIContext()
   const swipeHandlers = useSwipeable({
@@ -62,6 +86,10 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
 
   useEffect(() => {
     const resizeListener = () => {
+      /**
+       * Determine how many items fit within a single row
+       * Then fetch the total amount of items displayable.
+       */
       if (container.current) {
         const displayableEntities = Math.floor(
           container.current.clientWidth / (props.boxSize + 40),
@@ -91,26 +119,6 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
             props.generator(currentEntity, props.boxSize, i),
           )}
       </Grid>
-
-      {/* <div className={styles.previous}>
-        <Button
-          context="neutral"
-          display="inline-block"
-          action={() => setPageNumber(pageNumber - 1)}
-          disabled={pageNumber <= 1}
-        >
-          <Icon>{IconName.chevronLeft}</Icon>
-        </Button>
-      </div> */}
-      {/* <div className={styles.forward}>
-        <Button
-          context="neutral"
-          display="inline-block"
-          action={() => setPageNumber(pageNumber + 1)}
-        >
-          <Icon>{IconName.chevronRight}</Icon>
-        </Button>
-      </div> */}
       <div className={styles.preferences}>
         <Button
           context="neutral"

@@ -45,3 +45,9 @@ const colorScheme = [
 export function ColorScheme(i: number) {
   return colorScheme[i % colorScheme.length]
 }
+
+export enum TrendDirection {
+  DOWN = "down",
+  NEUTRAL = "neutral",
+  UP = "up",
+}

@@ -11,7 +11,6 @@ import {
   Section,
   Spinner,
   TrendComponent,
-  TrendDirection,
 } from "../../components/content"
 import SectionTitle from "../../components/heading/SectionTitle"
 import { Grid, Page } from "../../components/layout"
@@ -25,6 +24,7 @@ import {
   requireAuthorization,
 } from "../../lib/api"
 import usePagination from "../../lib/api/usePagination"
+import { TrendDirection } from "../../lib/frontend"
 import { Trend } from "../api/trends"
 
 const Analytics: NextPage = requireAuthorization(
@@ -73,7 +73,7 @@ const Analytics: NextPage = requireAuthorization(
                     width="250px"
                   >
                     <TrendComponent
-                      name="Health"
+                      label="Health"
                       rating={
                         sum(
                           projects.map(
@@ -81,7 +81,7 @@ const Analytics: NextPage = requireAuthorization(
                           ),
                         ) / projects.length
                       }
-                      direction={TrendDirection.up}
+                      direction={TrendDirection.UP}
                       compact={true}
                     />
                   </RingChart>
@@ -99,7 +99,7 @@ const Analytics: NextPage = requireAuthorization(
                   <Card key={key} width={`${size}px`}>
                     <TrendComponent
                       direction={currentTrend.direction}
-                      name={currentTrend.name}
+                      label={currentTrend.name}
                       rating={currentTrend.value}
                       align="left"
                     />

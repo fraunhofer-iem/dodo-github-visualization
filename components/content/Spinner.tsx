@@ -4,6 +4,11 @@ interface Props {
   size?: string
 }
 
+/**
+ * Simple spinning wheel which is animated using CSS3.
+ *
+ * Used by components while they wait on API responses.
+ */
 export function Spinner(props: Props) {
   const { theme } = useUIContext()
   const size = props.size ?? "500px"
