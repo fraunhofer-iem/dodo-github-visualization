@@ -104,25 +104,27 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           },
         ]}
       >
-        <Sidebar
-          control={(control: () => void) => (toggleSidebar.current = control)}
-        >
-          <Card width="95%">
-            <CardTitle>List of KPIs</CardTitle>
+        <Grid>
+          <Sidebar
+            control={(control: () => void) => (toggleSidebar.current = control)}
+          >
+            <Card>
+              <CardTitle>List of KPIs</CardTitle>
+              <CardBody>
+                <KpiTable projectID={projectID as string} />
+              </CardBody>
+            </Card>
+          </Sidebar>
+          <Card>
+            <CardTitle>{`${project?.name}`}</CardTitle>
+            <CardSubTitle>{project?.url as string}</CardSubTitle>
             <CardBody>
-              <KpiTable projectID={projectID as string} />
+              <Grid>
+                <PieChart data={count()} width="500px" height="500px" />
+              </Grid>
             </CardBody>
           </Card>
-        </Sidebar>
-        <Card width="99%">
-          <CardTitle>{`${project?.name}`}</CardTitle>
-          <CardSubTitle>{project?.url as string}</CardSubTitle>
-          <CardBody>
-            <Grid>
-              <PieChart data={count()} width="500px" height="500px" />
-            </Grid>
-          </CardBody>
-        </Card>
+        </Grid>
       </Page>
     )
   )

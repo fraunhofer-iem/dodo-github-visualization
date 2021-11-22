@@ -114,58 +114,62 @@ const KPIDetail: NextPage = requireAuthorization(
             },
           ]}
         >
-          <Sidebar
-            control={(control: () => void) => (toggleSidebar.current = control)}
-          >
-            <Card width="95%">
-              <CardTitle>List of KPIs</CardTitle>
+          <Grid>
+            <Sidebar
+              control={(control: () => void) =>
+                (toggleSidebar.current = control)
+              }
+            >
+              <Card>
+                <CardTitle>List of KPIs</CardTitle>
+                <CardBody>
+                  <KpiTable
+                    projectID={projectID as string}
+                    kpiID={kpiID as string}
+                  />
+                </CardBody>
+              </Card>
+            </Sidebar>
+            <Card>
+              <CardTitle>
+                {`${project?.name}`}
+                <Button
+                  action={() =>
+                    project
+                      ? router.push(getAnalyticsForProjectRoute(project.id))
+                      : router.push("/")
+                  }
+                  context="neutral"
+                >
+                  <Icon>{IconName.keyboardArrowUp}</Icon>
+                </Button>
+              </CardTitle>
+              <CardSubTitle>{project?.url as string}</CardSubTitle>
               <CardBody>
-                <KpiTable
-                  projectID={projectID as string}
-                  kpiID={kpiID as string}
-                />
+                <SectionTitle>{`${kpi?.name}`}</SectionTitle>
+                Description: {kpi?.description}
+                <br />
+                Calculation: {kpi?.calculation}
+                <br />
+                Children: {kpi?.children}
+                <br />
+                {kpi?.data && (
+                  <Grid>
+                    <LineChart
+                      data={timeline(kpi.data)}
+                      width="500px"
+                      height="500px"
+                    />
+                    <LineChart
+                      data={cluster(kpi.data)}
+                      width="500px"
+                      height="500px"
+                    />
+                  </Grid>
+                )}
               </CardBody>
             </Card>
-          </Sidebar>
-          <Card width="99%">
-            <CardTitle>
-              {`${project?.name}`}
-              <Button
-                action={() =>
-                  project
-                    ? router.push(getAnalyticsForProjectRoute(project.id))
-                    : router.push("/")
-                }
-                context="neutral"
-              >
-                <Icon>{IconName.keyboardArrowUp}</Icon>
-              </Button>
-            </CardTitle>
-            <CardSubTitle>{project?.url as string}</CardSubTitle>
-            <CardBody>
-              <SectionTitle>{`${kpi?.name}`}</SectionTitle>
-              Description: {kpi?.description}
-              <br />
-              Calculation: {kpi?.calculation}
-              <br />
-              Children: {kpi?.children}
-              <br />
-              {kpi?.data && (
-                <Grid>
-                  <LineChart
-                    data={timeline(kpi.data)}
-                    width="500px"
-                    height="500px"
-                  />
-                  <LineChart
-                    data={cluster(kpi.data)}
-                    width="500px"
-                    height="500px"
-                  />
-                </Grid>
-              )}
-            </CardBody>
-          </Card>
+          </Grid>
         </Page>
       )
     )

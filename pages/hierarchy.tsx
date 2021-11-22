@@ -2,11 +2,13 @@ import { NextPage } from "next"
 import React, { useCallback, useRef } from "react"
 import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import { Card, CardTitle } from "../components/card"
+import { Card } from "../components/card"
+import { Section } from "../components/content"
 import CytoscapeComponent, {
   edgeDefinition,
   nodeDefinition,
 } from "../components/cytoscape/CytoscapeComponent"
+import SectionTitle from "../components/heading/SectionTitle"
 import { Page } from "../components/layout"
 import { ApiRoutes, KpiType } from "../lib/api"
 import {
@@ -18,6 +20,7 @@ import { useUIContext } from "../lib/uiContext"
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
+    const domContainer = useRef<HTMLDivElement>(null)
     const cy = useRef<cytoscape.Core | null>()
     const { setTippy } = props
     const { data: kpis } = useSWR<KpiType[]>(ApiRoutes.KPIS)
@@ -84,19 +87,21 @@ const Hierarchy: NextPage = requireAuthorization(
           title="Hierarchy- KPI Dashboard"
           crumbs={[{ name: "Hierarchy", route: "/hierarchy" }]}
         >
-          <Card width="99%">
-            <CardTitle>KPI Hierarchy</CardTitle>
-            <CytoscapeComponent
-              cy={cytoscapeControl}
-              elements={elements}
-              layout={{
-                name: "dagre",
-                nodeDimensionsIncludeLabels: true,
-                fit: false,
-              }}
-              stylesheet={theme.cytoscape?.canvas}
-            />
-          </Card>
+          <Section>
+            <SectionTitle>Hierarchy</SectionTitle>
+            <Card width="99%" height="500px">
+              <CytoscapeComponent
+                cy={cytoscapeControl}
+                elements={elements}
+                layout={{
+                  name: "dagre",
+                  nodeDimensionsIncludeLabels: true,
+                  fit: false,
+                }}
+                stylesheet={theme.cytoscape?.canvas}
+              />
+            </Card>
+          </Section>
         </Page>
       )
     )
