@@ -1,46 +1,42 @@
 import { ActiveElement, Chart, ChartDataset, ChartEvent } from "chart.js"
-import deepEqual from "deep-equal"
 import { useCallback, useRef } from "react"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import { colors } from "../../lib/themes/Theme"
+import { DoughnutChart } from "."
+import { colors, ColorScheme, compareProps, Ring } from "../../lib/frontend"
 import styles from "../../styles/components/RingChart.module.scss"
-import { DoughnutChart } from "./DoughnutChart"
 interface Props {
-  rings: {
-    tooltip?: React.ReactNode
-    value: number
-    action?: () => void
-  }[]
+  /**
+   * Data to be displayed as rings
+   */
+  rings: Ring[]
+  /**
+   * The charts width in px
+   *
+   * Defaults to 500px
+   */
   width?: string
+  /**
+   * Content to be displayed in the ring's cutout
+   */
   children?: React.ReactNode
 }
 
-const colorScheme = [
-  colors.steelBlue,
-  colors.orange,
-  colors.maroon,
-  colors.turquoise,
-  colors.green,
-  colors.yellow,
-  colors.purple,
-  colors.fuchsia,
-  colors.brown,
-  colors.silver,
-]
-
+/**
+ * RingChart is a doughnut chart configured to display multiple
+ * datasets in narrow rings, similar to what can be seen in
+ * iOS's Fitness app.
+ */
 const RingChart: (props: Props) => JSX.Element = tippyfy(
   (props: Props & TooltipControl) => {
     const { setTippy, children } = props
 
-    const rings = useRef<
-      {
-        tooltip?: React.ReactNode
-        value: number
-        action?: () => void
-      }[]
-    >([])
-
-    if (!deepEqual(rings.current, props.rings)) {
+    // The handleHover and handleClick callbacks need to access the hovered/clicked ring's
+    // tooltip and action props, making props.rings a dependency.
+    // Since it is not desirable to force the user to memoize the rings array, we do that ourselves
+    // using a ref.
+    // Fun fact: only stuff that would cause a rerender upon change needs to be a dependency.
+    const rings = useRef<Ring[]>([])
+    if (!compareProps(rings.current, props.rings)) {
       rings.current = props.rings
     }
 
@@ -55,19 +51,26 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
         chart: Chart<"doughnut">,
       ) => {
         if (!elements.length) {
+          // nothing of interest is hovered, remove the tooltip
           setTippy("tooltip", {
             content: undefined,
             popperRef: undefined,
           })
         }
+        // ChartJS seems to think that it is possible to hover multiple
+        // entities at once. In this case, it is not. But we play along.
         elements.forEach((currentElement) => {
           if (currentElement.index != 1) {
+            // Rings are constructed as two elements.
+            // The first element is invisible to the user and thus ignored on hover.
             return
           }
+          // set the tooltip using the information stored within props.rings
           const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
           setTippy("tooltip", {
             content: rings.current[ring].tooltip,
             popperRef: {
+              // create a Popper VirtualElement since ChartJS does not provide us with that
               getBoundingClientRect: () => ({
                 width: 0,
                 height: 0,
@@ -90,15 +93,16 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
     )
 
     const handleClick = useCallback(
-      (
-        event: ChartEvent,
-        elements: ActiveElement[],
-        chart: Chart<"doughnut">,
-      ) => {
+      (_, elements: ActiveElement[], chart: Chart<"doughnut">) => {
+        // ChartJS seems to think that it is possible to click multiple
+        // entities at once. In this case, it is not. But we play along.
         elements.forEach((currentElement) => {
           if (currentElement.index != 1) {
+            // Rings are constructed as two elements.
+            // The first element is invisible to the user and thus ignored on click.
             return
           }
+          // perform the clicked ring's action and remove the tooltip
           const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
           const action = rings.current[ring].action
           if (action) {
@@ -124,13 +128,14 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
                 data: [100 - value, value],
                 backgroundColor: [
                   colors.transparent.rgba(),
-                  colorScheme[i % colorScheme.length].rgba(),
+                  ColorScheme(i).rgba(),
                 ],
                 hoverBackgroundColor: [
                   colors.transparent.rgba(),
-                  colorScheme[i % colorScheme.length].alph(0.6).rgba(),
+                  ColorScheme(i).alph(0.6).rgba(),
                 ],
                 borderWidth: 0,
+                // this is used by the hover and click handler to extract the ring's tooltip and action props from props.rings
                 label: `${i}`,
               }
               return dataset

@@ -7,22 +7,15 @@ import cxtmenu from "cytoscape-cxtmenu"
 import dagre from "cytoscape-dagre"
 import edgehandles from "cytoscape-edgehandles"
 import popper from "cytoscape-popper"
-import deepEqual from "deep-equal"
 import { useEffect, useRef } from "react"
 import { nodeExpansion } from "../../lib/cytoscape"
+import { compareProps } from "../../lib/frontend"
 
 interface Props {
   cy?: (cy: cytoscape.Core) => void | undefined
   elements: cytoscape.ElementDefinition[]
   layout?: cytoscape.LayoutOptions | dagre.DagreLayoutOptions | undefined
   stylesheet?: cytoscape.Stylesheet[] | undefined
-}
-
-const equals = (prev: Props | null | undefined, curr: Props) => {
-  if (!prev) {
-    return false
-  }
-  return deepEqual(prev, curr)
 }
 
 export const nodeDefinition = (
@@ -86,7 +79,7 @@ export default function CytoscapeComponent(props: Props) {
   const { elements, layout, stylesheet } = props
 
   useEffect(() => {
-    if (!equals(prevProps.current, props)) {
+    if (!compareProps(prevProps.current, props)) {
       cytoscape.use(dagre)
       cy.current = cytoscape({
         container: container.current,
@@ -115,7 +108,7 @@ export default function CytoscapeComponent(props: Props) {
       props.cy(cy.current as cytoscape.Core)
     }
     return () => {
-      if (!equals(prevProps.current, props)) {
+      if (!compareProps(prevProps.current, props)) {
         cy.current?.destroy()
       }
     }

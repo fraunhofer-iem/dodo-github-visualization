@@ -1,5 +1,6 @@
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Card.module.scss"
+
 interface Props {
   width?: string
   height?: string

@@ -1,7 +1,7 @@
 import { ChartData, ChartOptions, ChartType } from "chart.js"
 import Chart from "chart.js/auto"
-import deepEqual from "deep-equal"
 import { useEffect, useRef } from "react"
+import { compareProps } from "../../lib/frontend"
 
 interface Props {
   type: ChartType
@@ -11,20 +11,21 @@ interface Props {
   height?: string
 }
 
-const equals = (prev: Props | null | undefined, curr: Props) => {
-  if (!prev) {
-    return false
-  }
-  return deepEqual(prev, curr, { strict: true })
-}
-
+/**
+ * Function component that integrates ChartJS into React, avoiding
+ * rerenders as much as possible.
+ *
+ * Since ChartJS uses lots of generic types, it is recommended to
+ * use the more specific chart components, that wrap this component
+ * and instantiate the proper types in their props.
+ */
 export function ChartComponent(props: Props) {
   const container = useRef(null)
   const prevProps = useRef<Props | null>()
   const chart = useRef<Chart | null>()
 
   useEffect(() => {
-    if (!equals(prevProps.current, props) && container.current !== null) {
+    if (!compareProps(prevProps.current, props) && container.current !== null) {
       chart.current?.destroy()
       chart.current = new Chart(container.current, {
         type: props.type,
@@ -40,7 +41,7 @@ export function ChartComponent(props: Props) {
     }
 
     return () => {
-      if (!equals(prevProps.current, props)) {
+      if (!compareProps(prevProps.current, props)) {
         chart.current?.destroy()
       }
     }

@@ -1,18 +1,19 @@
 import { IconName } from "../../components/rating/IconName"
-import {
-  black,
-  blue,
-  CSSProperties,
-  fraunhoferGreen,
-  gold,
-  gray,
-  green,
-  maroon,
-  navy,
-  Theme,
-  transparent,
+import { colors, CSSProperties } from "../frontend"
+import { Theme } from "./Theme"
+
+const {
   white,
-} from "./Theme"
+  black,
+  gray,
+  fraunhoferGreen,
+  transparent,
+  blue,
+  navy,
+  maroon,
+  gold,
+  green,
+} = colors
 
 const LightTheme: Theme = {
   name: "light",
