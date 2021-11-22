@@ -4,10 +4,7 @@ import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import { Card } from "../components/card"
 import { Section } from "../components/content"
-import CytoscapeComponent, {
-  edgeDefinition,
-  nodeDefinition,
-} from "../components/cytoscape/CytoscapeComponent"
+import CytoscapeComponent from "../components/cytoscape/CytoscapeComponent"
 import SectionTitle from "../components/heading/SectionTitle"
 import { Page } from "../components/layout"
 import { ApiRoutes, KpiType } from "../lib/api"
@@ -15,6 +12,7 @@ import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../lib/api/requireAuthorization"
+import { Edge, Node } from "../lib/cytoscape"
 import { useUIContext } from "../lib/hooks"
 
 const Hierarchy: NextPage = requireAuthorization(
@@ -28,18 +26,13 @@ const Hierarchy: NextPage = requireAuthorization(
 
     kpis?.forEach((currentKpi) => {
       elements.push(
-        nodeDefinition(
-          currentKpi.type,
-          parseInt(currentKpi.id),
-          currentKpi.name,
-          {
-            description: currentKpi.description,
-            hover: false,
-          },
-        ),
+        Node(currentKpi.type, parseInt(currentKpi.id), currentKpi.name, {
+          description: currentKpi.description,
+          hover: false,
+        }),
       )
       currentKpi.children.forEach((currentChild) => {
-        elements.push(edgeDefinition(currentKpi.id, currentChild))
+        elements.push(Edge(currentKpi.id, currentChild))
       })
     })
 
