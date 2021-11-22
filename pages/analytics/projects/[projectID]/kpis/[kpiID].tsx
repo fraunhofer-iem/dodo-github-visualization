@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "../../../../../components/card"
 import { LineChart } from "../../../../../components/chart"
+import { BollingerChart } from "../../../../../components/chart/BollingerChart"
 import SectionTitle from "../../../../../components/heading/SectionTitle"
 import KpiTable from "../../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../../components/layout"
@@ -77,6 +78,7 @@ const KPIDetail: NextPage = requireAuthorization(
     const router = useRouter()
     //TODO: proper type cast needed
     const { projectID, kpiID } = router.query
+    console.log(router.query)
     const { data: project } = useSWR<ProjectDetail>(
       getProjectApiRoute(projectID as string),
     )
@@ -155,12 +157,14 @@ const KPIDetail: NextPage = requireAuthorization(
                   <LineChart
                     data={timeline(kpi.data)}
                     width="500px"
-                    height="500px"
+                    height="auto"
                   />
-                  <LineChart
-                    data={cluster(kpi.data)}
-                    width="500px"
-                    height="500px"
+                  <BollingerChart
+                    data={kpi.data}
+                    n={20}
+                    k={2}
+                    width="1000px"
+                    height="auto"
                   />
                 </Grid>
               )}
