@@ -1,4 +1,4 @@
-import { IconName, Ordering, TableContexts } from "../../lib/frontend"
+import { IconNames, Ordering, TableContexts } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import { Icon } from "../rating"
 
@@ -42,9 +42,9 @@ export function TableCell(props: Props) {
       {props.children}
       {props.sortedBy ? (
         ordering == Ordering.ASCENDING ? (
-          <Icon>{IconName.arrowDropUp}</Icon>
+          <Icon>{IconNames.arrowDropUp}</Icon>
         ) : ordering == Ordering.DESCENDING ? (
-          <Icon>{IconName.arrowDropDown}</Icon>
+          <Icon>{IconNames.arrowDropDown}</Icon>
         ) : undefined
       ) : undefined}
     </th>

@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import React from "react"
 import useSWR from "swr"
 import { Card } from "../../components/card"
-import { RingChart } from "../../components/chart/RingChart"
+import { RingChart } from "../../components/chart"
 import {
   Gallery,
   ProjectHealth,
@@ -23,7 +23,7 @@ import {
   Project,
   requireAuthorization,
 } from "../../lib/api"
-import { TrendDirection } from "../../lib/frontend"
+import { TrendDirections } from "../../lib/frontend"
 import { usePagination } from "../../lib/hooks"
 import { Trend } from "../api/trends"
 
@@ -81,7 +81,7 @@ const Analytics: NextPage = requireAuthorization(
                           ),
                         ) / projects.length
                       }
-                      direction={TrendDirection.UP}
+                      direction={TrendDirections.UP}
                       compact={true}
                     />
                   </RingChart>

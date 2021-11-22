@@ -2,7 +2,7 @@ import { ActiveElement, Chart, ChartDataset, ChartEvent } from "chart.js"
 import { useCallback, useRef } from "react"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import { DoughnutChart } from "."
-import { colors, ColorScheme, compareProps, Ring } from "../../lib/frontend"
+import { Colors, ColorScheme, compareProps, Ring } from "../../lib/frontend"
 import styles from "../../styles/components/RingChart.module.scss"
 interface Props {
   /**
@@ -127,11 +127,11 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
               const dataset: ChartDataset<"doughnut"> = {
                 data: [100 - value, value],
                 backgroundColor: [
-                  colors.transparent.rgba(),
+                  Colors.transparent.rgba(),
                   ColorScheme(i).rgba(),
                 ],
                 hoverBackgroundColor: [
-                  colors.transparent.rgba(),
+                  Colors.transparent.rgba(),
                   ColorScheme(i).alph(0.6).rgba(),
                 ],
                 borderWidth: 0,

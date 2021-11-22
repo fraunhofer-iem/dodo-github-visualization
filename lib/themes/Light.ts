@@ -1,5 +1,4 @@
-import { IconName } from "../../components/rating/IconName"
-import { colors, CSSProperties } from "../frontend"
+import { Colors, CSSProperties, IconNames } from "../frontend"
 import { Theme } from "./Theme"
 
 const {
@@ -13,7 +12,7 @@ const {
   maroon,
   gold,
   green,
-} = colors
+} = Colors
 
 const LightTheme: Theme = {
   name: "light",
@@ -138,15 +137,15 @@ const LightTheme: Theme = {
   trends: {
     down: {
       color: maroon,
-      icon: IconName.keyboardArrowDown,
+      icon: IconNames.keyboardArrowDown,
     },
     neutral: {
       color: gold,
-      icon: IconName.remove,
+      icon: IconNames.remove,
     },
     up: {
       color: green.darken(0.2),
-      icon: IconName.keyboardArrowUp,
+      icon: IconNames.keyboardArrowUp,
     },
   },
   cytoscape: {

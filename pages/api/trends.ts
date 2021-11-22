@@ -1,64 +1,64 @@
 import { reverse, sortBy } from "lodash"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getPagination } from "../../lib/api"
-import { TrendDirection } from "../../lib/frontend"
+import { TrendDirections } from "../../lib/frontend"
 
 // TODO: This is just for testing purposes and probably not the final type
 export type Trend = {
   name: string
-  direction: TrendDirection
+  direction: TrendDirections
   value: number
 }
 
 const dummyTrends = [
   {
     name: "Pikachu",
-    direction: TrendDirection.UP,
+    direction: TrendDirections.UP,
     value: 28,
   },
   {
     name: "Bisasam",
-    direction: TrendDirection.DOWN,
+    direction: TrendDirections.DOWN,
     value: 3,
   },
   {
     name: "Larvitar",
-    direction: TrendDirection.NEUTRAL,
+    direction: TrendDirections.NEUTRAL,
     value: 73,
   },
   {
     name: "Papinella",
-    direction: TrendDirection.UP,
+    direction: TrendDirections.UP,
     value: 87,
   },
   {
     name: "Pudox",
-    direction: TrendDirection.NEUTRAL,
+    direction: TrendDirections.NEUTRAL,
     value: 69,
   },
   {
     name: "Donphan",
-    direction: TrendDirection.UP,
+    direction: TrendDirections.UP,
     value: 12,
   },
   {
     name: "Teddiursa",
-    direction: TrendDirection.DOWN,
+    direction: TrendDirections.DOWN,
     value: 21,
   },
   {
     name: "Knogga",
-    direction: TrendDirection.UP,
+    direction: TrendDirections.UP,
     value: 90,
   },
   {
     name: "Relaxo",
-    direction: TrendDirection.NEUTRAL,
+    direction: TrendDirections.NEUTRAL,
     value: 50,
   },
   {
     name: "Porygon",
-    direction: TrendDirection.DOWN,
+    direction: TrendDirections.DOWN,
     value: 47,
   },
 ]

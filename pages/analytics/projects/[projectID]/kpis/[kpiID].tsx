@@ -11,11 +11,10 @@ import {
   CardTitle,
 } from "../../../../../components/card"
 import { LineChart } from "../../../../../components/chart"
-import SectionTitle from "../../../../../components/heading/SectionTitle"
+import { SectionTitle } from "../../../../../components/heading"
 import KpiTable from "../../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../../components/layout"
-import Icon from "../../../../../components/rating/Icon"
-import { IconName } from "../../../../../components/rating/IconName"
+import { Icon } from "../../../../../components/rating"
 import {
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
@@ -25,7 +24,7 @@ import {
   ProjectDetail,
   requireAuthorization,
 } from "../../../../../lib/api"
-import { purple, turquoise } from "../../../../../lib/themes/Theme"
+import { Colors, IconNames } from "../../../../../lib/frontend"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
@@ -34,8 +33,8 @@ const timeline = (prData: number[]): ChartData<"line"> => {
     datasets: [
       {
         data: prData,
-        backgroundColor: purple.rgba(),
-        borderColor: purple.rgba(),
+        backgroundColor: Colors.purple.rgba(),
+        borderColor: Colors.purple.rgba(),
         borderWidth: 1,
         pointRadius: 1,
         label: "PR size over time",
@@ -61,8 +60,8 @@ const cluster = (prData: number[]): ChartData<"line"> => {
     datasets: [
       {
         data: values,
-        backgroundColor: turquoise.rgba(),
-        borderColor: turquoise.rgba(),
+        backgroundColor: Colors.turquoise.rgba(),
+        borderColor: Colors.turquoise.rgba(),
         pointRadius: 1,
         showLine: false,
         label: "Sorted PR size",
@@ -96,7 +95,7 @@ const KPIDetail: NextPage = requireAuthorization(
                 toggleSidebar.current()
               }}
             >
-              <Icon>{IconName.menu}</Icon>
+              <Icon>{IconNames.menu}</Icon>
             </Button>
           }
           crumbs={[
@@ -141,7 +140,7 @@ const KPIDetail: NextPage = requireAuthorization(
                   }
                   context="neutral"
                 >
-                  <Icon>{IconName.keyboardArrowUp}</Icon>
+                  <Icon>{IconNames.keyboardArrowUp}</Icon>
                 </Button>
               </CardTitle>
               <CardSubTitle>{project?.url as string}</CardSubTitle>

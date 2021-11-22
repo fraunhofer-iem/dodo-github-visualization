@@ -9,7 +9,7 @@ import {
   Kpi,
   Project,
 } from "../../lib/api"
-import { TrendDirection } from "../../lib/frontend"
+import { TrendDirections } from "../../lib/frontend"
 import { Card } from "../card"
 import { RingChart } from "../chart"
 
@@ -55,7 +55,7 @@ export function ProjectHealth(props: Props) {
         label={project.name}
         action={() => router.push(getAnalyticsForProjectRoute(project.id))}
         rating={project.maturityIndex}
-        direction={TrendDirection.UP}
+        direction={TrendDirections.UP}
       />
     </RingChart>
   ) : (

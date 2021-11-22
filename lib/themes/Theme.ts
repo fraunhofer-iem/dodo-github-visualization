@@ -1,5 +1,4 @@
-import { IconName } from "../../components/rating/IconName"
-import { Color, CSSProperties } from "../frontend"
+import { Color, CSSProperties, IconNames } from "../frontend"
 
 export type Theme = {
   name: string
@@ -60,15 +59,15 @@ export type Theme = {
   trends: {
     down: {
       color: Color
-      icon: IconName
+      icon: IconNames
     }
     neutral: {
       color: Color
-      icon: IconName
+      icon: IconNames
     }
     up: {
       color: Color
-      icon: IconName
+      icon: IconNames
     }
   }
   cytoscape?: {

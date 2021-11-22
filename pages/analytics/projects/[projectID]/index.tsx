@@ -13,8 +13,7 @@ import {
 import { PieChart } from "../../../../components/chart"
 import KpiTable from "../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../components/layout"
-import Icon from "../../../../components/rating/Icon"
-import { IconName } from "../../../../components/rating/IconName"
+import { Icon } from "../../../../components/rating"
 import {
   AuthorizationDetails,
   getAnalyticsForProjectRoute,
@@ -23,7 +22,7 @@ import {
   requireAuthorization,
 } from "../../../../lib/api"
 import prData from "../../../../lib/data/pullRequestData.json"
-import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
+import { Color, Colors, IconNames } from "../../../../lib/frontend"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -34,11 +33,11 @@ const count = (): ChartData<"pie"> => {
     50: 0,
   }
   const colors = {
-    10: lime,
-    20: yellow,
-    30: red,
+    10: Colors.lime,
+    20: Colors.yellow,
+    30: Colors.red,
     40: new Color(220, 20, 60),
-    50: purple,
+    50: Colors.purple,
   }
   prData.forEach((value) => {
     if (value < 10) {
@@ -90,7 +89,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
               toggleSidebar.current()
             }}
           >
-            <Icon>{IconName.menu}</Icon>
+            <Icon>{IconNames.menu}</Icon>
           </Button>
         }
         crumbs={[

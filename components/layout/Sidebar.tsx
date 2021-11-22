@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { SidebarState } from "../../lib/frontend"
+import { SidebarStates } from "../../lib/frontend"
 import { useMediaQuery, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
 
@@ -16,18 +16,18 @@ interface Props {
  */
 export function Sidebar(props: Props) {
   const { theme } = useUIContext()
-  const [state, setState] = useState(SidebarState.DEPEND_ON_SCREEN)
+  const [state, setState] = useState(SidebarStates.DEPEND_ON_SCREEN)
   const wideScreen = useMediaQuery("(min-width: 1200px)", () => {
-    setState(SidebarState.DEPEND_ON_SCREEN)
+    setState(SidebarStates.DEPEND_ON_SCREEN)
   })
 
   const toggleSidebar = () => {
     switch (state) {
-      case SidebarState.DEPEND_ON_SCREEN:
-        setState(SidebarState.REQUESTED_BY_USER)
+      case SidebarStates.DEPEND_ON_SCREEN:
+        setState(SidebarStates.REQUESTED_BY_USER)
         break
       default:
-        setState(SidebarState.DEPEND_ON_SCREEN)
+        setState(SidebarStates.DEPEND_ON_SCREEN)
         break
     }
   }
@@ -37,7 +37,7 @@ export function Sidebar(props: Props) {
   const css = theme.layout.sidebar.css()
   if (wideScreen) {
     switch (state) {
-      case SidebarState.REQUESTED_BY_USER:
+      case SidebarStates.REQUESTED_BY_USER:
         css.display = "none"
         break
       default:
@@ -46,7 +46,7 @@ export function Sidebar(props: Props) {
     }
   } else {
     switch (state) {
-      case SidebarState.REQUESTED_BY_USER:
+      case SidebarStates.REQUESTED_BY_USER:
         css.display = "block"
         css.position = "absolute"
         css.left = "0"

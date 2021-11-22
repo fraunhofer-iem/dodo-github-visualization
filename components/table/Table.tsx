@@ -1,5 +1,5 @@
 import { TableBody, TableCell, TableHead, TableRow } from "."
-import { IconName, Ordering, TableContexts } from "../../lib/frontend"
+import { IconNames, Ordering, TableContexts } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
 import { Button } from "../action"
@@ -13,7 +13,13 @@ interface Props {
   }
   context?: TableContexts
   width?: string
+  /**
+   * Display pagination controls
+   */
   paginate?: boolean
+  /**
+   * State variables and methods passed to the Table by the parent component.
+   */
   pageNumber?: number
   setPageNumber?: (pageNumber: number) => void
   pageSize?: number
@@ -28,11 +34,15 @@ interface Props {
   }) => void
 }
 
-export default function Table(props: Props) {
+export function Table(props: Props) {
   const { theme } = useUIContext()
   const tableData = props.children ?? { columns: [], rows: [] }
   const context = props.context ?? TableContexts.NEUTRAL
   const width = props.width ?? "100%"
+  // extract state variables and methods from props passed to the Table
+  // by the parent component; this way, the Table can be reused
+  // and relay the pagination controls to the parent, which then
+  // issues the respective API request (or otherwise generates a data chunk)
   const [pageNumber, setPageNumber] = [
     props.pageNumber ?? 0,
     props.setPageNumber ?? (() => {}),
@@ -100,7 +110,7 @@ export default function Table(props: Props) {
             action={() => setPageNumber(pageNumber - 1)}
             disabled={pageNumber <= 1}
           >
-            <Icon>{IconName.chevronLeft}</Icon>
+            <Icon>{IconNames.chevronLeft}</Icon>
           </Button>
           Page {pageNumber}
           <Button
@@ -108,7 +118,7 @@ export default function Table(props: Props) {
             display="inline-block"
             action={() => setPageNumber(pageNumber + 1)}
           >
-            <Icon>{IconName.chevronRight}</Icon>
+            <Icon>{IconNames.chevronRight}</Icon>
           </Button>
           <br />
           Show{" "}

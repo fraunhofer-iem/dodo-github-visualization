@@ -1,4 +1,4 @@
-export enum IconName {
+export enum IconNames {
   "10k" = "10k",
   "10mp" = "10mp",
   "11mp" = "11mp",

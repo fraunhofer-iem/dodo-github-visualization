@@ -5,7 +5,7 @@ import { Button } from "../components/action"
 import { Card, CardAction, CardBody, CardTitle } from "../components/card"
 import { Overlay } from "../components/layout"
 import { ApiRoutes, fetchJson, PageRoutes } from "../lib/api"
-import useUser from "../lib/api/useUser"
+import { useUser } from "../lib/hooks"
 
 const Landing: NextPage = () => {
   const { mutateUser } = useUser({

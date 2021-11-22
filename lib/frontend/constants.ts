@@ -1,6 +1,6 @@
 import { Color } from "."
 
-export const colors = {
+export const Colors = {
   // small collection of HTML colors
   white: new Color(255, 255, 255),
   ghostWhite: new Color(248, 248, 255),
@@ -30,23 +30,23 @@ export const colors = {
 }
 
 const colorScheme = [
-  colors.steelBlue,
-  colors.orange,
-  colors.maroon,
-  colors.turquoise,
-  colors.green,
-  colors.yellow,
-  colors.purple,
-  colors.fuchsia,
-  colors.brown,
-  colors.silver,
+  Colors.steelBlue,
+  Colors.orange,
+  Colors.maroon,
+  Colors.turquoise,
+  Colors.green,
+  Colors.yellow,
+  Colors.purple,
+  Colors.fuchsia,
+  Colors.brown,
+  Colors.silver,
 ]
 
 export function ColorScheme(i: number) {
   return colorScheme[i % colorScheme.length]
 }
 
-export enum TrendDirection {
+export enum TrendDirections {
   DOWN = "down",
   NEUTRAL = "neutral",
   UP = "up",
@@ -58,7 +58,7 @@ export enum Ordering {
   GIVEN = 2,
 }
 
-export enum SidebarState {
+export enum SidebarStates {
   DEPEND_ON_SCREEN,
   REQUESTED_BY_USER,
 }

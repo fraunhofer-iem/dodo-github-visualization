@@ -3,14 +3,13 @@ import { useEffect, useRef, useState } from "react"
 import { useSwipeable } from "react-swipeable"
 import useSWR from "swr"
 import { ApiError } from "../../lib/api"
-import { Ordering } from "../../lib/frontend"
+import { IconNames, Ordering } from "../../lib/frontend"
 import { usePagination, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
 import { Button } from "../action"
 import { Grid } from "../layout"
 import { ListGroup, ListGroupAction } from "../list"
-import Icon from "../rating/Icon"
-import { IconName } from "../rating/IconName"
+import { Icon } from "../rating"
 interface Props<EntityType> {
   /**
    * Number of rows within the gallery
@@ -124,7 +123,7 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
           action={() => setPageNumber(pageNumber - 1)}
           disabled={pageNumber <= 1}
         >
-          <Icon>{IconName.chevronLeft}</Icon>
+          <Icon>{IconNames.chevronLeft}</Icon>
         </Button>
         <Tippy
           visible={preferences}
@@ -160,7 +159,7 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
         >
           <div style={{ display: "inline-block" }}>
             <Button context="neutral" action={() => showPreferences(true)}>
-              <Icon>{IconName.tune}</Icon>
+              <Icon>{IconNames.tune}</Icon>
             </Button>
           </div>
         </Tippy>
@@ -178,8 +177,8 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
         >
           <Icon>
             {sortInformation.ordering == Ordering.ASCENDING
-              ? IconName.sort
-              : IconName.segment}
+              ? IconNames.sort
+              : IconNames.segment}
           </Icon>
         </Button>
         <Button
@@ -187,7 +186,7 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
           display="inline-block"
           action={() => setPageNumber(pageNumber + 1)}
         >
-          <Icon>{IconName.chevronRight}</Icon>
+          <Icon>{IconNames.chevronRight}</Icon>
         </Button>
       </div>
     </div>

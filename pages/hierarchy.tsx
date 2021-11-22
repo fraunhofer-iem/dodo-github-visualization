@@ -5,7 +5,7 @@ import tippyfy, { TooltipControl } from "tooltip-component"
 import { Card } from "../components/card"
 import { Section } from "../components/content"
 import CytoscapeComponent from "../components/cytoscape/CytoscapeComponent"
-import SectionTitle from "../components/heading/SectionTitle"
+import { SectionTitle } from "../components/heading"
 import { Page } from "../components/layout"
 import { ApiRoutes, KpiType } from "../lib/api"
 import {

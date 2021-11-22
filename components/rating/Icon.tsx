@@ -1,10 +1,10 @@
-import { Color, CSSProperties, IconName } from "../../lib/frontend"
+import { Color, CSSProperties, IconNames } from "../../lib/frontend"
 
 interface Props {
   style?: "outlined" | "rounded" | "filled" | "sharp" | undefined
   color?: Color
   styles?: CSSProperties
-  children: IconName
+  children: IconNames
 }
 
 export function Icon(props: Props) {
