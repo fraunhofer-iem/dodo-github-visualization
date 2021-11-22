@@ -1,7 +1,7 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { Bar, Breadcrumbs, Container, Crumb } from "../../components/layout"
-import Button from "../action/Button"
+import { Button } from "../action"
 
 interface Props {
   title: string

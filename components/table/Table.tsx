@@ -1,6 +1,6 @@
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Table.module.scss"
-import Button from "../action/Button"
+import { Button } from "../action"
 import { Select } from "../form"
 import Icon from "../rating/Icon"
 import { IconName } from "../rating/IconName"

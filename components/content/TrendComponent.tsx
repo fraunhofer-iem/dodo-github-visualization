@@ -2,7 +2,7 @@ import { delay } from "lodash"
 import { useEffect, useRef } from "react"
 import { useUIContext } from "../../lib/uiContext"
 import styles from "../../styles/components/Content.module.scss"
-import Button from "../action/Button"
+import { Button } from "../action"
 import { Grid } from "../layout"
 import Icon from "../rating/Icon"
 interface Props {

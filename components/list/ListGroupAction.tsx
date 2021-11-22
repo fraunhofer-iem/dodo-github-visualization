@@ -1,6 +1,6 @@
-import styles from "../../styles/components/List.module.scss"
 import { useUIContext } from "../../lib/uiContext"
-import Button from "../action/Button"
+import styles from "../../styles/components/List.module.scss"
+import { Button } from "../action"
 
 interface Props {
   children?: React.ReactNode

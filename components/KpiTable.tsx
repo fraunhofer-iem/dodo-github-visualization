@@ -7,7 +7,7 @@ import {
   Kpi,
 } from "../lib/api"
 import usePagination from "../lib/api/usePagination"
-import Button from "./action/Button"
+import { Button } from "./action"
 import Table from "./table/Table"
 
 interface Props {

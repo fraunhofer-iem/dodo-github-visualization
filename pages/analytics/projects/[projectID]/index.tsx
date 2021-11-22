@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import React, { useRef } from "react"
 import useSWR from "swr"
-import Button from "../../../../components/action/Button"
+import { Button } from "../../../../components/action"
 import {
   Card,
   CardBody,
