@@ -1,7 +1,7 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { Bar, Container } from "../../components/layout"
-import { Crumb } from "../../lib/frontend"
+import { Crumb, PageRoutes } from "../../lib/frontend"
 import { Button } from "../action"
 import { Breadcrumbs } from "../content"
 
@@ -31,10 +31,16 @@ export function Page(props: Props) {
           </>
         }
       >
-        <Button action={() => router.push("/analytics")} context="neutral">
+        <Button
+          action={() => router.push(PageRoutes.ANALYTICS)}
+          context="neutral"
+        >
           KPI Analytics
         </Button>
-        <Button action={() => router.push("/hierarchy")} context="neutral">
+        <Button
+          action={() => router.push(PageRoutes.HIERARCHY)}
+          context="neutral"
+        >
           KPI Hierarchy
         </Button>
       </Bar>

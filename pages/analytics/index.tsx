@@ -17,15 +17,18 @@ import { Grid, Page } from "../../components/layout"
 import {
   ApiError,
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getProjectsApiRoute,
-  PaginationQueryParams,
+  getTrendsApiRoute,
   Project,
   requireAuthorization,
+  Trend,
 } from "../../lib/api"
-import { TrendDirections } from "../../lib/frontend"
+import {
+  getAnalyticsForProjectRoute,
+  PageRoutes,
+  TrendDirections,
+} from "../../lib/frontend"
 import { usePagination } from "../../lib/hooks"
-import { Trend } from "../api/trends"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -54,7 +57,7 @@ const Analytics: NextPage = requireAuthorization(
       props.user?.isLoggedIn && (
         <Page
           title="Analytics - KPI Dashboard"
-          crumbs={[{ name: "Analytics", route: "/analytics" }]}
+          crumbs={[{ name: "Analytics", route: PageRoutes.ANALYTICS }]}
         >
           <Section>
             <SectionTitle>Organization</SectionTitle>
@@ -134,18 +137,5 @@ const Analytics: NextPage = requireAuthorization(
     )
   },
 )
-
-function getTrendsApiRoute(
-  pageSize?: number,
-  pageNumber?: number,
-  sortKey?: string,
-  asc?: number,
-) {
-  pageSize = pageSize ? pageSize : 9
-  pageNumber = pageNumber ? pageNumber : 1
-  sortKey = sortKey ? sortKey : "name"
-  asc = asc == 0 ? 0 : 1
-  return `/api/trends?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
-}
 
 export default Analytics

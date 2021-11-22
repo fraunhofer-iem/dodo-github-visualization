@@ -13,6 +13,7 @@ import {
   requireAuthorization,
 } from "../lib/api/requireAuthorization"
 import { Edge, Node } from "../lib/cytoscape"
+import { PageRoutes } from "../lib/frontend"
 import { useUIContext } from "../lib/hooks"
 
 const Hierarchy: NextPage = requireAuthorization(
@@ -77,8 +78,8 @@ const Hierarchy: NextPage = requireAuthorization(
     return (
       props.user?.isLoggedIn && (
         <Page
-          title="Hierarchy- KPI Dashboard"
-          crumbs={[{ name: "Hierarchy", route: "/hierarchy" }]}
+          title="Hierarchy - KPI Dashboard"
+          crumbs={[{ name: "Hierarchy", route: PageRoutes.HIERARCHY }]}
         >
           <Section>
             <SectionTitle>Hierarchy</SectionTitle>

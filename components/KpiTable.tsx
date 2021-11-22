@@ -1,12 +1,7 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import {
-  ApiError,
-  getKpiForProjectRoute,
-  getKpisForProjectApiRoute,
-  Kpi,
-} from "../lib/api"
-import { TableContexts } from "../lib/frontend"
+import { ApiError, getKpisForProjectApiRoute, Kpi } from "../lib/api"
+import { getKpiForProjectRoute, TableContexts } from "../lib/frontend"
 import { usePagination } from "../lib/hooks"
 import { Button } from "./action"
 import { Table } from "./table"

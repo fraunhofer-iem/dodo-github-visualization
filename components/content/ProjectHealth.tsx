@@ -2,14 +2,16 @@ import { useRouter } from "next/router"
 import useSWR from "swr"
 import { Spinner, TrendComponent } from "."
 import {
-  getAnalyticsForProjectRoute,
-  getKpiForProjectRoute,
   getKpisForProjectApiRoute,
   getProjectApiRoute,
   Kpi,
   Project,
 } from "../../lib/api"
-import { TrendDirections } from "../../lib/frontend"
+import {
+  getAnalyticsForProjectRoute,
+  getKpiForProjectRoute,
+  TrendDirections,
+} from "../../lib/frontend"
 import { Card } from "../card"
 import { RingChart } from "../chart"
 

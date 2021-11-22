@@ -1,14 +1,7 @@
 import { reverse, sortBy } from "lodash"
 import { NextApiRequest, NextApiResponse } from "next"
-import { getPagination } from "../../lib/api"
+import { getPagination, Trend } from "../../lib/api"
 import { TrendDirections } from "../../lib/frontend"
-
-// TODO: This is just for testing purposes and probably not the final type
-export type Trend = {
-  name: string
-  direction: TrendDirections
-  value: number
-}
 
 const dummyTrends = [
   {

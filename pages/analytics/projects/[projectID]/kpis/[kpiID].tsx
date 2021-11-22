@@ -17,14 +17,19 @@ import { Grid, Page, Sidebar } from "../../../../../components/layout"
 import { Icon } from "../../../../../components/rating"
 import {
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getKpiForProjectApiRoute,
   getProjectApiRoute,
   KpiDetail,
   ProjectDetail,
   requireAuthorization,
 } from "../../../../../lib/api"
-import { Colors, IconNames } from "../../../../../lib/frontend"
+import {
+  Colors,
+  getAnalyticsForProjectRoute,
+  getKpiForProjectRoute,
+  IconNames,
+  PageRoutes,
+} from "../../../../../lib/frontend"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
@@ -101,7 +106,7 @@ const KPIDetail: NextPage = requireAuthorization(
           crumbs={[
             {
               name: "Analytics",
-              route: "/analytics",
+              route: PageRoutes.ANALYTICS,
             },
             {
               name: project?.name as string,
@@ -109,7 +114,10 @@ const KPIDetail: NextPage = requireAuthorization(
             },
             {
               name: kpi?.name as string,
-              route: `/analytics/projects/${projectID}/kpis/${kpiID}`,
+              route: getKpiForProjectRoute(
+                projectID as string,
+                kpiID as string,
+              ),
             },
           ]}
         >

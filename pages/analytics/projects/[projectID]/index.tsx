@@ -16,13 +16,18 @@ import { Grid, Page, Sidebar } from "../../../../components/layout"
 import { Icon } from "../../../../components/rating"
 import {
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getProjectApiRoute,
   ProjectDetail,
   requireAuthorization,
 } from "../../../../lib/api"
 import prData from "../../../../lib/data/pullRequestData.json"
-import { Color, Colors, IconNames } from "../../../../lib/frontend"
+import {
+  Color,
+  Colors,
+  getAnalyticsForProjectRoute,
+  IconNames,
+  PageRoutes,
+} from "../../../../lib/frontend"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -95,7 +100,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
         crumbs={[
           {
             name: "Analytics",
-            route: "/analytics",
+            route: PageRoutes.ANALYTICS,
           },
           {
             name: project?.name as string,
