@@ -8,13 +8,29 @@ import { Grid } from "../layout"
 import { Icon } from "../rating"
 interface Props {
   /**
-   * The label of the
+   * Name of the entity whose trend is displayed
    */
   label?: string
+  /**
+   * Action to perform when clicking the component
+   */
   action?: () => void
+  /**
+   * The calculated trend
+   */
   rating: number
+  /**
+   * The direction of the trend
+   */
   direction: TrendDirections
+  /**
+   * Fine-tune the text layout
+   */
   align?: "left" | "center" | "right"
+  /**
+   * A compact TrendComponent displays the trend direction
+   * next to the rating
+   */
   compact?: boolean
 }
 
