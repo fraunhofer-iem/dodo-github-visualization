@@ -1,12 +1,11 @@
-import { useUIContext } from "../../lib/uiContext"
-import Icon from "../rating/Icon"
-import { IconName } from "../rating/IconName"
-import { TableContext } from "./Table"
+import { IconNames, Ordering, TableContexts } from "../../lib/frontend"
+import { useUIContext } from "../../lib/hooks"
+import { Icon } from "../rating"
 
 interface Props {
   scope?: "col" | "row"
   children?: React.ReactNode
-  context: TableContext
+  context: TableContexts
   sortedBy?: boolean
   sortKey?: string
   ordering?: Ordering
@@ -16,17 +15,11 @@ interface Props {
   }) => void
 }
 
-export enum Ordering {
-  ascending = 1,
-  descending = 0,
-  given = 2,
-}
-
-export default function TableCell(props: Props) {
+export function TableCell(props: Props) {
   const { theme } = useUIContext()
   const [sortKey, ordering, setSortInformation] = [
     props.sortKey ?? undefined,
-    props.ordering ?? Ordering.given,
+    props.ordering ?? Ordering.GIVEN,
     props.setSortInformation ?? (() => {}),
   ]
 
@@ -37,9 +30,9 @@ export default function TableCell(props: Props) {
           setSortInformation({
             sortKey: sortKey,
             ordering:
-              ordering == Ordering.given || ordering == Ordering.descending
-                ? Ordering.ascending
-                : Ordering.descending,
+              ordering == Ordering.GIVEN || ordering == Ordering.DESCENDING
+                ? Ordering.ASCENDING
+                : Ordering.DESCENDING,
           })
         }
       }}
@@ -48,10 +41,10 @@ export default function TableCell(props: Props) {
     >
       {props.children}
       {props.sortedBy ? (
-        ordering == Ordering.ascending ? (
-          <Icon>{IconName.arrowDropUp}</Icon>
-        ) : ordering == Ordering.descending ? (
-          <Icon>{IconName.arrowDropDown}</Icon>
+        ordering == Ordering.ASCENDING ? (
+          <Icon>{IconNames.arrowDropUp}</Icon>
+        ) : ordering == Ordering.DESCENDING ? (
+          <Icon>{IconNames.arrowDropDown}</Icon>
         ) : undefined
       ) : undefined}
     </th>

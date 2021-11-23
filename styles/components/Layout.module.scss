@@ -36,24 +36,19 @@
 }
 
 .breadcrumbs {
-  height: 30px;
   width: 100%;
   padding: 0 1%;
 }
 
 .container {
-  height: calc(100vh - 80px);
-  display: flex;
-  flex-direction: row;
+  min-height: calc(100vh - 50px);
   justify-content: center;
   width: 100%;
 }
 
 .grid {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  width: 100%;
 }
 
 .sidebar {

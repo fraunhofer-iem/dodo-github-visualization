@@ -1,3 +1,5 @@
+import { TrendDirections } from "../frontend"
+
 export type Project = {
   name: string
   maturityIndex: number
@@ -47,4 +49,20 @@ export type KpiDetail = Kpi & {
 export type Pagination = {
   pageSize: number
   pageNumber: number
+}
+
+export class ApiError extends Error {
+  statusCode: number
+
+  constructor(statusCode: number, message?: string) {
+    super(message)
+    this.statusCode = statusCode
+  }
+}
+
+// TODO: This is just for testing purposes and probably not the final type
+export type Trend = {
+  name: string
+  direction: TrendDirections
+  value: number
 }

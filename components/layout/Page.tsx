@@ -1,7 +1,9 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { Bar, Breadcrumbs, Container, Crumb } from "../../components/layout"
-import Button from "../action/Button"
+import { Bar, Container } from "../../components/layout"
+import { Crumb, PageRoutes } from "../../lib/frontend"
+import { Button } from "../action"
+import { Breadcrumbs } from "../content"
 
 interface Props {
   title: string
@@ -10,6 +12,9 @@ interface Props {
   children?: React.ReactNode
 }
 
+/**
+ * Skeleton page layout
+ */
 export function Page(props: Props) {
   const router = useRouter()
 
@@ -26,15 +31,23 @@ export function Page(props: Props) {
           </>
         }
       >
-        <Button action={() => router.push("/analytics")} context="neutral">
+        <Button
+          action={() => router.push(PageRoutes.ANALYTICS)}
+          context="neutral"
+        >
           KPI Analytics
         </Button>
-        <Button action={() => router.push("/hierarchy")} context="neutral">
+        <Button
+          action={() => router.push(PageRoutes.HIERARCHY)}
+          context="neutral"
+        >
           KPI Hierarchy
         </Button>
       </Bar>
-      {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />}
-      <Container>{props.children}</Container>
+      <Container>
+        {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />}
+        {props.children}
+      </Container>
     </>
   )
 }

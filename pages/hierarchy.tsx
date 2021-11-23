@@ -2,22 +2,24 @@ import { NextPage } from "next"
 import React, { useCallback, useRef } from "react"
 import useSWR from "swr"
 import tippyfy, { TooltipControl } from "tooltip-component"
-import { Card, CardTitle } from "../components/card"
-import CytoscapeComponent, {
-  edgeDefinition,
-  nodeDefinition,
-} from "../components/cytoscape/CytoscapeComponent"
+import { Card } from "../components/card"
+import { Section } from "../components/content"
+import CytoscapeComponent from "../components/cytoscape/CytoscapeComponent"
+import { SectionTitle } from "../components/heading"
 import { Page } from "../components/layout"
 import { ApiRoutes, KpiType } from "../lib/api"
 import {
   AuthorizationDetails,
   requireAuthorization,
 } from "../lib/api/requireAuthorization"
-import { useUIContext } from "../lib/uiContext"
+import { Edge, Node } from "../lib/cytoscape"
+import { PageRoutes } from "../lib/frontend"
+import { useUIContext } from "../lib/hooks"
 
 const Hierarchy: NextPage = requireAuthorization(
   tippyfy((props: TooltipControl & AuthorizationDetails) => {
     const { theme } = useUIContext()
+    const domContainer = useRef<HTMLDivElement>(null)
     const cy = useRef<cytoscape.Core | null>()
     const { setTippy } = props
     const { data: kpis } = useSWR<KpiType[]>(ApiRoutes.KPIS)
@@ -25,18 +27,13 @@ const Hierarchy: NextPage = requireAuthorization(
 
     kpis?.forEach((currentKpi) => {
       elements.push(
-        nodeDefinition(
-          currentKpi.type,
-          parseInt(currentKpi.id),
-          currentKpi.name,
-          {
-            description: currentKpi.description,
-            hover: false,
-          },
-        ),
+        Node(currentKpi.type, parseInt(currentKpi.id), currentKpi.name, {
+          description: currentKpi.description,
+          hover: false,
+        }),
       )
       currentKpi.children.forEach((currentChild) => {
-        elements.push(edgeDefinition(currentKpi.id, currentChild))
+        elements.push(Edge(currentKpi.id, currentChild))
       })
     })
 
@@ -81,22 +78,24 @@ const Hierarchy: NextPage = requireAuthorization(
     return (
       props.user?.isLoggedIn && (
         <Page
-          title="Hierarchy- KPI Dashboard"
-          crumbs={[{ name: "Hierarchy", route: "/hierarchy" }]}
+          title="Hierarchy - KPI Dashboard"
+          crumbs={[{ name: "Hierarchy", route: PageRoutes.HIERARCHY }]}
         >
-          <Card width="99%">
-            <CardTitle>KPI Hierarchy</CardTitle>
-            <CytoscapeComponent
-              cy={cytoscapeControl}
-              elements={elements}
-              layout={{
-                name: "dagre",
-                nodeDimensionsIncludeLabels: true,
-                fit: false,
-              }}
-              stylesheet={theme.cytoscape?.canvas}
-            />
-          </Card>
+          <Section>
+            <SectionTitle>Hierarchy</SectionTitle>
+            <Card width="99%" height="500px">
+              <CytoscapeComponent
+                cy={cytoscapeControl}
+                elements={elements}
+                layout={{
+                  name: "dagre",
+                  nodeDimensionsIncludeLabels: true,
+                  fit: false,
+                }}
+                stylesheet={theme.cytoscape?.canvas}
+              />
+            </Card>
+          </Section>
         </Page>
       )
     )

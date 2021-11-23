@@ -1,5 +1,5 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Select.module.scss"
-import { useUIContext } from "../../lib/uiContext"
 
 export interface Option {
   id: number

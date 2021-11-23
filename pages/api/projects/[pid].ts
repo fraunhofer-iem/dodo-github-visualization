@@ -4,7 +4,7 @@ import projects from "../../../lib/data/projects.json"
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ProjectDetail | undefined>,
+  res: NextApiResponse<ProjectDetail | { detail: string }>,
 ) {
   const {
     query: { pid },
@@ -20,6 +20,6 @@ export default function handler(
       url: `github.com/owner/${project.id}`,
     })
   } else {
-    res.status(404).json(undefined)
+    res.status(404).json({ detail: `Project not found` })
   }
 }

@@ -1,24 +1,25 @@
-import { useUIContext } from "../../lib/uiContext"
+import { TableBody, TableCell, TableHead, TableRow } from "."
+import { IconNames, Ordering, TableContexts } from "../../lib/frontend"
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
-import Button from "../action/Button"
+import { Button } from "../action"
 import { Select } from "../form"
-import Icon from "../rating/Icon"
-import { IconName } from "../rating/IconName"
-import TableBody from "./TableBody"
-import TableCell, { Ordering } from "./TableCell"
-import TableHead from "./TableHead"
-import TableRow from "./TableRow"
-
-export type TableContext = "neutral" | "striped"
+import { Icon } from "../rating"
 
 interface Props {
   children?: {
     columns: { content: React.ReactNode; sortable: boolean; sortKey?: string }[]
     rows: { content: React.ReactNode; sortKey: string | number }[][]
   }
-  context?: TableContext
+  context?: TableContexts
   width?: string
+  /**
+   * Display pagination controls
+   */
   paginate?: boolean
+  /**
+   * State variables and methods passed to the Table by the parent component.
+   */
   pageNumber?: number
   setPageNumber?: (pageNumber: number) => void
   pageSize?: number
@@ -33,11 +34,15 @@ interface Props {
   }) => void
 }
 
-export default function Table(props: Props) {
+export function Table(props: Props) {
   const { theme } = useUIContext()
   const tableData = props.children ?? { columns: [], rows: [] }
-  const context = props.context ?? "neutral"
+  const context = props.context ?? TableContexts.NEUTRAL
   const width = props.width ?? "100%"
+  // extract state variables and methods from props passed to the Table
+  // by the parent component; this way, the Table can be reused
+  // and relay the pagination controls to the parent, which then
+  // issues the respective API request (or otherwise generates a data chunk)
   const [pageNumber, setPageNumber] = [
     props.pageNumber ?? 0,
     props.setPageNumber ?? (() => {}),
@@ -48,7 +53,7 @@ export default function Table(props: Props) {
   ]
   const [sortKey, ordering, setSortInformation] = [
     props.sortKey ?? undefined,
-    props.ordering ?? Ordering.given,
+    props.ordering ?? Ordering.GIVEN,
     props.setSortInformation ?? (() => {}),
   ]
 
@@ -66,7 +71,7 @@ export default function Table(props: Props) {
               ordering={
                 column.sortable && column.sortKey == sortKey
                   ? ordering
-                  : Ordering.given
+                  : Ordering.GIVEN
               }
               setSortInformation={
                 column.sortable ? setSortInformation : undefined
@@ -80,10 +85,10 @@ export default function Table(props: Props) {
           {tableData.rows.map((cells, i) => (
             <TableRow
               context={
-                context === "striped"
+                context === TableContexts.STRIPED
                   ? i % 2 == 0
                     ? context
-                    : "neutral"
+                    : TableContexts.NEUTRAL
                   : context
               }
               key={i}
@@ -105,7 +110,7 @@ export default function Table(props: Props) {
             action={() => setPageNumber(pageNumber - 1)}
             disabled={pageNumber <= 1}
           >
-            <Icon>{IconName.chevronLeft}</Icon>
+            <Icon>{IconNames.chevronLeft}</Icon>
           </Button>
           Page {pageNumber}
           <Button
@@ -113,7 +118,7 @@ export default function Table(props: Props) {
             display="inline-block"
             action={() => setPageNumber(pageNumber + 1)}
           >
-            <Icon>{IconName.chevronRight}</Icon>
+            <Icon>{IconNames.chevronRight}</Icon>
           </Button>
           <br />
           Show{" "}

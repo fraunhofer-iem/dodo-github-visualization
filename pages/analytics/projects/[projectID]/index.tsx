@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import React, { useRef } from "react"
 import useSWR from "swr"
-import Button from "../../../../components/action/Button"
+import { Button } from "../../../../components/action"
 import {
   Card,
   CardBody,
@@ -13,17 +13,21 @@ import {
 import { PieChart } from "../../../../components/chart"
 import KpiTable from "../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../components/layout"
-import Icon from "../../../../components/rating/Icon"
-import { IconName } from "../../../../components/rating/IconName"
+import { Icon } from "../../../../components/rating"
 import {
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getProjectApiRoute,
   ProjectDetail,
   requireAuthorization,
 } from "../../../../lib/api"
 import prData from "../../../../lib/data/pullRequestData.json"
-import { Color, lime, purple, red, yellow } from "../../../../lib/themes/Theme"
+import {
+  Color,
+  Colors,
+  getAnalyticsForProjectRoute,
+  IconNames,
+  PageRoutes,
+} from "../../../../lib/frontend"
 
 const count = (): ChartData<"pie"> => {
   const data = {
@@ -34,11 +38,11 @@ const count = (): ChartData<"pie"> => {
     50: 0,
   }
   const colors = {
-    10: lime,
-    20: yellow,
-    30: red,
+    10: Colors.lime,
+    20: Colors.yellow,
+    30: Colors.red,
     40: new Color(220, 20, 60),
-    50: purple,
+    50: Colors.purple,
   }
   prData.forEach((value) => {
     if (value < 10) {
@@ -90,13 +94,13 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
               toggleSidebar.current()
             }}
           >
-            <Icon>{IconName.menu}</Icon>
+            <Icon>{IconNames.menu}</Icon>
           </Button>
         }
         crumbs={[
           {
             name: "Analytics",
-            route: "/analytics",
+            route: PageRoutes.ANALYTICS,
           },
           {
             name: project?.name as string,
@@ -104,25 +108,27 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           },
         ]}
       >
-        <Sidebar
-          control={(control: () => void) => (toggleSidebar.current = control)}
-        >
-          <Card width="95%">
-            <CardTitle>List of KPIs</CardTitle>
+        <Grid>
+          <Sidebar
+            control={(control: () => void) => (toggleSidebar.current = control)}
+          >
+            <Card>
+              <CardTitle>List of KPIs</CardTitle>
+              <CardBody>
+                <KpiTable projectID={projectID as string} />
+              </CardBody>
+            </Card>
+          </Sidebar>
+          <Card>
+            <CardTitle>{`${project?.name}`}</CardTitle>
+            <CardSubTitle>{project?.url as string}</CardSubTitle>
             <CardBody>
-              <KpiTable projectID={projectID as string} />
+              <Grid>
+                <PieChart data={count()} width="500px" height="500px" />
+              </Grid>
             </CardBody>
           </Card>
-        </Sidebar>
-        <Card width="99%">
-          <CardTitle>{`${project?.name}`}</CardTitle>
-          <CardSubTitle>{project?.url as string}</CardSubTitle>
-          <CardBody>
-            <Grid>
-              <PieChart data={count()} width="500px" height="500px" />
-            </Grid>
-          </CardBody>
-        </Card>
+        </Grid>
       </Page>
     )
   )

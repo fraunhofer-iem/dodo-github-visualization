@@ -1,11 +1,12 @@
 import type { NextPage } from "next"
 import Head from "next/head"
 import React from "react"
-import Button from "../components/action/Button"
-import { Card, CardTitle, CardBody, CardAction } from "../components/card"
+import { Button } from "../components/action"
+import { Card, CardAction, CardBody, CardTitle } from "../components/card"
 import { Overlay } from "../components/layout"
-import { ApiRoutes, fetchJson, PageRoutes } from "../lib/api"
-import useUser from "../lib/api/useUser"
+import { ApiRoutes, fetchJson } from "../lib/api"
+import { PageRoutes } from "../lib/frontend"
+import { useUser } from "../lib/hooks"
 
 const Landing: NextPage = () => {
   const { mutateUser } = useUser({

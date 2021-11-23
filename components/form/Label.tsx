@@ -1,4 +1,4 @@
-import { useUIContext } from "../../lib/uiContext"
+import { useUIContext } from "../../lib/hooks"
 
 interface Props {
   for: string
