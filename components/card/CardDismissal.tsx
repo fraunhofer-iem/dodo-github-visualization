@@ -1,6 +1,6 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Card.module.scss"
-import { useUIContext } from "../../lib/uiContext"
-import Button from "../action/Button"
+import { Button } from "../action"
 
 interface Props {
   dismiss: () => void

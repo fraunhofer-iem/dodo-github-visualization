@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
-import English from "./locales/English"
-import LightTheme from "./themes/Light"
+import English from "../locales/English"
+import LightTheme from "../themes/Light"
 
 export const themes = {
   light: LightTheme,

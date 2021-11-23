@@ -1,11 +1,14 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   title: React.ReactNode
   children?: React.ReactNode
 }
 
+/**
+ * Title bar
+ */
 export function Bar(props: Props) {
   const { theme } = useUIContext()
 

@@ -17,18 +17,6 @@ export const enum ApiRoutes {
   KPIS = "/api/kpis",
 }
 
-export const enum PageRoutes {
-  ANALYTICS = "/analytics",
-}
-
-export function getAnalyticsForProjectRoute(projectId: string) {
-  return `/analytics/projects/${projectId}`
-}
-
-export function getKpiForProjectRoute(projectId: string, kpiId: string) {
-  return `/analytics/projects/${projectId}/kpis/${kpiId}`
-}
-
 export function getProjectsApiRoute(
   pageSize?: number,
   pageNumber?: number,
@@ -67,3 +55,17 @@ export function getKpiForProjectApiRoute(projectId: string, kpiId: string) {
 // the first key is the default sorting key, which is
 // used if no sorting is specified by the user's  request
 export const SortableTableKeys = ["NAME", "RATING"]
+
+// TODO: Replace with final solution
+export function getTrendsApiRoute(
+  pageSize?: number,
+  pageNumber?: number,
+  sortKey?: string,
+  asc?: number,
+) {
+  pageSize = pageSize ? pageSize : 9
+  pageNumber = pageNumber ? pageNumber : 1
+  sortKey = sortKey ? sortKey : "name"
+  asc = asc == 0 ? 0 : 1
+  return `/api/trends?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+}

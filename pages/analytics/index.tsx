@@ -1,22 +1,34 @@
+import { sum } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
 import useSWR from "swr"
-import Button from "../../components/action/Button"
-import { Card, CardBody, CardTitle } from "../../components/card"
-import SectionTitle from "../../components/heading/SectionTitle"
-import { Page } from "../../components/layout"
-import Rating from "../../components/rating/Rating"
-import Table from "../../components/table/Table"
+import { Card } from "../../components/card"
+import { RingChart } from "../../components/chart"
+import {
+  Gallery,
+  ProjectHealth,
+  Section,
+  Spinner,
+  TrendComponent,
+} from "../../components/content"
+import { SectionTitle } from "../../components/heading"
+import { Grid, Page } from "../../components/layout"
 import {
   ApiError,
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getProjectsApiRoute,
+  getTrendsApiRoute,
   Project,
   requireAuthorization,
+  Trend,
 } from "../../lib/api"
-import usePagination from "../../lib/api/usePagination"
+import {
+  getAnalyticsForProjectRoute,
+  PageRoutes,
+  TrendDirections,
+} from "../../lib/frontend"
+import { usePagination } from "../../lib/hooks"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -40,75 +52,86 @@ const Analytics: NextPage = requireAuthorization(
     if (error && error.statusCode == 404) {
       setPageNumber(pageNumber - 1)
     }
+
     return (
       props.user?.isLoggedIn && (
         <Page
           title="Analytics - KPI Dashboard"
-          crumbs={[{ name: "Analytics", route: "/analytics" }]}
+          crumbs={[{ name: "Analytics", route: PageRoutes.ANALYTICS }]}
         >
-          <Card width="99%">
-            <CardTitle>KPI Analytics</CardTitle>
-            <CardBody>
-              <SectionTitle>Project Overview</SectionTitle>
-              <Table
-                width="50%"
-                context={"striped"}
-                paginate={true}
-                {...{
-                  pageSize,
-                  setPageSize,
-                  pageNumber,
-                  setPageNumber,
-                  ordering: sortInformation.ordering,
-                  sortKey: sortInformation.sortKey,
-                  setSortInformation,
-                }}
-              >
-                {{
-                  columns: [
-                    {
-                      content: "Project",
-                      sortable: true,
-                      sortKey: "name",
-                    },
-                    {
-                      content: "Rating",
-                      sortable: true,
-                      sortKey: "maturityIndex",
-                    },
-                  ],
-                  rows: projects
-                    ? projects.map((project) => [
-                        {
-                          content: (
-                            <Button
-                              action={() =>
-                                router.push(
-                                  getAnalyticsForProjectRoute(project.id),
-                                )
-                              }
-                              context="anchor"
-                              width="100%"
-                              display="block"
-                              align="left"
-                            >
-                              {project.name}
-                            </Button>
+          <Section>
+            <SectionTitle>Organization</SectionTitle>
+            <Grid align="center">
+              <Card>
+                {projects ? (
+                  <RingChart
+                    rings={projects.map((currentProject) => ({
+                      value: currentProject.maturityIndex,
+                      tooltip: <Card>{currentProject.name}</Card>,
+                      action: () =>
+                        router.push(
+                          getAnalyticsForProjectRoute(currentProject.id),
+                        ),
+                    }))}
+                    width="250px"
+                  >
+                    <TrendComponent
+                      label="Health"
+                      rating={
+                        sum(
+                          projects.map(
+                            (currentProject) => currentProject.maturityIndex,
                           ),
-                          sortKey: project.name,
-                        },
-                        {
-                          content: (
-                            <Rating>{`${project.maturityIndex}`}</Rating>
-                          ),
-                          sortKey: project.maturityIndex,
-                        },
-                      ])
-                    : [],
-                }}
-              </Table>
-            </CardBody>
-          </Card>
+                        ) / projects.length
+                      }
+                      direction={TrendDirections.UP}
+                      compact={true}
+                    />
+                  </RingChart>
+                ) : (
+                  <Spinner size="250px" />
+                )}
+              </Card>
+              <Gallery<Trend>
+                rows={3}
+                width={"50%"}
+                boxSize={150}
+                sortKeys={["name", "direction", "value"]}
+                route={getTrendsApiRoute}
+                generator={(currentTrend: Trend, size: number, key: number) => (
+                  <Card key={key} width={`${size}px`}>
+                    <TrendComponent
+                      direction={currentTrend.direction}
+                      label={currentTrend.name}
+                      rating={currentTrend.value}
+                      align="left"
+                    />
+                  </Card>
+                )}
+              />
+            </Grid>
+          </Section>
+          <Section>
+            <SectionTitle>Projects</SectionTitle>
+            <Gallery<Project>
+              rows={1}
+              boxSize={250}
+              sortKeys={["name", "maturity Index"]}
+              generator={(
+                currentProject: Project,
+                size: number,
+                key: number,
+              ) => (
+                <Card key={key}>
+                  <ProjectHealth
+                    projectId={currentProject.id}
+                    width={`${size}px`}
+                  />
+                </Card>
+              )}
+              route={getProjectsApiRoute}
+            />
+          </Section>
         </Page>
       )
     )

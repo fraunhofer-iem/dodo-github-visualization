@@ -1,17 +1,19 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../lib/uiContext"
 
 interface Props {
   children?: React.ReactNode
-  width?: string
-  height?: string
 }
 
+/**
+ * Main content container. Simulates the <body> element by
+ * stretching to the window's height minus the bar's size.
+ * This is necessary because it is not possible to add inline
+ * styles to the body element in NextJS.
+ */
 export function Container(props: Props) {
   const { theme } = useUIContext()
   const css = theme.layout.container.css()
-  css.width = props.width ?? css.width
-  css.height = props.height ?? css.height
 
   return (
     <div className={styles.container} style={css}>

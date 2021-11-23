@@ -1,6 +1,6 @@
+import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/List.module.scss"
-import { useUIContext } from "../../lib/uiContext"
-import Button from "../action/Button"
+import { Button } from "../action"
 
 interface Props {
   children?: React.ReactNode
@@ -8,7 +8,7 @@ interface Props {
   cxtAction?: () => void
 }
 
-export default function ListGroupAction(props: Props) {
+export function ListGroupAction(props: Props) {
   const { theme } = useUIContext()
 
   return (

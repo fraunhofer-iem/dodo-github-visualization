@@ -1,14 +1,18 @@
-import {
-  black,
-  blue,
-  CSSProperties,
-  fraunhoferGreen,
-  gray,
-  navy,
-  Theme,
-  transparent,
+import { Colors, CSSProperties, IconNames } from "../frontend"
+import { Theme } from "./Theme"
+
+const {
   white,
-} from "./Theme"
+  black,
+  gray,
+  fraunhoferGreen,
+  transparent,
+  blue,
+  navy,
+  maroon,
+  gold,
+  green,
+} = Colors
 
 const LightTheme: Theme = {
   name: "light",
@@ -25,7 +29,6 @@ const LightTheme: Theme = {
       backgroundColor: white.darken(0.05),
     }),
     container: new CSSProperties({ backgroundColor: white.darken(0.05) }),
-    breadcrumbs: new CSSProperties({ backgroundColor: white.darken(0.05) }),
   },
   card: {
     card: new CSSProperties({
@@ -116,6 +119,34 @@ const LightTheme: Theme = {
       backgroundColor: transparent,
       textDecoration: "underline",
     }),
+  },
+  content: {
+    trend: {
+      icon: new CSSProperties({
+        backgroundColor: transparent,
+      }),
+    },
+    section: new CSSProperties({
+      borderColor: gray,
+    }),
+    spinner: new CSSProperties({
+      borderColor: black.brighten(0.25),
+      borderTopColor: transparent,
+    }),
+  },
+  trends: {
+    down: {
+      color: maroon,
+      icon: IconNames.keyboardArrowDown,
+    },
+    neutral: {
+      color: gold,
+      icon: IconNames.remove,
+    },
+    up: {
+      color: green.darken(0.2),
+      icon: IconNames.keyboardArrowUp,
+    },
   },
   cytoscape: {
     canvas: [

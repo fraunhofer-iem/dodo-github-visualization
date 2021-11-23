@@ -1,32 +1,33 @@
 import { useState } from "react"
+import { SidebarStates } from "../../lib/frontend"
+import { useMediaQuery, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Layout.module.scss"
-import { useUIContext } from "../../lib/uiContext"
-import { useMediaQuery } from "../../lib/uiHooks"
 
 interface Props {
   control: (control: () => void) => void
   children?: React.ReactNode
 }
 
-export enum SidebarState {
-  dependOnScreen,
-  requestedByUser,
-}
-
+/**
+ * Sidebar that is hidden responsively if the user's screen size is too small
+ * but also can be toggled by the user.
+ *
+ * Might be removed in a future redesign of the detail pages.
+ */
 export function Sidebar(props: Props) {
   const { theme } = useUIContext()
-  const [state, setState] = useState(SidebarState.dependOnScreen)
+  const [state, setState] = useState(SidebarStates.DEPEND_ON_SCREEN)
   const wideScreen = useMediaQuery("(min-width: 1200px)", () => {
-    setState(SidebarState.dependOnScreen)
+    setState(SidebarStates.DEPEND_ON_SCREEN)
   })
 
   const toggleSidebar = () => {
     switch (state) {
-      case SidebarState.dependOnScreen:
-        setState(SidebarState.requestedByUser)
+      case SidebarStates.DEPEND_ON_SCREEN:
+        setState(SidebarStates.REQUESTED_BY_USER)
         break
       default:
-        setState(SidebarState.dependOnScreen)
+        setState(SidebarStates.DEPEND_ON_SCREEN)
         break
     }
   }
@@ -36,7 +37,7 @@ export function Sidebar(props: Props) {
   const css = theme.layout.sidebar.css()
   if (wideScreen) {
     switch (state) {
-      case SidebarState.requestedByUser:
+      case SidebarStates.REQUESTED_BY_USER:
         css.display = "none"
         break
       default:
@@ -45,7 +46,7 @@ export function Sidebar(props: Props) {
     }
   } else {
     switch (state) {
-      case SidebarState.requestedByUser:
+      case SidebarStates.REQUESTED_BY_USER:
         css.display = "block"
         css.position = "absolute"
         css.left = "0"

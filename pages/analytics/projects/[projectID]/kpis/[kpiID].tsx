@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import React, { useRef } from "react"
 import useSWR from "swr"
-import Button from "../../../../../components/action/Button"
+import { Button } from "../../../../../components/action"
 import {
   Card,
   CardBody,
@@ -11,21 +11,25 @@ import {
   CardTitle,
 } from "../../../../../components/card"
 import { LineChart } from "../../../../../components/chart"
-import SectionTitle from "../../../../../components/heading/SectionTitle"
+import { SectionTitle } from "../../../../../components/heading"
 import KpiTable from "../../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../../components/layout"
-import Icon from "../../../../../components/rating/Icon"
-import { IconName } from "../../../../../components/rating/IconName"
+import { Icon } from "../../../../../components/rating"
 import {
   AuthorizationDetails,
-  getAnalyticsForProjectRoute,
   getKpiForProjectApiRoute,
   getProjectApiRoute,
   KpiDetail,
   ProjectDetail,
   requireAuthorization,
 } from "../../../../../lib/api"
-import { purple, turquoise } from "../../../../../lib/themes/Theme"
+import {
+  Colors,
+  getAnalyticsForProjectRoute,
+  getKpiForProjectRoute,
+  IconNames,
+  PageRoutes,
+} from "../../../../../lib/frontend"
 
 const timeline = (prData: number[]): ChartData<"line"> => {
   const labels: number[] = []
@@ -34,8 +38,8 @@ const timeline = (prData: number[]): ChartData<"line"> => {
     datasets: [
       {
         data: prData,
-        backgroundColor: purple.rgba(),
-        borderColor: purple.rgba(),
+        backgroundColor: Colors.purple.rgba(),
+        borderColor: Colors.purple.rgba(),
         borderWidth: 1,
         pointRadius: 1,
         label: "PR size over time",
@@ -61,8 +65,8 @@ const cluster = (prData: number[]): ChartData<"line"> => {
     datasets: [
       {
         data: values,
-        backgroundColor: turquoise.rgba(),
-        borderColor: turquoise.rgba(),
+        backgroundColor: Colors.turquoise.rgba(),
+        borderColor: Colors.turquoise.rgba(),
         pointRadius: 1,
         showLine: false,
         label: "Sorted PR size",
@@ -96,13 +100,13 @@ const KPIDetail: NextPage = requireAuthorization(
                 toggleSidebar.current()
               }}
             >
-              <Icon>{IconName.menu}</Icon>
+              <Icon>{IconNames.menu}</Icon>
             </Button>
           }
           crumbs={[
             {
               name: "Analytics",
-              route: "/analytics",
+              route: PageRoutes.ANALYTICS,
             },
             {
               name: project?.name as string,
@@ -110,62 +114,69 @@ const KPIDetail: NextPage = requireAuthorization(
             },
             {
               name: kpi?.name as string,
-              route: `/analytics/projects/${projectID}/kpis/${kpiID}`,
+              route: getKpiForProjectRoute(
+                projectID as string,
+                kpiID as string,
+              ),
             },
           ]}
         >
-          <Sidebar
-            control={(control: () => void) => (toggleSidebar.current = control)}
-          >
-            <Card width="95%">
-              <CardTitle>List of KPIs</CardTitle>
+          <Grid>
+            <Sidebar
+              control={(control: () => void) =>
+                (toggleSidebar.current = control)
+              }
+            >
+              <Card>
+                <CardTitle>List of KPIs</CardTitle>
+                <CardBody>
+                  <KpiTable
+                    projectID={projectID as string}
+                    kpiID={kpiID as string}
+                  />
+                </CardBody>
+              </Card>
+            </Sidebar>
+            <Card>
+              <CardTitle>
+                {`${project?.name}`}
+                <Button
+                  action={() =>
+                    project
+                      ? router.push(getAnalyticsForProjectRoute(project.id))
+                      : router.push("/")
+                  }
+                  context="neutral"
+                >
+                  <Icon>{IconNames.keyboardArrowUp}</Icon>
+                </Button>
+              </CardTitle>
+              <CardSubTitle>{project?.url as string}</CardSubTitle>
               <CardBody>
-                <KpiTable
-                  projectID={projectID as string}
-                  kpiID={kpiID as string}
-                />
+                <SectionTitle>{`${kpi?.name}`}</SectionTitle>
+                Description: {kpi?.description}
+                <br />
+                Calculation: {kpi?.calculation}
+                <br />
+                Children: {kpi?.children}
+                <br />
+                {kpi?.data && (
+                  <Grid>
+                    <LineChart
+                      data={timeline(kpi.data)}
+                      width="500px"
+                      height="500px"
+                    />
+                    <LineChart
+                      data={cluster(kpi.data)}
+                      width="500px"
+                      height="500px"
+                    />
+                  </Grid>
+                )}
               </CardBody>
             </Card>
-          </Sidebar>
-          <Card width="99%">
-            <CardTitle>
-              {`${project?.name}`}
-              <Button
-                action={() =>
-                  project
-                    ? router.push(getAnalyticsForProjectRoute(project.id))
-                    : router.push("/")
-                }
-                context="neutral"
-              >
-                <Icon>{IconName.keyboardArrowUp}</Icon>
-              </Button>
-            </CardTitle>
-            <CardSubTitle>{project?.url as string}</CardSubTitle>
-            <CardBody>
-              <SectionTitle>{`${kpi?.name}`}</SectionTitle>
-              Description: {kpi?.description}
-              <br />
-              Calculation: {kpi?.calculation}
-              <br />
-              Children: {kpi?.children}
-              <br />
-              {kpi?.data && (
-                <Grid>
-                  <LineChart
-                    data={timeline(kpi.data)}
-                    width="500px"
-                    height="500px"
-                  />
-                  <LineChart
-                    data={cluster(kpi.data)}
-                    width="500px"
-                    height="500px"
-                  />
-                </Grid>
-              )}
-            </CardBody>
-          </Card>
+          </Grid>
         </Page>
       )
     )

@@ -1,5 +1,5 @@
-import Icon from "./Icon"
-import { IconName } from "./IconName"
+import { Icon } from "."
+import { IconNames } from "../../lib/frontend"
 
 interface Props {
   children?: string
@@ -13,10 +13,10 @@ export default function Rating(props: Props) {
       {[5, 10, 15, 20, 25].map((limit) => (
         <Icon key={limit}>
           {rating - limit >= 0
-            ? IconName.star
+            ? IconNames.star
             : rating - limit > -5
-            ? IconName.starHalf
-            : IconName.starBorder}
+            ? IconNames.starHalf
+            : IconNames.starBorder}
         </Icon>
       ))}
       {rating}

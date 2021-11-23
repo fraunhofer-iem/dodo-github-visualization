@@ -1,3 +1,5 @@
+import { TrendDirections } from "../frontend"
+
 export type Project = {
   name: string
   maturityIndex: number
@@ -56,4 +58,11 @@ export class ApiError extends Error {
     super(message)
     this.statusCode = statusCode
   }
+}
+
+// TODO: This is just for testing purposes and probably not the final type
+export type Trend = {
+  name: string
+  direction: TrendDirections
+  value: number
 }

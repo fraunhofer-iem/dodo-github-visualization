@@ -1,14 +1,10 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import {
-  ApiError,
-  getKpiForProjectRoute,
-  getKpisForProjectApiRoute,
-  Kpi,
-} from "../lib/api"
-import usePagination from "../lib/api/usePagination"
-import Button from "./action/Button"
-import Table from "./table/Table"
+import { ApiError, getKpisForProjectApiRoute, Kpi } from "../lib/api"
+import { getKpiForProjectRoute, TableContexts } from "../lib/frontend"
+import { usePagination } from "../lib/hooks"
+import { Button } from "./action"
+import { Table } from "./table"
 
 interface Props {
   projectID: string
@@ -42,7 +38,7 @@ export default function KpiTable(props: Props) {
   return (
     <Table
       width="50%"
-      context={"striped"}
+      context={TableContexts.STRIPED}
       paginate={true}
       {...{
         pageSize,
