@@ -2,7 +2,13 @@ import { ActiveElement, Chart, ChartDataset, ChartEvent } from "chart.js"
 import { useCallback, useRef } from "react"
 import tippyfy, { TooltipControl } from "tooltip-component"
 import { DoughnutChart } from "."
-import { Colors, ColorScheme, compareProps, Ring } from "../../lib/frontend"
+import {
+  Colors,
+  ColorScheme,
+  compareProps,
+  getCurrentRing,
+  Ring,
+} from "../../lib/frontend"
 import styles from "../../styles/components/RingChart.module.scss"
 interface Props {
   /**
@@ -10,7 +16,7 @@ interface Props {
    */
   rings: Ring[]
   /**
-   * The charts width in px
+   * The chart's width in px
    *
    * Defaults to 500px
    */
@@ -50,25 +56,16 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
         elements: ActiveElement[],
         chart: Chart<"doughnut">,
       ) => {
-        if (!elements.length) {
-          // nothing of interest is hovered, remove the tooltip
+        const ring = getCurrentRing(elements, chart, rings.current)
+        if (!ring) {
+          // no ring is hovered, remove the tooltip
           setTippy("tooltip", {
             content: undefined,
             popperRef: undefined,
           })
-        }
-        // ChartJS seems to think that it is possible to hover multiple
-        // entities at once. In this case, it is not. But we play along.
-        elements.forEach((currentElement) => {
-          if (currentElement.index != 1) {
-            // Rings are constructed as two elements.
-            // The first element is invisible to the user and thus ignored on hover.
-            return
-          }
-          // set the tooltip using the information stored within props.rings
-          const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
+        } else {
           setTippy("tooltip", {
-            content: rings.current[ring].tooltip,
+            content: ring.tooltip,
             popperRef: {
               // create a Popper VirtualElement since ChartJS does not provide us with that
               getBoundingClientRect: () => ({
@@ -87,32 +84,23 @@ const RingChart: (props: Props) => JSX.Element = tippyfy(
               placement: "auto",
             },
           })
-        })
+        }
       },
       [setTippy],
     )
 
     const handleClick = useCallback(
       (_, elements: ActiveElement[], chart: Chart<"doughnut">) => {
-        // ChartJS seems to think that it is possible to click multiple
-        // entities at once. In this case, it is not. But we play along.
-        elements.forEach((currentElement) => {
-          if (currentElement.index != 1) {
-            // Rings are constructed as two elements.
-            // The first element is invisible to the user and thus ignored on click.
-            return
-          }
-          // perform the clicked ring's action and remove the tooltip
-          const ring = +chart.getDatasetMeta(currentElement.datasetIndex).label
-          const action = rings.current[ring].action
-          if (action) {
-            setTippy("tooltip", {
-              content: undefined,
-              popperRef: undefined,
-            })
-            action()
-          }
-        })
+        // perform the clicked ring's action and remove the tooltip
+        const ring = getCurrentRing(elements, chart, rings.current)
+        const action = ring?.action
+        if (action) {
+          setTippy("tooltip", {
+            content: undefined,
+            popperRef: undefined,
+          })
+          action()
+        }
       },
       [setTippy],
     )
