@@ -21,6 +21,7 @@ jobs:
       - uses: actions/checkout@v2
         with: 
           repository: fraunhofer-iem/dodo-deployment
+          ref: main
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
