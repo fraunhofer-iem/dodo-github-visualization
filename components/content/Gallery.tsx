@@ -1,10 +1,10 @@
 import Tippy from "@tippyjs/react"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useSwipeable } from "react-swipeable"
 import useSWR from "swr"
 import { ApiError } from "../../lib/api"
 import { IconNames, Ordering } from "../../lib/frontend"
-import { usePagination, useUIContext } from "../../lib/hooks"
+import { usePagination, useResize, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
 import { Button } from "../action"
 import { Grid } from "../layout"
@@ -81,27 +81,18 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
     setPageNumber(1)
   }
 
-  useEffect(() => {
-    const resizeListener = () => {
-      /**
-       * Determine how many items fit within a single row
-       * Then fetch the total amount of items displayable.
-       */
-      if (container.current) {
-        const displayableEntities = Math.floor(
-          container.current.clientWidth / (props.boxSize + 40),
-        )
-        setPageSize(
-          displayableEntities == 0 ? 1 : displayableEntities * props.rows,
-        )
-      }
+  useResize(() => {
+    // Determine how many items fit within a single row.
+    // Then fetch the total amount of items displayable.
+    if (container.current) {
+      const displayableEntities = Math.floor(
+        container.current.clientWidth / (props.boxSize + 40),
+      )
+      setPageSize(
+        displayableEntities == 0 ? 1 : displayableEntities * props.rows,
+      )
     }
-    window.addEventListener("resize", resizeListener)
-    window.dispatchEvent(new UIEvent("resize"))
-    return () => {
-      window.removeEventListener("resize", resizeListener)
-    }
-  }, [props.boxSize, props.rows, setPageSize, setPageNumber])
+  })
 
   return (
     <div
