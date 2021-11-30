@@ -1,13 +1,13 @@
-name: CI/CD main
+name: CI/CD dev
 
 on:
   push:
     branches:
-      - main
+      - dev
 
   pull_request:
     branches:
-      - main
+      - dev
 
 concurrency: tagging
 
@@ -23,10 +23,12 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     needs: build
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/tag.yml@main
+    with:
+      suffix: vortex
 
   release:
     needs: tag
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/release.yml@main
     with:
-      tag: ${{ needs.tag.outputs.new_tag }}
-      prerelease: false
+      tag: ${{ needs.tag.outputs.tag }}
+      prerelease: true
