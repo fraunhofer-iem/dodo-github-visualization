@@ -37,7 +37,7 @@ jobs:
         run: |
           git submodule update --init --recursive -- dodo-github-visualization
           cd dodo-github-visualization
-          git checkout ${{ inputs.tag }}
+          git checkout ${{ github.event.inputs.tag }}
           cd ..
 
       - name: Commit
@@ -45,5 +45,5 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions - Update submodules"
           git add dodo-github-visualization/
-          git commit -m "dodo-github-visualization@${{ inputs.tag }}"
+          git commit -m "dodo-github-visualization@${{ github.event.inputs.tag }}"
           git push
