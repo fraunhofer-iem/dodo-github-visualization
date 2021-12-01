@@ -32,3 +32,9 @@ jobs:
     with:
       tag: ${{ needs.tag.outputs.tag }}
       prerelease: true
+
+  deploy:
+    needs: tag
+    uses: fraunhofer.iem/dodo-github-visualization/.github/workflows/updateDeploy.yml@main
+    with:
+      tag: ${{ needs.tag.outputs.new_tag }}
