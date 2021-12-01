@@ -9,6 +9,8 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 concurrency: tagging
 
 jobs:
@@ -20,7 +22,7 @@ jobs:
     needs: lint
 
   tag:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch'}}
     needs: build
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/tag.yml@main
 
