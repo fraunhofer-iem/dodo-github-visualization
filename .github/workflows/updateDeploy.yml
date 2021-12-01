@@ -36,6 +36,7 @@ jobs:
       - name: Pull & update submodules recursively
         run: |
           git submodule update --init --recursive -- dodo-github-visualization
+          git submodule update --recursive --remote -- dodo-github-visualization
           cd dodo-github-visualization
           git checkout ${{ github.event.inputs.tag }}
           cd ..
