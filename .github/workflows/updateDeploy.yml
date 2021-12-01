@@ -37,7 +37,7 @@ jobs:
         run: |
           git submodule update --init --recursive -- dodo-github-visualization
           cd dodo-github-visualization
-          git fetch
+          git fetch --all --tags
           git checkout ${{ github.event.inputs.tag }}
           cd ..
 
