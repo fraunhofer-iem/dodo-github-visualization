@@ -9,6 +9,6 @@ jobs:
   lint:
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/lint.yml@main
 
-  build:
+  compile:
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/compile.yml@main
     needs: lint
