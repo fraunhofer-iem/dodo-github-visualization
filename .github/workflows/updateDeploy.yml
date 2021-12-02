@@ -13,6 +13,7 @@ on:
         description: Tag to be pushed to dodo-deployment
         required: true
         type: string
+
 jobs:
   updateDeployment:
     runs-on: ubuntu-latest
@@ -24,11 +25,11 @@ jobs:
           token: ${{ secrets.ORG_ACCESS_TOKEN }}
           submodules: true
 
-      - name: Prepare submodule
-        run: |
-          git submodule update --init --recursive -- dodo-github-visualization
-          cd dodo-github-visualization
-          git fetch --all --tags
+      # - name: Prepare submodule
+      #   run: |
+      #     git submodule update --init --recursive -- dodo-github-visualization
+      #     cd dodo-github-visualization
+      #     git fetch --all --tags
 
       - name: Checkout desired tag (workflow_call)
         if: ${{ github.event_name != 'workflow_dispatch' }}
@@ -39,6 +40,9 @@ jobs:
       - name: Checkout desired tag (workflow_dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
+          git submodule update --init --recursive -- dodo-github-visualization
+          cd dodo-github-visualization
+          git fetch --all --tags
           git checkout ${{ github.event.inputs.tag }}
           cd ..
 
