@@ -1,0 +1,14 @@
+name: CI/CD feature
+
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  lint:
+    uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/lint.yml@main
+
+  build:
+    uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/compile.yml@main
+    needs: lint
