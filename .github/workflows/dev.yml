@@ -40,3 +40,5 @@ jobs:
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/updateDeploy.yml@main
     with:
       tag: ${{ needs.tag.outputs.new_tag }}
+    secrets:
+      ORG_ACCESS_TOKEN: ${{ secrets.ORG_ACCESS_TOKEN }}
