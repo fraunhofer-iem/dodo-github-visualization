@@ -58,5 +58,5 @@ jobs:
       - name: Push changes (workflow_dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          git commit -m "dodo-github-visualization@${{ github.event.inputs.tag }}" || echo "dodo-deployment/dodo-github-visualization already on ${{ inputs.tag }}
+          git commit -m "dodo-github-visualization@${{ github.event.inputs.tag }}" || echo "dodo-deployment/dodo-github-visualization already on ${{ inputs.tag }}"
           git push
