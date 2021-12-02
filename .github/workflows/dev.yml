@@ -17,13 +17,13 @@ jobs:
   lint:
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/lint.yml@main
 
-  build:
+  compile:
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/compile.yml@main
     needs: lint
 
   tag:
     if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-    needs: build
+    needs: compile
     uses: fraunhofer-iem/dodo-github-visualization/.github/workflows/tag.yml@main
     with:
       suffix: vortex

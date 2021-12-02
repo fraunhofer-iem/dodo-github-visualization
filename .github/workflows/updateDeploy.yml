@@ -8,6 +8,11 @@ on:
         type: string
 
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to be pushed to dodo-deployment
+        required: true
+        type: string
 
 jobs:
   updateDeployment:
@@ -20,21 +25,21 @@ jobs:
           token: ${{ secrets.ORG_ACCESS_TOKEN }}
           submodules: true
 
-      - name: Prepare submodule
-      - run: |
-          git submodule update --init --recursive -- dodo-github-visualization
-          cd dodo-github-visualization
-          git fetch --all --tags
-
       - name: Checkout desired tag (workflow_call)
         if: ${{ github.event_name != 'workflow_dispatch' }}
         run: |
+          git submodule update --init --recursive -- dodo-github-visualization
+          cd dodo-github-visualization
+          git fetch --all --tags
           git checkout ${{ inputs.tag }}
           cd ..
 
       - name: Checkout desired tag (workflow_dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
+          git submodule update --init --recursive -- dodo-github-visualization
+          cd dodo-github-visualization
+          git fetch --all --tags
           git checkout ${{ github.event.inputs.tag }}
           cd ..
 
@@ -47,11 +52,11 @@ jobs:
       - name: Push changes (workflow_call)
         if: ${{ github.event_name != 'workflow_dispatch' }}
         run: |
-          git commit -m "dodo-github-visualization@${{ inputs.tag }}"
+          git commit -m "dodo-github-visualization@${{ inputs.tag }}" || echo "dodo-deployment/dodo-github-visualization already on ${{ inputs.tag }}"
           git push
 
       - name: Push changes (workflow_dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          git commit -m "dodo-github-visualization@${{ github.event.inputs.tag }}"
+          git commit -m "dodo-github-visualization@${{ github.event.inputs.tag }}" || echo "dodo-deployment/dodo-github-visualization already on ${{ github.event.inputs.tag }}"
           git push
