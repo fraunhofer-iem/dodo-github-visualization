@@ -8,7 +8,11 @@ on:
         type: string
 
   workflow_dispatch:
-
+    inputs:
+      tag:
+        description: Tag to be pushed to dodo-deployment
+        required: true
+        type: string
 jobs:
   updateDeployment:
     runs-on: ubuntu-latest
