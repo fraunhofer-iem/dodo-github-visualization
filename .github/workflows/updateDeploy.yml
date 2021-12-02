@@ -21,7 +21,7 @@ jobs:
           submodules: true
 
       - name: Prepare submodule
-      - run: |
+        run: |
           git submodule update --init --recursive -- dodo-github-visualization
           cd dodo-github-visualization
           git fetch --all --tags
