@@ -22,7 +22,7 @@ export interface AuthorizationDetails {
 export function requireAuthorization(
   page: (props: any) => React.ReactNode,
 ): NextPage {
-  return (props: { [key: string]: any }) => {
+  return function ProtectedPage(props: { [key: string]: any }) {
     const { user } = useUser({ redirectTo: "/" })
 
     return (
