@@ -11,7 +11,7 @@ export default function handler(
     "name",
     "rating",
   ])
-  console.log({ pageNumber, pageSize, sortKey, asc })
+  // console.log({ pageNumber, pageSize, sortKey, asc })
 
   let kpis = dummyKpis
   if (sortKey) {
@@ -37,8 +37,8 @@ export default function handler(
     startOfChunk < kpis.length ? startOfChunk : undefined,
     endOfChunk < kpis.length ? endOfChunk : undefined,
   )
-  console.log(startOfChunk, endOfChunk)
-  console.log(chunk)
+  // console.log(startOfChunk, endOfChunk)
+  // console.log(chunk)
 
   res.status(200).json(chunk)
 }

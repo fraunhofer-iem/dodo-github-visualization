@@ -37,12 +37,6 @@ export function Page(props: Props) {
         >
           KPI Analytics
         </Button>
-        <Button
-          action={() => router.push(PageRoutes.HIERARCHY)}
-          context="neutral"
-        >
-          KPI Hierarchy
-        </Button>
       </Bar>
       <Container>
         {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />}

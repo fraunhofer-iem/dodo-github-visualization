@@ -6,6 +6,15 @@ export type Project = {
   id: string
 }
 
+export type Repo = {
+  id: string
+  owner: string
+  name: string
+  maturityIndex: number
+  url: string
+  kpis: string[]
+}
+
 export type Sort = {
   asc: boolean
   sortKey: string

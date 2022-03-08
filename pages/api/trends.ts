@@ -66,7 +66,7 @@ export default function handler(
     "value",
   ])
 
-  console.log({ pageNumber, pageSize, sortKey, asc })
+  // console.log({ pageNumber, pageSize, sortKey, asc })
 
   let trends = dummyTrends
   if (sortKey) {
@@ -92,8 +92,8 @@ export default function handler(
     startOfChunk < trends.length ? startOfChunk : undefined,
     endOfChunk < trends.length ? endOfChunk : undefined,
   )
-  console.log(startOfChunk, endOfChunk)
-  console.log(chunk)
+  // console.log(startOfChunk, endOfChunk)
+  // console.log(chunk)
 
   res.status(200).json(chunk)
 }

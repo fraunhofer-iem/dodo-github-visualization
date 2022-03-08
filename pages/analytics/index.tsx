@@ -7,7 +7,7 @@ import { Card } from "../../components/card"
 import { RingChart } from "../../components/chart"
 import {
   Gallery,
-  ProjectHealth,
+  RepositoryHealth,
   Section,
   Spinner,
   TrendComponent,
@@ -17,9 +17,9 @@ import { Grid, Page } from "../../components/layout"
 import {
   ApiError,
   AuthorizationDetails,
-  getProjectsApiRoute,
+  getReposApiRoute,
   getTrendsApiRoute,
-  Project,
+  Repo,
   requireAuthorization,
   Trend,
 } from "../../lib/api"
@@ -41,8 +41,8 @@ const Analytics: NextPage = requireAuthorization(
       sortInformation,
       setSortInformation,
     } = usePagination("name")
-    const { data: projects, error: error } = useSWR<Project[], ApiError>(
-      getProjectsApiRoute(
+    const { data: repos, error: error } = useSWR<Repo[], ApiError>(
+      getReposApiRoute(
         pageSize,
         pageNumber,
         sortInformation.sortKey,
@@ -63,14 +63,14 @@ const Analytics: NextPage = requireAuthorization(
             <SectionTitle>Organization</SectionTitle>
             <Grid align="center">
               <Card>
-                {projects ? (
+                {repos ? (
                   <RingChart
-                    rings={projects.map((currentProject) => ({
-                      value: currentProject.maturityIndex,
-                      tooltip: <Card>{currentProject.name}</Card>,
+                    rings={repos.map((currentRepo) => ({
+                      value: 50,
+                      tooltip: <Card>{currentRepo.name}</Card>,
                       action: () =>
                         router.push(
-                          getAnalyticsForProjectRoute(currentProject.id),
+                          getAnalyticsForProjectRoute(currentRepo.id),
                         ),
                     }))}
                     width="250px"
@@ -78,11 +78,7 @@ const Analytics: NextPage = requireAuthorization(
                     <TrendComponent
                       label="Health"
                       rating={
-                        sum(
-                          projects.map(
-                            (currentProject) => currentProject.maturityIndex,
-                          ),
-                        ) / projects.length
+                        sum(repos.map((currentProject) => 50)) / repos.length
                       }
                       direction={TrendDirections.UP}
                       compact={true}
@@ -112,24 +108,20 @@ const Analytics: NextPage = requireAuthorization(
             </Grid>
           </Section>
           <Section>
-            <SectionTitle>Projects</SectionTitle>
-            <Gallery<Project>
+            <SectionTitle>Repositories</SectionTitle>
+            <Gallery<Repo>
               rows={1}
               boxSize={250}
-              sortKeys={["name", "maturity Index"]}
-              generator={(
-                currentProject: Project,
-                size: number,
-                key: number,
-              ) => (
+              sortKeys={["name", "owner", "maturity Index"]}
+              generator={(currentRepo: Repo, size: number, key: number) => (
                 <Card key={key}>
-                  <ProjectHealth
-                    projectId={currentProject.id}
+                  <RepositoryHealth
+                    repoId={currentRepo.id}
                     width={`${size}px`}
                   />
                 </Card>
               )}
-              route={getProjectsApiRoute}
+              route={getReposApiRoute}
             />
           </Section>
         </Page>

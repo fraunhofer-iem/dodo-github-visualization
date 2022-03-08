@@ -11,7 +11,7 @@ export default function handler(
     "name",
     "maturityIndex",
   ])
-  console.log({ pageNumber, pageSize, sortKey, asc })
+  // console.log({ pageNumber, pageSize, sortKey, asc })
 
   let projects = dummyProjects
   if (sortKey) {
@@ -39,8 +39,8 @@ export default function handler(
     startOfChunk < projects.length ? startOfChunk : undefined,
     endOfChunk < projects.length ? endOfChunk : undefined,
   )
-  console.log(startOfChunk, endOfChunk)
-  console.log(chunk)
+  // console.log(startOfChunk, endOfChunk)
+  // console.log(chunk)
 
   res.status(200).json(chunk)
 }

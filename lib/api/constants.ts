@@ -17,6 +17,19 @@ export const enum ApiRoutes {
   KPIS = "/api/kpis",
 }
 
+export function getReposApiRoute(
+  pageSize?: number,
+  pageNumber?: number,
+  sortKey?: string,
+  asc?: number,
+) {
+  pageSize = pageSize ? pageSize : PAGE_SIZE_LIMIT
+  pageNumber = pageNumber ? pageNumber : FIRST_PAGE
+  sortKey = sortKey ? sortKey : "name"
+  asc = asc == 0 ? 0 : 1
+  return `/api/repos?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+}
+
 export function getProjectsApiRoute(
   pageSize?: number,
   pageNumber?: number,
@@ -32,6 +45,10 @@ export function getProjectsApiRoute(
 
 export function getProjectApiRoute(projectId: string) {
   return `/api/projects/${projectId}`
+}
+
+export function getRepoApiRoute(repoId: string) {
+  return `/api/repos/${repoId}`
 }
 
 export function getKpisForProjectApiRoute(

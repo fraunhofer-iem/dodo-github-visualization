@@ -1,12 +1,7 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
 import { Spinner, TrendComponent } from "."
-import {
-  getKpisForProjectApiRoute,
-  getProjectApiRoute,
-  Kpi,
-  Project,
-} from "../../lib/api"
+import { getRepoApiRoute, Repo } from "../../lib/api"
 import {
   getAnalyticsForProjectRoute,
   getKpiForProjectRoute,
@@ -17,9 +12,9 @@ import { RingChart } from "../chart"
 
 interface Props {
   /**
-   * The ID of the project to be displayed
+   * The ID of the repository to be displayed
    */
-  projectId: string
+  repoId: string
   /**
    * The ring chart's size
    *
@@ -29,34 +24,30 @@ interface Props {
 }
 
 /**
- * Simple wrapper component that fetches the project's data from the API
+ * Simple wrapper component that fetches the repository's data from the API
  * and displays it in a ring chart.
  */
-export function ProjectHealth(props: Props) {
-  const { projectId } = props
+export function RepositoryHealth(props: Props) {
+  const { repoId: projectId } = props
   const router = useRouter()
   const width = props.width ?? "100px"
-  // Note: in the future, the necessary information should be obtained via the /api/project/[pid]
-  // endpoint alone. Currently, the trend direction is set to "up" by default and the (first 5)
-  // KPIs are used for the dummy rings.
-  const { data: project } = useSWR<Project>(getProjectApiRoute(projectId))
-  const { data: kpis } = useSWR<Kpi[]>(getKpisForProjectApiRoute(projectId))
-
-  return project && kpis ? (
+  const { data: repo } = useSWR<Repo>(getRepoApiRoute(projectId))
+  const kpis = [{ rating: 5, name: "Test", id: "test" }]
+  return repo && kpis ? (
     <RingChart
       rings={kpis.map((currentKpi) => ({
         value: currentKpi.rating,
         tooltip: <Card>{currentKpi.name}</Card>,
         action: () =>
-          router.push(getKpiForProjectRoute(project.id, currentKpi.id)),
+          router.push(getKpiForProjectRoute(repo.id, currentKpi.id)),
       }))}
       width={width}
     >
       <TrendComponent
         compact={true}
-        label={project.name}
-        action={() => router.push(getAnalyticsForProjectRoute(project.id))}
-        rating={project.maturityIndex}
+        label={repo.name}
+        action={() => router.push(getAnalyticsForProjectRoute(repo.id))}
+        rating={repo.maturityIndex}
         direction={TrendDirections.UP}
       />
     </RingChart>
