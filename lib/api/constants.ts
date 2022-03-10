@@ -30,7 +30,12 @@ export function getReposApiRoute(
   return `/api/repos?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
 
-export function getProjectsApiRoute(
+export function getRepoApiRoute(repoId: { owner: string; name: string }) {
+  return `/api/repos/${repoId.owner}/${repoId.name}`
+}
+
+export function getKpisForRepoApiRoute(
+  repoId: { owner: string; name: string },
   pageSize?: number,
   pageNumber?: number,
   sortKey?: string,
@@ -40,33 +45,14 @@ export function getProjectsApiRoute(
   pageNumber = pageNumber ? pageNumber : FIRST_PAGE
   sortKey = sortKey ? sortKey : "name"
   asc = asc == 0 ? 0 : 1
-  return `/api/projects?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+  return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
 
-export function getProjectApiRoute(projectId: string) {
-  return `/api/projects/${projectId}`
-}
-
-export function getRepoApiRoute(repoId: string) {
-  return `/api/repos/${repoId}`
-}
-
-export function getKpisForProjectApiRoute(
-  projectId: string,
-  pageSize?: number,
-  pageNumber?: number,
-  sortKey?: string,
-  asc?: number,
+export function getKpiForRepoApiRoute(
+  repoId: { owner: string; name: string },
+  kpiId: string,
 ) {
-  pageSize = pageSize ? pageSize : PAGE_SIZE_LIMIT
-  pageNumber = pageNumber ? pageNumber : FIRST_PAGE
-  sortKey = sortKey ? sortKey : "name"
-  asc = asc == 0 ? 0 : 1
-  return `/api/projects/${projectId}/kpis?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
-}
-
-export function getKpiForProjectApiRoute(projectId: string, kpiId: string) {
-  return `/api/projects/${projectId}/kpis/${kpiId}`
+  return `/api/repos/${repoId.owner}/${repoId.name}/kpis/${kpiId}`
 }
 
 // the first key is the default sorting key, which is

@@ -1,18 +1,18 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import { ApiError, getKpisForProjectApiRoute, Kpi } from "../lib/api"
-import { getKpiForProjectRoute, TableContexts } from "../lib/frontend"
+import { ApiError, getKpisForRepoApiRoute, Kpi } from "../lib/api"
+import { getKpiForRepoRoute, TableContexts } from "../lib/frontend"
 import { usePagination } from "../lib/hooks"
 import { Button } from "./action"
 import { Table } from "./table"
 
 interface Props {
-  projectID: string
-  kpiID?: string
+  repoId: { owner: string; name: string }
+  kpiId?: string
 }
 
 export default function KpiTable(props: Props) {
-  const { projectID, kpiID } = props
+  const { repoId, kpiId: kpiID } = props
   const router = useRouter()
   const {
     pageNumber,
@@ -23,8 +23,8 @@ export default function KpiTable(props: Props) {
     setSortInformation,
   } = usePagination("name")
   const { data: kpis, error: error } = useSWR<Kpi[], ApiError>(
-    getKpisForProjectApiRoute(
-      projectID,
+    getKpisForRepoApiRoute(
+      repoId,
       pageSize,
       pageNumber,
       sortInformation.sortKey,
@@ -37,7 +37,7 @@ export default function KpiTable(props: Props) {
 
   return (
     <Table
-      width="50%"
+      width="100%"
       context={TableContexts.STRIPED}
       paginate={true}
       {...{
@@ -61,7 +61,7 @@ export default function KpiTable(props: Props) {
                 content: (
                   <Button
                     action={() =>
-                      router.push(getKpiForProjectRoute(projectID, kpi.id))
+                      router.push(getKpiForRepoRoute(repoId, kpi.id))
                     }
                     context="anchor"
                     width="100%"

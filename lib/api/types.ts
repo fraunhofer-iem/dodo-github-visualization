@@ -1,15 +1,12 @@
 import { TrendDirections } from "../frontend"
 
-export type Project = {
-  name: string
-  maturityIndex: number
-  id: string
-}
-
 export type Repo = {
   id: string
   owner: string
   name: string
+}
+
+export type RepoDetail = Repo & {
   maturityIndex: number
   url: string
   kpis: string[]
@@ -27,19 +24,6 @@ export type User = {
   isLoggedIn: boolean
 }
 
-export type KpiType = {
-  id: string
-  type: string
-  name: string
-  children: string[]
-  parents: string[]
-  description: string
-}
-
-export type ProjectDetail = Project & {
-  url: string
-}
-
 export type Kpi = {
   name: string
   rating: number
@@ -47,9 +31,9 @@ export type Kpi = {
 }
 
 export type KpiDetail = Kpi & {
-  description: string
-  children: Kpi[]
-  calculation: string
+  description?: string
+  children?: Kpi[]
+  calculation?: string
   // this is custom for each KPI, I guess we need to define a type for each KPI
   // and cast the KPI_Detail as needed
   data?: any

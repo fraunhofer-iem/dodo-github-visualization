@@ -70,7 +70,4 @@ export type Theme = {
       icon: IconNames
     }
   }
-  cytoscape?: {
-    canvas: cytoscape.Stylesheet[]
-  }
 }

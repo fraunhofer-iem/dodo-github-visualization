@@ -1,6 +1,6 @@
+import { reverse, sortBy } from "lodash"
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
-
-import { PAGE_SIZE_LIMIT, FIRST_PAGE, PaginationQueryParams } from "./constants"
+import { FIRST_PAGE, PAGE_SIZE_LIMIT, PaginationQueryParams } from "./constants"
 import { Pagination, Sort } from "./types"
 
 /**
@@ -82,4 +82,42 @@ const hasValidPageSize = (query: NextApiRequestQuery) => {
 
 const isNumber = (numVal: string | string[]) => {
   return typeof numVal == "string" && !isNaN(+numVal)
+}
+
+export function paginate<T>(
+  collection: T[],
+  paginationParams: {
+    sortKey: string
+    asc: boolean
+    pageSize: number
+    pageNumber: number
+  },
+): T[] {
+  const { sortKey, asc, pageSize, pageNumber } = paginationParams
+  if (sortKey) {
+    collection = sortBy(collection, [
+      (currentElem: any) => currentElem[sortKey],
+    ])
+    if (!asc) {
+      reverse(collection)
+    }
+  }
+  let startOfChunk = pageSize * (pageNumber - 1)
+  let endOfChunk = pageSize * (pageNumber - 1) + pageSize
+  if (startOfChunk >= collection.length) {
+    return []
+  }
+  if (endOfChunk >= collection.length) {
+    endOfChunk = collection.length
+  }
+  if (startOfChunk < 0) {
+    startOfChunk = 0
+    endOfChunk = pageSize
+  }
+  const chunk: T[] = collection.slice(
+    startOfChunk < collection.length ? startOfChunk : undefined,
+    endOfChunk < collection.length ? endOfChunk : undefined,
+  )
+
+  return chunk
 }

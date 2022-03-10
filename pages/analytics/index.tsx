@@ -1,4 +1,3 @@
-import { sum } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
@@ -24,7 +23,7 @@ import {
   Trend,
 } from "../../lib/api"
 import {
-  getAnalyticsForProjectRoute,
+  getAnalyticsForRepoRoute,
   PageRoutes,
   TrendDirections,
 } from "../../lib/frontend"
@@ -66,20 +65,16 @@ const Analytics: NextPage = requireAuthorization(
                 {repos ? (
                   <RingChart
                     rings={repos.map((currentRepo) => ({
-                      value: 50,
+                      value: 98,
                       tooltip: <Card>{currentRepo.name}</Card>,
                       action: () =>
-                        router.push(
-                          getAnalyticsForProjectRoute(currentRepo.id),
-                        ),
+                        router.push(getAnalyticsForRepoRoute(currentRepo)),
                     }))}
                     width="250px"
                   >
                     <TrendComponent
                       label="Health"
-                      rating={
-                        sum(repos.map((currentProject) => 50)) / repos.length
-                      }
+                      rating={42}
                       direction={TrendDirections.UP}
                       compact={true}
                     />
@@ -115,10 +110,7 @@ const Analytics: NextPage = requireAuthorization(
               sortKeys={["name", "owner", "maturity Index"]}
               generator={(currentRepo: Repo, size: number, key: number) => (
                 <Card key={key}>
-                  <RepositoryHealth
-                    repoId={currentRepo.id}
-                    width={`${size}px`}
-                  />
+                  <RepositoryHealth repoId={currentRepo} width={`${size}px`} />
                 </Card>
               )}
               route={getReposApiRoute}

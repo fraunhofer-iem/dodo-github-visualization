@@ -1,10 +1,15 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
 import { Spinner, TrendComponent } from "."
-import { getRepoApiRoute, Repo } from "../../lib/api"
 import {
-  getAnalyticsForProjectRoute,
-  getKpiForProjectRoute,
+  getKpisForRepoApiRoute,
+  getRepoApiRoute,
+  Kpi,
+  RepoDetail,
+} from "../../lib/api"
+import {
+  getAnalyticsForRepoRoute,
+  getKpiForRepoRoute,
   TrendDirections,
 } from "../../lib/frontend"
 import { Card } from "../card"
@@ -14,7 +19,7 @@ interface Props {
   /**
    * The ID of the repository to be displayed
    */
-  repoId: string
+  repoId: { owner: string; name: string }
   /**
    * The ring chart's size
    *
@@ -28,25 +33,28 @@ interface Props {
  * and displays it in a ring chart.
  */
 export function RepositoryHealth(props: Props) {
-  const { repoId: projectId } = props
+  const { repoId } = props
   const router = useRouter()
   const width = props.width ?? "100px"
-  const { data: repo } = useSWR<Repo>(getRepoApiRoute(projectId))
-  const kpis = [{ rating: 5, name: "Test", id: "test" }]
+  const { data: repo } = useSWR<RepoDetail>(getRepoApiRoute(repoId))
+  const { data: kpis } = useSWR<Kpi[]>(getKpisForRepoApiRoute(repoId))
   return repo && kpis ? (
     <RingChart
       rings={kpis.map((currentKpi) => ({
         value: currentKpi.rating,
         tooltip: <Card>{currentKpi.name}</Card>,
-        action: () =>
-          router.push(getKpiForProjectRoute(repo.id, currentKpi.id)),
+        action: () => router.push(getKpiForRepoRoute(repoId, currentKpi.id)),
       }))}
       width={width}
     >
       <TrendComponent
         compact={true}
         label={repo.name}
-        action={() => router.push(getAnalyticsForProjectRoute(repo.id))}
+        action={() =>
+          router.push(
+            getAnalyticsForRepoRoute({ owner: repo.owner, name: repo.name }),
+          )
+        }
         rating={repo.maturityIndex}
         direction={TrendDirections.UP}
       />

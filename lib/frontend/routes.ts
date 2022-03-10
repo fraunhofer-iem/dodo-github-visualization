@@ -3,10 +3,19 @@ export const enum PageRoutes {
   HIERARCHY = "/hierarchy",
 }
 
-export function getAnalyticsForProjectRoute(projectId: string) {
-  return `/analytics/projects/${projectId}`
+export function getAnalyticsForRepoRoute(repoId: {
+  owner: string
+  name: string
+}) {
+  return `/analytics/repos/${repoId.owner}/${repoId.name}`
 }
 
-export function getKpiForProjectRoute(projectId: string, kpiId: string) {
-  return `/analytics/projects/${projectId}/kpis/${kpiId}`
+export function getKpiForRepoRoute(
+  repoId: {
+    owner: string
+    name: string
+  },
+  kpiId: string,
+) {
+  return `/analytics/repos/${repoId.owner}/${repoId.name}/kpis/${kpiId}`
 }

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { fetchJson, Repo } from "../../../../lib/api"
+import { fetchJson, RepoDetail } from "../../../../lib/api"
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Repo>,
+  res: NextApiResponse<RepoDetail>,
 ) {
   const {
     query: { owner, name },
