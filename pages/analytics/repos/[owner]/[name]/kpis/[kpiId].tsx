@@ -1,3 +1,4 @@
+import { sortBy } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import React, { useRef } from "react"
@@ -9,6 +10,7 @@ import {
   CardSubTitle,
   CardTitle,
 } from "../../../../../../components/card"
+import { LineChart } from "../../../../../../components/chart"
 import { SectionTitle } from "../../../../../../components/heading"
 import KpiTable from "../../../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../../../components/layout"
@@ -22,6 +24,7 @@ import {
   requireAuthorization,
 } from "../../../../../../lib/api"
 import {
+  Colors,
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
   IconNames,
@@ -39,6 +42,19 @@ const KPIDetail: NextPage = requireAuthorization(
       getKpiForRepoApiRoute(repoId, kpiId as string),
     )
     const toggleSidebar = useRef<() => void>(() => {})
+
+    const dataPoints: { label: string; value: number }[] = []
+    if (kpi && kpi.data) {
+      for (const year of Object.keys(kpi.data)) {
+        for (const ident of Object.keys(kpi.data[year])) {
+          dataPoints.push({
+            label: `${year}-${ident}`,
+            value: kpi.data[year][ident].avg,
+          })
+        }
+      }
+      sortBy(dataPoints, (dataPoint) => dataPoint.label)
+    }
 
     return (
       props.user?.isLoggedIn && (
@@ -99,12 +115,31 @@ const KPIDetail: NextPage = requireAuthorization(
               <CardSubTitle>{repo?.url as string}</CardSubTitle>
               <CardBody>
                 <SectionTitle>{`${kpi?.name}`}</SectionTitle>
-                Description: {kpi?.description}
-                <br />
-                Calculation: {kpi?.calculation}
-                <br />
-                Children: {kpi?.children}
-                <br />
+                <LineChart
+                  data={{
+                    datasets: [
+                      {
+                        data: dataPoints.map((dataPoint) => dataPoint.value),
+                        backgroundColor: Colors.purple.rgba(),
+                        borderColor: Colors.purple.rgba(),
+                        borderWidth: 1,
+                        pointRadius: 1,
+                        showLine: false,
+                      },
+                    ],
+                    labels: dataPoints.map((dataPoint) => dataPoint.label),
+                  }}
+                  options={{
+                    plugins: {
+                      legend: {
+                        display: false,
+                      },
+                      tooltip: {
+                        enabled: false,
+                      },
+                    },
+                  }}
+                />
               </CardBody>
             </Card>
           </Grid>
