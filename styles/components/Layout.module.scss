@@ -51,8 +51,12 @@
   flex-wrap: wrap;
 }
 
+.grid div:last-child {
+  flex-grow: 1;
+}
+
 .sidebar {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 100px);
 }

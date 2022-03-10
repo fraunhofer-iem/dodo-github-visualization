@@ -91,14 +91,14 @@ const KPIDetail: NextPage = requireAuthorization(
                 (toggleSidebar.current = control)
               }
             >
-              <Card>
+              <Card width="95%">
                 <CardTitle>List of KPIs</CardTitle>
                 <CardBody>
                   <KpiTable repoId={repoId} kpiId={kpiId as string} />
                 </CardBody>
               </Card>
             </Sidebar>
-            <Card>
+            <Card width="calc(100% - 400px)">
               <CardTitle>
                 {`${repo?.name}`}
                 <Button
@@ -138,6 +138,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         enabled: false,
                       },
                     },
+                    aspectRatio: 3.5,
                   }}
                 />
               </CardBody>
