@@ -2,6 +2,7 @@ import styles from "../../styles/components/Layout.module.scss"
 
 interface Props {
   align?: "left" | "center" | "right"
+  grow?: boolean
   children?: React.ReactNode
 }
 
@@ -10,7 +11,10 @@ interface Props {
  */
 export function Grid(props: Props) {
   return (
-    <div className={styles.grid} style={{ justifyContent: props.align }}>
+    <div
+      className={props.grow ? styles.gridGrow : styles.grid}
+      style={{ justifyContent: props.align }}
+    >
       {props.children}
     </div>
   )

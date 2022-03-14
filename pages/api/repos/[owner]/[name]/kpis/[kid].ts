@@ -6,12 +6,25 @@ export default async function handler(
   res: NextApiResponse<KpiDetail | undefined>,
 ) {
   const {
-    query: { owner, name, kid },
+    query: { owner, name, kid, since, to, interval },
   } = req
+
+  const params = new URLSearchParams()
+  if (since) {
+    params.append("since", since as string)
+  }
+  if (to) {
+    params.append("to", to as string)
+  }
+  if (interval) {
+    params.append("interval", interval as string)
+  }
 
   let kpiData = await fetchJson(
     new Request(
-      `${process.env.HOST}/api/kpis/${kid}?owner=${owner}&repo=${name}&since=2022-01-01`,
+      `${
+        process.env.HOST
+      }/api/kpis/${kid}?owner=${owner}&repo=${name}&${params.toString()}`,
     ),
   )
 

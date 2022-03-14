@@ -1,7 +1,9 @@
 import { sortBy } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 import useSWR from "swr"
 import { Button } from "../../../../../../components/action"
 import {
@@ -11,6 +13,7 @@ import {
   CardTitle,
 } from "../../../../../../components/card"
 import { LineChart } from "../../../../../../components/chart"
+import { Select } from "../../../../../../components/form"
 import { SectionTitle } from "../../../../../../components/heading"
 import KpiTable from "../../../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../../../components/layout"
@@ -19,6 +22,7 @@ import {
   AuthorizationDetails,
   getKpiForRepoApiRoute,
   getRepoApiRoute,
+  Intervals,
   KpiDetail,
   RepoDetail,
   requireAuthorization,
@@ -30,16 +34,31 @@ import {
   IconNames,
   PageRoutes,
 } from "../../../../../../lib/frontend"
+import { useUIContext } from "../../../../../../lib/hooks"
+
+const intervals: Intervals[] = [Intervals.MONTH, Intervals.WEEK, Intervals.DAY]
 
 const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
+    const { theme } = useUIContext()
     const router = useRouter()
+    const [since, setSince] = useState<Date>(
+      new Date(new Date().setMonth(new Date().getMonth() - 3)),
+    )
+    const [to, setTo] = useState<Date>(new Date())
+    const [interval, setInterval] = useState<Intervals>(Intervals.MONTH)
     //TODO: proper type cast needed
     const { owner, name, kpiId } = router.query
     const repoId = { owner: owner as string, name: name as string }
     const { data: repo } = useSWR<RepoDetail>(getRepoApiRoute(repoId))
     const { data: kpi } = useSWR<KpiDetail>(
-      getKpiForRepoApiRoute(repoId, kpiId as string),
+      getKpiForRepoApiRoute(
+        repoId,
+        kpiId as string,
+        since.toISOString(),
+        to.toISOString(),
+        interval,
+      ),
     )
     const toggleSidebar = useRef<() => void>(() => {})
 
@@ -85,7 +104,7 @@ const KPIDetail: NextPage = requireAuthorization(
             },
           ]}
         >
-          <Grid>
+          <Grid grow={true}>
             <Sidebar
               control={(control: () => void) =>
                 (toggleSidebar.current = control)
@@ -115,6 +134,53 @@ const KPIDetail: NextPage = requireAuthorization(
               <CardSubTitle>{repo?.url as string}</CardSubTitle>
               <CardBody>
                 <SectionTitle>{`${kpi?.name}`}</SectionTitle>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  Show from{" "}
+                  <div>
+                    <DatePicker
+                      maxDate={to}
+                      selected={since}
+                      onChange={(date) => {
+                        if (date) {
+                          setSince(date)
+                        }
+                      }}
+                    />
+                  </div>
+                  to{" "}
+                  <div>
+                    <DatePicker
+                      minDate={since}
+                      maxDate={new Date()}
+                      selected={to}
+                      onChange={(date) => {
+                        if (date) {
+                          setTo(date)
+                        }
+                      }}
+                    />
+                  </div>
+                  calculated for each{" "}
+                  <Select
+                    id="intervalSelector"
+                    multiple={false}
+                    options={intervals.map((currentInterval, i) => ({
+                      id: i,
+                      name: currentInterval,
+                      selected: interval === currentInterval,
+                    }))}
+                    changeHandler={(selection) => {
+                      if (!Array.isArray(selection)) {
+                        setInterval(intervals[selection])
+                      }
+                    }}
+                  />
+                </div>
                 <LineChart
                   data={{
                     datasets: [
@@ -124,7 +190,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         borderColor: Colors.purple.rgba(),
                         borderWidth: 1,
                         pointRadius: 1,
-                        showLine: false,
+                        showLine: true,
                       },
                     ],
                     labels: dataPoints.map((dataPoint) => dataPoint.label),
@@ -136,6 +202,11 @@ const KPIDetail: NextPage = requireAuthorization(
                       },
                       tooltip: {
                         enabled: false,
+                      },
+                    },
+                    scales: {
+                      y: {
+                        min: 0,
                       },
                     },
                     aspectRatio: 3.5,

@@ -60,7 +60,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           },
         ]}
       >
-        <Grid>
+        <Grid grow={true}>
           <Sidebar
             control={(control: () => void) => (toggleSidebar.current = control)}
           >

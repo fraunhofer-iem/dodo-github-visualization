@@ -9,6 +9,13 @@ export const enum PaginationQueryParams {
   PAGE_SIZE = "pageSize",
 }
 
+export const enum Intervals {
+  YEAR = "year",
+  MONTH = "month",
+  WEEK = "week",
+  DAY = "day",
+}
+
 export const USER_COOKIE = "user"
 
 export const enum ApiRoutes {
@@ -51,8 +58,23 @@ export function getKpisForRepoApiRoute(
 export function getKpiForRepoApiRoute(
   repoId: { owner: string; name: string },
   kpiId: string,
+  since?: string,
+  to?: string,
+  interval?: Intervals,
 ) {
-  return `/api/repos/${repoId.owner}/${repoId.name}/kpis/${kpiId}`
+  const params = new URLSearchParams()
+  if (since) {
+    params.append("since", since)
+  }
+  if (to) {
+    params.append("to", to)
+  }
+  if (interval) {
+    params.append("interval", interval)
+  }
+  return `/api/repos/${repoId.owner}/${
+    repoId.name
+  }/kpis/${kpiId}?${params.toString()}`
 }
 
 // the first key is the default sorting key, which is
