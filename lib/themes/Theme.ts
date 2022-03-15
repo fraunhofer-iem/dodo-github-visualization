@@ -25,6 +25,10 @@ export type Theme = {
     anchor: CSSProperties
     "anchor:hover": CSSProperties
   }
+  alert: {
+    error: CSSProperties
+    success: CSSProperties
+  }
   list: {
     list: CSSProperties
     listItem: CSSProperties

@@ -1,4 +1,4 @@
-import { Colors, CSSProperties, IconNames } from "../frontend"
+import { Color, Colors, CSSProperties, IconNames } from "../frontend"
 import { Theme } from "./Theme"
 
 const {
@@ -12,6 +12,7 @@ const {
   maroon,
   gold,
   green,
+  red,
 } = Colors
 
 const LightTheme: Theme = {
@@ -118,6 +119,18 @@ const LightTheme: Theme = {
     "anchor:hover": new CSSProperties({
       backgroundColor: transparent,
       textDecoration: "underline",
+    }),
+  },
+  alert: {
+    error: new CSSProperties({
+      backgroundColor: red.brighten(0.75),
+      borderColor: red.brighten(0.7),
+      color: red.darken(0.6),
+    }),
+    success: new CSSProperties({
+      backgroundColor: new Color(210, 240, 220),
+      borderColor: new Color(195, 230, 200),
+      color: new Color(20, 90, 35),
     }),
   },
   content: {

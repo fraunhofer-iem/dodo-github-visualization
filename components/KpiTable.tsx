@@ -52,7 +52,7 @@ export default function KpiTable(props: Props) {
     >
       {{
         columns: [
-          { content: "Name", sortable: true, sortKey: "name" },
+          { content: "Name", sortable: true, sortKey: "name", width: "70%" },
           { content: "Score", sortable: true, sortKey: "rating" },
         ],
         rows: kpis

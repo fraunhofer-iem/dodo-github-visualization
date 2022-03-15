@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "../../../../../../components/card"
 import { LineChart } from "../../../../../../components/chart"
+import Alert from "../../../../../../components/content/Alert"
 import { Select } from "../../../../../../components/form"
 import { SectionTitle } from "../../../../../../components/heading"
 import KpiTable from "../../../../../../components/KpiTable"
@@ -34,13 +35,11 @@ import {
   IconNames,
   PageRoutes,
 } from "../../../../../../lib/frontend"
-import { useUIContext } from "../../../../../../lib/hooks"
 
 const intervals: Intervals[] = [Intervals.MONTH, Intervals.WEEK, Intervals.DAY]
 
 const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
-    const { theme } = useUIContext()
     const router = useRouter()
     const [since, setSince] = useState<Date>(
       new Date(new Date().setMonth(new Date().getMonth() - 3)),
@@ -117,7 +116,7 @@ const KPIDetail: NextPage = requireAuthorization(
                 </CardBody>
               </Card>
             </Sidebar>
-            <Card width="calc(100% - 400px)">
+            <Card width="calc(100% - 500px)">
               <CardTitle>
                 {`${repo?.name}`}
                 <Button
@@ -134,6 +133,9 @@ const KPIDetail: NextPage = requireAuthorization(
               <CardSubTitle>{repo?.url as string}</CardSubTitle>
               <CardBody>
                 <SectionTitle>{`${kpi?.name}`}</SectionTitle>
+                {kpi?.data.length == 0 && (
+                  <Alert errorMessage="No data in specified timeframe" />
+                )}
                 <div
                   style={{
                     display: "flex",
@@ -189,7 +191,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         backgroundColor: Colors.purple.rgba(),
                         borderColor: Colors.purple.rgba(),
                         borderWidth: 1,
-                        pointRadius: 1,
+                        pointRadius: 2,
                         showLine: true,
                       },
                     ],

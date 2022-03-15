@@ -8,7 +8,12 @@ import { Icon } from "../rating"
 
 interface Props {
   children?: {
-    columns: { content: React.ReactNode; sortable: boolean; sortKey?: string }[]
+    columns: {
+      content: React.ReactNode
+      sortable: boolean
+      sortKey?: string
+      width?: string
+    }[]
     rows: { content: React.ReactNode; sortKey: string | number }[][]
   }
   context?: TableContexts
@@ -76,6 +81,7 @@ export function Table(props: Props) {
               setSortInformation={
                 column.sortable ? setSortInformation : undefined
               }
+              width={column.width}
             >
               {column.content}
             </TableCell>

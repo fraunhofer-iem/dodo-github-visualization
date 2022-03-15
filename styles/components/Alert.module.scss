@@ -1,0 +1,13 @@
+.alert {
+  width: 100%;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.25rem;
+}
+
+.alert button {
+  float: right;
+  margin-top: -1rem;
+  margin-right: -1.5rem;
+}

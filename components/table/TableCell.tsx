@@ -4,6 +4,7 @@ import { Icon } from "../rating"
 
 interface Props {
   scope?: "col" | "row"
+  width?: string
   children?: React.ReactNode
   context: TableContexts
   sortedBy?: boolean
@@ -22,6 +23,11 @@ export function TableCell(props: Props) {
     props.ordering ?? Ordering.GIVEN,
     props.setSortInformation ?? (() => {}),
   ]
+  const css = theme.table[props.context].headCell.css()
+  if (props.width) {
+    css.width = props.width
+    console.log(css)
+  }
 
   return props.scope ? (
     <th
@@ -37,7 +43,7 @@ export function TableCell(props: Props) {
         }
       }}
       scope={props.scope}
-      style={theme.table[props.context].headCell.css()}
+      style={css}
     >
       {props.children}
       {props.sortedBy ? (
@@ -49,6 +55,6 @@ export function TableCell(props: Props) {
       ) : undefined}
     </th>
   ) : (
-    <td style={theme.table[props.context].headCell.css()}>{props.children}</td>
+    <td style={css}>{props.children}</td>
   )
 }
