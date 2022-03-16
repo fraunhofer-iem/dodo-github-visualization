@@ -42,7 +42,7 @@ const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
     const [since, setSince] = useState<Date>(
-      new Date(new Date().setMonth(new Date().getMonth() - 3)),
+      new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
     )
     const [to, setTo] = useState<Date>(new Date())
     const [interval, setInterval] = useState<Intervals>(Intervals.MONTH)

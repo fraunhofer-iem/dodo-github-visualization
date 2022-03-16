@@ -1,3 +1,4 @@
+import { sortBy } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import React, { useRef } from "react"
@@ -9,16 +10,20 @@ import {
   CardSubTitle,
   CardTitle,
 } from "../../../../components/card"
+import { ChartComponent } from "../../../../components/chart"
 import KpiTable from "../../../../components/KpiTable"
 import { Grid, Page, Sidebar } from "../../../../components/layout"
 import { Icon } from "../../../../components/rating"
 import {
   AuthorizationDetails,
+  getKpisForRepoApiRoute,
   getRepoApiRoute,
+  Kpi,
   RepoDetail,
   requireAuthorization,
 } from "../../../../lib/api"
 import {
+  Colors,
   getAnalyticsForRepoRoute,
   IconNames,
   PageRoutes,
@@ -30,7 +35,18 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const { data: repo } = useSWR<RepoDetail>(
     getRepoApiRoute({ owner: owner as string, name: name as string }),
   )
+  const { data: kpis } = useSWR<Kpi[]>(
+    getKpisForRepoApiRoute({ owner: owner as string, name: name as string }),
+  )
   const toggleSidebar = useRef<() => void>(() => {})
+
+  const dataPoints: { label: string; value: number }[] = []
+  if (kpis) {
+    for (const kpi of kpis) {
+      dataPoints.push({ label: kpi.name, value: kpi.rating })
+    }
+    sortBy(dataPoints, (dataPoint) => dataPoint.label)
+  }
 
   return (
     props.user?.isLoggedIn && (
@@ -76,7 +92,40 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
           <Card>
             <CardTitle>{`${repo?.name}`}</CardTitle>
             <CardSubTitle>{repo?.url as string}</CardSubTitle>
-            <CardBody>Overview</CardBody>
+            <CardBody>
+              <ChartComponent
+                type={"bar"}
+                data={{
+                  datasets: [
+                    {
+                      data: dataPoints.map((dataPoint) => dataPoint.value),
+                      backgroundColor: Colors.purple.rgba(),
+                      borderColor: Colors.purple.rgba(),
+                      borderWidth: 1,
+                      pointRadius: 2,
+                      showLine: true,
+                    },
+                  ],
+                  labels: dataPoints.map((dataPoint) => dataPoint.label),
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      enabled: false,
+                    },
+                  },
+                  scales: {
+                    y: {
+                      min: 0,
+                    },
+                  },
+                  aspectRatio: 3.5,
+                }}
+              />
+            </CardBody>
           </Card>
         </Grid>
       </Page>

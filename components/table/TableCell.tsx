@@ -26,7 +26,6 @@ export function TableCell(props: Props) {
   const css = theme.table[props.context].headCell.css()
   if (props.width) {
     css.width = props.width
-    console.log(css)
   }
 
   return props.scope ? (

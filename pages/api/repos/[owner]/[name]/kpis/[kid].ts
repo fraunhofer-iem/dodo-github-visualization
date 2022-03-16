@@ -51,18 +51,17 @@ export default async function handler(
     ),
   )
 
-  const kpi: KpiDetail = {
-    id: kid as string,
-    name: KpiNames.get(kid as string) as string,
+  let kpi = await fetchJson(
+    new Request(
+      `${process.env.HOST}/api/repositories/${owner}/${name}/kpis/${kid}`,
+    ),
+  )
+  const kpiDetail: KpiDetail = {
+    id: kpi.id,
+    name: kpi.name,
     rating: kpiData.avg,
+    unit: kpi.unit,
     data: kpiData.data,
   }
-
-  res.status(200).json(kpi)
+  res.status(200).json(kpiDetail)
 }
-
-const KpiNames = new Map<string, string>([
-  ["devSpread", "Developer Spread"],
-  ["releaseCycle", "Release Cycle"],
-  ["coc", "Coupling of Components"],
-])

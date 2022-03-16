@@ -75,7 +75,17 @@ export default function KpiTable(props: Props) {
               },
               {
                 content:
-                  kpiID === kpi.id ? <strong>{kpi.rating}</strong> : kpi.rating,
+                  kpiID === kpi.id ? (
+                    <strong>
+                      {Math.round((kpi.rating + Number.EPSILON) * 100) / 100}
+                      {kpi.unit}
+                    </strong>
+                  ) : (
+                    <>
+                      {Math.round((kpi.rating + Number.EPSILON) * 100) / 100}
+                      {kpi.unit}
+                    </>
+                  ),
                 sortKey: kpi.rating,
               },
             ])

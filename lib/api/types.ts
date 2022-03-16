@@ -25,9 +25,10 @@ export type User = {
 }
 
 export type Kpi = {
+  id: string
   name: string
   rating: number
-  id: string
+  unit: string
 }
 
 export type KpiDetail = Kpi & {

@@ -94,3 +94,9 @@ export function getTrendsApiRoute(
   asc = asc == 0 ? 0 : 1
   return `/api/trends?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
+
+export const KpiNames = new Map<string, string>([
+  ["devSpread", "Developer Spread"],
+  ["releaseCycle", "Release Cycle"],
+  ["coc", "Coupling of Components"],
+])
