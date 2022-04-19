@@ -21,6 +21,7 @@ export const USER_COOKIE = "user"
 export const enum ApiRoutes {
   USER = "/api/user",
   LOGIN = "/api/login",
+  LOGOUT = "/api/logout",
   KPIS = "/api/kpis",
 }
 
@@ -55,14 +56,18 @@ export function getKpisForRepoApiRoute(
   return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
 
-export function getKpiForRepoApiRoute(
-  repoId: { owner: string; name: string },
+export function getKpiApiRoute(
+  id: { owner: string; name?: string },
   kpiId: string,
   since?: string,
   to?: string,
   interval?: Intervals,
 ) {
   const params = new URLSearchParams()
+  params.append("owner", id.owner)
+  if (id.name) {
+    params.append("repo", id.name)
+  }
   if (since) {
     params.append("since", since)
   }
@@ -72,9 +77,7 @@ export function getKpiForRepoApiRoute(
   if (interval) {
     params.append("interval", interval)
   }
-  return `/api/repos/${repoId.owner}/${
-    repoId.name
-  }/kpis/${kpiId}?${params.toString()}`
+  return `${ApiRoutes.KPIS}/${kpiId}?${params.toString()}`
 }
 
 // the first key is the default sorting key, which is

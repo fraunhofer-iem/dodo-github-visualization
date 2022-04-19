@@ -9,13 +9,13 @@ interface Props {
 /**
  * Title bar
  */
-export function Bar(props: Props) {
+export function Header(props: Props) {
   const { theme } = useUIContext()
 
   return (
-    <div className={styles.bar} style={theme.layout.bar.css()}>
-      <div className={styles.barTitle}>{props.title}</div>
-      <div className={styles.barChildren}>{props.children}</div>
+    <div className={styles.header} style={theme.layout.header.css()}>
+      <h1 style={theme.layout.title.css()}>{props.title}</h1>
+      {props.children}
     </div>
   )
 }

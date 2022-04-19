@@ -22,12 +22,14 @@ export type User = {
   admin: boolean
   id: string
   isLoggedIn: boolean
+  organization: string
 }
 
 export type Kpi = {
   id: string
-  name: string
-  rating: number
+  name?: string
+  rating?: number
+  value?: number
   unit: string
 }
 

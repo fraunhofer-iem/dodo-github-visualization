@@ -15,7 +15,7 @@ const Landing: NextPage = () => {
   })
   const handleClick = async () => {
     const body = {
-      username: "hardcoded",
+      username: "Demo",
       password: "superSecret",
     }
 

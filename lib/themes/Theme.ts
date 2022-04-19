@@ -7,7 +7,8 @@ export type Theme = {
       opaque: CSSProperties
       translucent: CSSProperties
     }
-    bar: CSSProperties
+    header: CSSProperties
+    title: CSSProperties
     container: CSSProperties
     sidebar: CSSProperties
   }
@@ -24,6 +25,8 @@ export type Theme = {
     "neutral:hover": CSSProperties
     anchor: CSSProperties
     "anchor:hover": CSSProperties
+    light: CSSProperties
+    "light:hover": CSSProperties
   }
   alert: {
     error: CSSProperties

@@ -21,7 +21,7 @@ import { Grid, Page, Sidebar } from "../../../../../../components/layout"
 import { Icon } from "../../../../../../components/rating"
 import {
   AuthorizationDetails,
-  getKpiForRepoApiRoute,
+  getKpiApiRoute,
   getRepoApiRoute,
   Intervals,
   KpiDetail,
@@ -51,7 +51,7 @@ const KPIDetail: NextPage = requireAuthorization(
     const repoId = { owner: owner as string, name: name as string }
     const { data: repo } = useSWR<RepoDetail>(getRepoApiRoute(repoId))
     const { data: kpi } = useSWR<KpiDetail>(
-      getKpiForRepoApiRoute(
+      getKpiApiRoute(
         repoId,
         kpiId as string,
         since.toISOString(),

@@ -94,6 +94,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
             <CardSubTitle>{repo?.url as string}</CardSubTitle>
             <CardBody>
               <ChartComponent
+                width="800px"
                 type={"bar"}
                 data={{
                   datasets: [
@@ -122,7 +123,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       min: 0,
                     },
                   },
-                  aspectRatio: 3.5,
+                  aspectRatio: 2,
                 }}
               />
             </CardBody>

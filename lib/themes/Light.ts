@@ -22,9 +22,16 @@ const LightTheme: Theme = {
       opaque: new CSSProperties({ backgroundColor: white.darken(0.05) }),
       translucent: new CSSProperties({ backgroundColor: black.alph(0.8) }),
     },
-    bar: new CSSProperties({
-      backgroundColor: black.brighten(0.1),
+    header: new CSSProperties({
+      background: `linear-gradient(90deg, ${black.brighten(0.1).rgba()}, ${white
+        .darken(0.1)
+        .rgba()})`,
       color: white,
+      borderBottom: `4px solid ${black.rgba()}`,
+    }),
+    title: new CSSProperties({
+      color: white,
+      textShadow: `-1px 3px ${black.alph(0.7).rgba()}`,
     }),
     sidebar: new CSSProperties({
       backgroundColor: white.darken(0.05),
@@ -119,6 +126,14 @@ const LightTheme: Theme = {
     "anchor:hover": new CSSProperties({
       backgroundColor: transparent,
       textDecoration: "underline",
+    }),
+    light: new CSSProperties({
+      backgroundColor: white.darken(0.1),
+      color: black,
+    }),
+    "light:hover": new CSSProperties({
+      backgroundColor: white.darken(0.05),
+      color: black,
     }),
   },
   alert: {

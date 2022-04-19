@@ -67,3 +67,11 @@ export enum TableContexts {
   NEUTRAL = "neutral",
   STRIPED = "striped",
 }
+
+export enum KpiIds {
+  ORGANIZATION_HEALTH = "orgHealth",
+}
+
+export const KpiNames = {
+  orgHealth: "Organization Health",
+}

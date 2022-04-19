@@ -6,11 +6,11 @@ interface Props {
   /**
    * The button's appearance, defined in the themes
    */
-  context: "primary" | "neutral" | "anchor"
+  context: "primary" | "neutral" | "anchor" | "light"
   /**
    * Action to perform on left-click
    */
-  action?: () => void
+  action?: (e: any) => void
   /**
    * Action to perform on right-click
    */
@@ -57,6 +57,7 @@ const contexts = {
   primary: (hovered: boolean) => (hovered ? "primary:hover" : "primary"),
   neutral: (hovered: boolean) => (hovered ? "neutral:hover" : "neutral"),
   anchor: (hovered: boolean) => (hovered ? "anchor:hover" : "anchor"),
+  light: (hovered: boolean) => (hovered ? "light:hover" : "light"),
 }
 
 export function Button(props: Props) {

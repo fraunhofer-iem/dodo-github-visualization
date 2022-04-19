@@ -30,6 +30,34 @@
   margin: 0;
 }
 
+.dateRangePicker {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  color: inherit;
+  padding: 5px;
+}
+
+.dateRangePicker > div {
+  width: 150px;
+}
+
+.comparator {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.comparator .kpiSelector {
+  font-weight: bold;
+  text-align: center;
+}
+
+.comparator .kpiComparison {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
 .gallery {
   width: 100%;
   position: relative;

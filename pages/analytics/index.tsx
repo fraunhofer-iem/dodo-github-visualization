@@ -56,6 +56,7 @@ const Analytics: NextPage = requireAuthorization(
       props.user?.isLoggedIn && (
         <Page
           title="Analytics - KPI Dashboard"
+          user={props.user}
           crumbs={[{ name: "Analytics", route: PageRoutes.ANALYTICS }]}
         >
           <Section>
