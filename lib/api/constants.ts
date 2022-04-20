@@ -30,12 +30,27 @@ export function getReposApiRoute(
   pageNumber?: number,
   sortKey?: string,
   asc?: number,
+  since?: Date,
+  to?: Date,
 ) {
-  pageSize = pageSize ? pageSize : PAGE_SIZE_LIMIT
-  pageNumber = pageNumber ? pageNumber : FIRST_PAGE
-  sortKey = sortKey ? sortKey : "name"
-  asc = asc == 0 ? 0 : 1
-  return `/api/repos?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+  const params = new URLSearchParams()
+  params.append(
+    PaginationQueryParams.PAGE_SIZE,
+    `${pageSize ? pageSize : PAGE_SIZE_LIMIT}`,
+  )
+  params.append(
+    PaginationQueryParams.PAGE_NUMBER,
+    `${pageNumber ? pageNumber : FIRST_PAGE}`,
+  )
+  params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
+  params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
+  if (since) {
+    params.append("since", since.toISOString().split("T")[0])
+  }
+  if (to) {
+    params.append("to", to.toISOString().split("T")[0])
+  }
+  return `/api/repos?${params.toString()}`
 }
 
 export function getRepoApiRoute(repoId: { owner: string; name: string }) {
@@ -49,18 +64,25 @@ export function getKpisForRepoApiRoute(
   sortKey?: string,
   asc?: number,
 ) {
-  pageSize = pageSize ? pageSize : PAGE_SIZE_LIMIT
-  pageNumber = pageNumber ? pageNumber : FIRST_PAGE
-  sortKey = sortKey ? sortKey : "name"
-  asc = asc == 0 ? 0 : 1
-  return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
+  const params = new URLSearchParams()
+  params.append(
+    PaginationQueryParams.PAGE_SIZE,
+    `${pageSize ? pageSize : PAGE_SIZE_LIMIT}`,
+  )
+  params.append(
+    PaginationQueryParams.PAGE_NUMBER,
+    `${pageNumber ? pageNumber : FIRST_PAGE}`,
+  )
+  params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
+  params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
+  return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${params.toString()}`
 }
 
 export function getKpiApiRoute(
   id: { owner: string; name?: string },
   kpiId: string,
-  since?: string,
-  to?: string,
+  since?: Date,
+  to?: Date,
   interval?: Intervals,
 ) {
   const params = new URLSearchParams()
@@ -69,10 +91,10 @@ export function getKpiApiRoute(
     params.append("repo", id.name)
   }
   if (since) {
-    params.append("since", since)
+    params.append("since", since.toISOString().split("T")[0])
   }
   if (to) {
-    params.append("to", to)
+    params.append("to", to.toISOString().split("T")[0])
   }
   if (interval) {
     params.append("interval", interval)

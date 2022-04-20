@@ -4,10 +4,10 @@ export type Repo = {
   id: string
   owner: string
   name: string
+  health: number
 }
 
 export type RepoDetail = Repo & {
-  maturityIndex: number
   url: string
   kpis: string[]
 }

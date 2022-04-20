@@ -1,5 +1,10 @@
 import { TableBody, TableCell, TableHead, TableRow } from "."
-import { IconNames, Ordering, TableContexts } from "../../lib/frontend"
+import {
+  CSSProperties,
+  IconNames,
+  Ordering,
+  TableContexts,
+} from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Table.module.scss"
 import { Button } from "../action"
@@ -14,10 +19,11 @@ interface Props {
       sortKey?: string
       width?: string
     }[]
-    rows: { content: React.ReactNode; sortKey: string | number }[][]
+    rows: { content: React.ReactNode; sortKey?: string | number }[][]
   }
   context?: TableContexts
   width?: string
+  styles?: CSSProperties
   /**
    * Display pagination controls
    */
@@ -64,7 +70,10 @@ export function Table(props: Props) {
 
   return (
     <div className={styles.tableContainer} style={{ width: width }}>
-      <table className={styles.table} style={theme.table[context].table.css()}>
+      <table
+        className={styles.table}
+        style={{ ...theme.table[context].table.css(), ...props.styles?.css() }}
+      >
         <TableHead>
           {tableData.columns.map((column, i) => (
             <TableCell

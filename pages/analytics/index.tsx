@@ -1,56 +1,28 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React from "react"
-import useSWR from "swr"
-import { Card } from "../../components/card"
-import { RingChart } from "../../components/chart"
-import {
-  Gallery,
-  RepositoryHealth,
-  Section,
-  Spinner,
-  TrendComponent,
-} from "../../components/content"
-import { SectionTitle } from "../../components/heading"
+import React, { useState } from "react"
+import { Gallery, Section } from "../../components/content"
+import RepositoryCard from "../../components/content/RepositoryCard"
 import { Grid, Page } from "../../components/layout"
 import {
-  ApiError,
   AuthorizationDetails,
   getReposApiRoute,
-  getTrendsApiRoute,
   Repo,
   requireAuthorization,
-  Trend,
 } from "../../lib/api"
-import {
-  getAnalyticsForRepoRoute,
-  PageRoutes,
-  TrendDirections,
-} from "../../lib/frontend"
-import { usePagination } from "../../lib/hooks"
+import { PageRoutes } from "../../lib/frontend"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const {
-      pageNumber,
-      setPageNumber,
-      pageSize,
-      setPageSize,
-      sortInformation,
-      setSortInformation,
-    } = usePagination("name")
-    const { data: repos, error: error } = useSWR<Repo[], ApiError>(
-      getReposApiRoute(
-        pageSize,
-        pageNumber,
-        sortInformation.sortKey,
-        sortInformation.ordering,
-      ),
-    )
-    if (error && error.statusCode == 404) {
-      setPageNumber(pageNumber - 1)
-    }
+    const [rangeA, setRangeA] = useState<{ since: Date; to: Date }>({
+      since: new Date(),
+      to: new Date(),
+    })
+    const [rangeB, setRangeB] = useState<{ since: Date; to: Date }>({
+      since: new Date(),
+      to: new Date(),
+    })
 
     return (
       props.user?.isLoggedIn && (
@@ -58,64 +30,36 @@ const Analytics: NextPage = requireAuthorization(
           title="Analytics - KPI Dashboard"
           user={props.user}
           crumbs={[{ name: "Analytics", route: PageRoutes.ANALYTICS }]}
+          setRangeA={(since, to) => {
+            setRangeA({ since, to })
+          }}
+          setRangeB={(since, to) => {
+            setRangeB({ since, to })
+          }}
         >
-          <Section>
-            <SectionTitle>Organization</SectionTitle>
-            <Grid align="center">
-              <Card>
-                {repos ? (
-                  <RingChart
-                    rings={repos.map((currentRepo) => ({
-                      value: 98,
-                      tooltip: <Card>{currentRepo.name}</Card>,
-                      action: () =>
-                        router.push(getAnalyticsForRepoRoute(currentRepo)),
-                    }))}
-                    width="250px"
-                  >
-                    <TrendComponent
-                      label="Health"
-                      rating={42}
-                      direction={TrendDirections.UP}
-                      compact={true}
-                    />
-                  </RingChart>
-                ) : (
-                  <Spinner size="250px" />
-                )}
-              </Card>
-              <Gallery<Trend>
+          <Section width="75%">
+            <Grid align="left">
+              <Gallery<Repo>
                 rows={3}
-                width={"50%"}
-                boxSize={150}
-                sortKeys={["name", "direction", "value"]}
-                route={getTrendsApiRoute}
-                generator={(currentTrend: Trend, size: number, key: number) => (
-                  <Card key={key} width={`${size}px`}>
-                    <TrendComponent
-                      direction={currentTrend.direction}
-                      label={currentTrend.name}
-                      rating={currentTrend.value}
-                      align="left"
-                    />
-                  </Card>
+                width={"100%"}
+                gap={25}
+                minBoxSize={150}
+                itemsPerRow={3}
+                sortKeys={["name", "health"]}
+                route={getReposApiRoute}
+                range={rangeB}
+                generator={(currentRepo: Repo, size: number, key: number) => (
+                  <RepositoryCard
+                    key={key}
+                    repo={currentRepo}
+                    width={`${size}px`}
+                    margin={"0"}
+                    rangeA={rangeA}
+                    rangeB={rangeB}
+                  />
                 )}
               />
             </Grid>
-          </Section>
-          <Section>
-            <SectionTitle>Repositories</SectionTitle>
-            <Gallery<Repo>
-              rows={1}
-              boxSize={250}
-              sortKeys={["name", "owner", "maturity Index"]}
-              generator={(currentRepo: Repo, size: number, key: number) => (
-                <Card key={key}>
-                  <RepositoryHealth repoId={currentRepo} width={`${size}px`} />
-                </Card>
-              )}
-              route={getReposApiRoute}
-            />
           </Section>
         </Page>
       )

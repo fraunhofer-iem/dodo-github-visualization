@@ -168,7 +168,7 @@ const LightTheme: Theme = {
       icon: IconNames.keyboardArrowDown,
     },
     neutral: {
-      color: gold,
+      color: gold.darken(0.2),
       icon: IconNames.remove,
     },
     up: {

@@ -7,6 +7,8 @@ import { Selector } from "./Selector"
 interface Props {
   repoId: { owner: string; name?: string }
   kpiId: KpiIds
+  setRangeA?: (since: Date, to: Date) => void
+  setRangeB?: (since: Date, to: Date) => void
 }
 
 export function Comparator(props: Props) {
@@ -36,6 +38,7 @@ export function Comparator(props: Props) {
           owner={props.repoId.owner}
           name={props.repoId.name}
           setValue={setA}
+          setRange={props.setRangeA}
         />
         {KpiNames[props.kpiId]} {A}%
       </div>
@@ -54,6 +57,7 @@ export function Comparator(props: Props) {
           owner={props.repoId.owner}
           name={props.repoId.name}
           setValue={setB}
+          setRange={props.setRangeB}
         />
         {KpiNames[props.kpiId]} {B}%
       </div>

@@ -70,8 +70,15 @@ export enum TableContexts {
 
 export enum KpiIds {
   ORGANIZATION_HEALTH = "orgHealth",
+  REPOSITORY_HEALTH = "repoHealth",
 }
 
 export const KpiNames = {
   orgHealth: "Organization Health",
+  repoHealth: "Repository Health",
+}
+
+export const KpiAbbreviations = {
+  orgHealth: "OH",
+  repoHealth: "RH",
 }

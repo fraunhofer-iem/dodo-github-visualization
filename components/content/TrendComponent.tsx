@@ -3,18 +3,13 @@ import { useEffect, useRef } from "react"
 import { TrendDirections } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
-import { Button } from "../action"
 import { Grid } from "../layout"
 import { Icon } from "../rating"
 interface Props {
   /**
-   * Name of the entity whose trend is displayed
+   * Text to be displayed next to the trend
    */
   label?: string
-  /**
-   * Action to perform when clicking the component
-   */
-  action?: () => void
   /**
    * The calculated trend
    */
@@ -32,6 +27,11 @@ interface Props {
    * next to the rating
    */
   compact?: boolean
+
+  /**
+   * Display trend arrow
+   */
+  displayArrow?: boolean
 }
 
 export function TrendComponent(props: Props) {
@@ -43,11 +43,11 @@ export function TrendComponent(props: Props) {
     for (let i = 0; i <= rating; i++) {
       delay(() => {
         if (domRating.current) {
-          domRating.current.textContent = `${i} %`
+          domRating.current.textContent = `${label ?? ""} ${i}%`
         }
       }, i * (600 / rating))
     }
-  }, [domRating, rating, direction])
+  }, [domRating, rating, direction, label])
 
   const jsxIndicator = (
     <Icon
@@ -58,45 +58,34 @@ export function TrendComponent(props: Props) {
     </Icon>
   )
 
-  const jsxLabel = label && (
-    <>
-      <Button
-        context="neutral"
-        action={() => (props.action ? props.action() : () => {})}
-        align={props.align}
-        padding="0.375rem 0"
-      >
-        {label}
-      </Button>
-      <br />
-    </>
-  )
-
   const jsxRating = (
-    <strong
+    <span
       style={{
         color: theme.trends[direction].color.rgba(),
       }}
       ref={domRating}
     >
       0 %
-    </strong>
+    </span>
   )
 
   if (compact) {
     return (
-      <div className={styles.trendInfo} style={{ textAlign: align }}>
-        {jsxLabel}
-        {jsxIndicator}
+      <div
+        className={styles.trendInfo}
+        style={{ textAlign: align, display: "inline" }}
+      >
+        {props.displayArrow && jsxIndicator}
         {jsxRating}
       </div>
     )
   } else {
     return (
       <Grid>
-        <div className={styles.trendIcon}>{jsxIndicator}</div>
+        {props.displayArrow && (
+          <div className={styles.trendIcon}>{jsxIndicator}</div>
+        )}
         <div className={styles.trendInfo} style={{ textAlign: align }}>
-          {jsxLabel}
           {jsxRating}
         </div>
       </Grid>

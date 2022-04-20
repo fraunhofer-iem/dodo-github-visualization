@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { getKpiApiRoute, Kpi } from "../../lib/api"
 import { DateRangePicker } from "../action"
@@ -10,6 +10,7 @@ interface Props {
   name?: string
   kpiId: string
   setValue: (value: number) => void
+  setRange?: (since: Date, to: Date) => void
 }
 
 export function Selector(props: Props) {
@@ -27,14 +28,19 @@ export function Selector(props: Props) {
     getKpiApiRoute(
       { owner: props.owner, name: props.name },
       props.kpiId,
-      since.toISOString().split("T")[0],
-      to.toISOString().split("T")[0],
+      since,
+      to,
     ),
   )
 
-  if (data && data.value) {
-    props.setValue(data.value)
-  }
+  useEffect(() => {
+    if (data && data.value) {
+      props.setValue(data.value)
+    }
+    if (props.setRange) {
+      props.setRange(since, to)
+    }
+  }, [data])
 
   return (
     <DateRangePicker since={since} setSince={setSince} to={to} setTo={setTo} />

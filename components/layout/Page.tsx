@@ -6,6 +6,7 @@ import { Crumb, IconNames, KpiIds } from "../../lib/frontend"
 import { Button } from "../action"
 import { Comparator } from "../kpis"
 import { Icon } from "../rating"
+import { Container } from "./Container"
 
 interface Props {
   title: string
@@ -13,6 +14,8 @@ interface Props {
   sidebar?: React.ReactNode
   children?: React.ReactNode
   user?: User
+  setRangeA?: (since: Date, to: Date) => void
+  setRangeB?: (since: Date, to: Date) => void
 }
 
 /**
@@ -30,6 +33,8 @@ export function Page(props: Props) {
           <Comparator
             kpiId={KpiIds.ORGANIZATION_HEALTH}
             repoId={{ owner: props.user ? props.user.organization : "" }}
+            setRangeA={props.setRangeA}
+            setRangeB={props.setRangeB}
           />
           <div
             style={{
@@ -54,10 +59,10 @@ export function Page(props: Props) {
           </div>
         </>
       </Header>
-      {/* <Container>
-        {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />}
+      <Container>
+        {/* {props.crumbs && <Breadcrumbs crumbs={props.crumbs} />} */}
         {props.children}
-      </Container> */}
+      </Container>
     </>
   )
 }

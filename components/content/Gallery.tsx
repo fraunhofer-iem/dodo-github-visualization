@@ -16,9 +16,19 @@ interface Props<EntityType> {
    */
   rows: number
   /**
-   * Width of a single gallery item
+   * Minimal width of a single gallery item
    */
-  boxSize: number
+  minBoxSize: number
+
+  /**
+   * Gap between gallery items
+   */
+  gap?: number
+
+  /**
+   * Desired amount of gallery items displayed per row
+   */
+  itemsPerRow: number
   /**
    * Width of the gallery
    */
@@ -36,11 +46,17 @@ interface Props<EntityType> {
     pageNumber?: number,
     sortKey?: string,
     asc?: number,
+    since?: Date,
+    to?: Date,
   ) => string
   /**
    * Names of the database entities props that can be used for sorting
    */
   sortKeys?: string[]
+  /**
+   * Limit API response to entities from specific date range
+   */
+  range?: { since: Date; to: Date }
 }
 
 /**
@@ -57,6 +73,8 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
     trackTouch: true,
   })
 
+  const [boxSize, setBoxSize] = useState<number>(props.minBoxSize)
+
   const {
     pageNumber,
     setPageNumber,
@@ -71,6 +89,8 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
       pageNumber,
       sortInformation.sortKey,
       sortInformation.ordering,
+      props.range ? props.range.since : undefined,
+      props.range ? props.range.to : undefined,
     ),
   )
   const width = props.width ?? "100%"
@@ -82,11 +102,22 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
   }
 
   useResize(() => {
+    if (container.current) {
+      const effectiveBoxSize =
+        Math.floor(container.current.clientWidth / props.itemsPerRow) -
+        (props.gap ?? 0)
+      if (effectiveBoxSize <= props.minBoxSize) {
+        setBoxSize(container.current.clientWidth - (props.gap ?? 0))
+      } else {
+        setBoxSize(effectiveBoxSize)
+      }
+    }
     // Determine how many items fit within a single row.
     // Then fetch the total amount of items displayable.
     if (container.current) {
       const displayableEntities = Math.floor(
-        container.current.clientWidth / (props.boxSize + 40),
+        container.current.clientWidth /
+          (boxSize + (props.gap ? props.gap * 2 : 0)),
       )
       setPageSize(
         displayableEntities == 0 ? 1 : displayableEntities * props.rows,
@@ -101,10 +132,10 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
       ref={container}
       style={{ width: width }}
     >
-      <Grid align="center">
+      <Grid align="left" gap={`${props.gap}px`}>
         {entities &&
           entities.map((currentEntity, i) =>
-            props.generator(currentEntity, props.boxSize, i),
+            props.generator(currentEntity, boxSize, i),
           )}
       </Grid>
       <div className={styles.preferences}>

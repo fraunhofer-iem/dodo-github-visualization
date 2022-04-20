@@ -1,6 +1,5 @@
 export * from "./Breadcrumbs"
 export * from "./Gallery"
-export * from "./RepositoryHealth"
 export * from "./Section"
 export * from "./Spinner"
 export * from "./TrendComponent"
