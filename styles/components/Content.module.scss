@@ -18,6 +18,12 @@
   // border-top: 4px solid;
 }
 
+.browser {
+  width: 100%;
+  height: calc(100vh - 100px);
+  overflow: scroll;
+}
+
 .sectionTitle {
   font-size: 1.25rem;
   font-weight: bold;
@@ -39,7 +45,7 @@
 }
 
 .dateRangePicker > div {
-  width: 150px;
+  width: 160px;
 }
 
 .comparator {

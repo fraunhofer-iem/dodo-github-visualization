@@ -1,134 +1,94 @@
-import { sortBy } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import React, { useRef } from "react"
-import useSWR from "swr"
-import { Button } from "../../../../components/action"
+import React, { useState } from "react"
+import { Section } from "../../../../components/content"
+import RepositoryBrowser from "../../../../components/content/RepositoryBrowser"
+import { Page } from "../../../../components/layout"
+import { AuthorizationDetails, requireAuthorization } from "../../../../lib/api"
 import {
-  Card,
-  CardBody,
-  CardSubTitle,
-  CardTitle,
-} from "../../../../components/card"
-import { ChartComponent } from "../../../../components/chart"
-import KpiTable from "../../../../components/KpiTable"
-import { Grid, Page, Sidebar } from "../../../../components/layout"
-import { Icon } from "../../../../components/rating"
-import {
-  AuthorizationDetails,
-  getKpisForRepoApiRoute,
-  getRepoApiRoute,
-  Kpi,
-  RepoDetail,
-  requireAuthorization,
-} from "../../../../lib/api"
-import {
-  Colors,
+  dateToString,
   getAnalyticsForRepoRoute,
-  IconNames,
-  PageRoutes,
 } from "../../../../lib/frontend"
 
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
-  const { owner, name } = router.query
-  const { data: repo } = useSWR<RepoDetail>(
-    getRepoApiRoute({ owner: owner as string, name: name as string }),
-  )
-  const { data: kpis } = useSWR<Kpi[]>(
-    getKpisForRepoApiRoute({ owner: owner as string, name: name as string }),
-  )
-  const toggleSidebar = useRef<() => void>(() => {})
 
-  const dataPoints: { label: string; value: number }[] = []
-  if (kpis) {
-    for (const kpi of kpis) {
-      dataPoints.push({ label: kpi.name, value: kpi.rating })
-    }
-    sortBy(dataPoints, (dataPoint) => dataPoint.label)
+  let owner: string | undefined = undefined
+  let name: string | undefined = undefined
+  let sinceA: string | undefined = undefined
+  let sinceB: string | undefined = undefined
+  let toA: string | undefined = undefined
+  let toB: string | undefined = undefined
+
+  if (typeof window !== "undefined") {
+    const query = Object.fromEntries(
+      new URLSearchParams(window.location.search).entries(),
+    )
+    const path = window.location.pathname.split("/")
+    owner = path[path.length - 2]
+    name = path[path.length - 1]
+    sinceA = query.sinceA
+    toA = query.toA
+    sinceB = query.sinceB
+    toB = query.toB
+  }
+  const [rangeA, setRangeA] = useState<{ since: Date; to: Date } | undefined>(
+    sinceA && toA
+      ? {
+          since: new Date(sinceA as string),
+          to: new Date(toA as string),
+        }
+      : undefined,
+  )
+  const [rangeB, setRangeB] = useState<{ since: Date; to: Date } | undefined>(
+    sinceB && toB
+      ? {
+          since: new Date(sinceB as string),
+          to: new Date(toB as string),
+        }
+      : undefined,
+  )
+
+  const updateQuery = (params: { [key: string]: string }) => {
+    router.push({
+      pathname: getAnalyticsForRepoRoute({
+        owner: owner as string,
+        name: name as string,
+      }),
+      query: {
+        ...router.query,
+        ...params,
+      },
+    })
   }
 
   return (
     props.user?.isLoggedIn && (
       <Page
-        title={`${repo?.name}  - KPI Dashboard`}
-        sidebar={
-          <Button
-            context="neutral"
-            action={() => {
-              toggleSidebar.current()
-            }}
-          >
-            <Icon>{IconNames.menu}</Icon>
-          </Button>
-        }
-        crumbs={[
-          {
-            name: "Analytics",
-            route: PageRoutes.ANALYTICS,
-          },
-          {
-            name: repo?.name as string,
-            route: getAnalyticsForRepoRoute({
-              owner: owner as string,
-              name: name as string,
-            }),
-          },
-        ]}
+        title={`${name}  - KPI Dashboard`}
+        user={props.user}
+        rangeA={rangeA}
+        setRangeA={(since, to) => {
+          updateQuery({
+            sinceA: dateToString(since, false),
+            toA: dateToString(to, false),
+          })
+          setRangeA({ since, to })
+        }}
+        rangeB={rangeB}
+        setRangeB={(since, to) => {
+          updateQuery({
+            sinceB: dateToString(since, false),
+            toB: dateToString(to, false),
+          })
+          setRangeB({ since, to })
+        }}
       >
-        <Grid grow={true}>
-          <Sidebar
-            control={(control: () => void) => (toggleSidebar.current = control)}
-          >
-            <Card>
-              <CardTitle>List of KPIs</CardTitle>
-              <CardBody>
-                <KpiTable
-                  repoId={{ owner: owner as string, name: name as string }}
-                />
-              </CardBody>
-            </Card>
-          </Sidebar>
-          <Card>
-            <CardTitle>{`${repo?.name}`}</CardTitle>
-            <CardSubTitle>{repo?.url as string}</CardSubTitle>
-            <CardBody>
-              <ChartComponent
-                width="800px"
-                type={"bar"}
-                data={{
-                  datasets: [
-                    {
-                      data: dataPoints.map((dataPoint) => dataPoint.value),
-                      backgroundColor: Colors.purple.rgba(),
-                      borderColor: Colors.purple.rgba(),
-                      borderWidth: 1,
-                      pointRadius: 2,
-                      showLine: true,
-                    },
-                  ],
-                  labels: dataPoints.map((dataPoint) => dataPoint.label),
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      enabled: false,
-                    },
-                  },
-                  scales: {
-                    y: {
-                      min: 0,
-                    },
-                  },
-                  aspectRatio: 2,
-                }}
-              />
-            </CardBody>
-          </Card>
-        </Grid>
+        {owner && name && (
+          <Section width="150px" padding="0">
+            <RepositoryBrowser repoId={{ owner: owner, name: name }} />
+          </Section>
+        )}
       </Page>
     )
   )

@@ -2,7 +2,7 @@ import React from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "."
-import { IconNames } from "../../lib/frontend"
+import { dateToString, IconNames } from "../../lib/frontend"
 import styles from "../../styles/components/Content.module.scss"
 import { Icon } from "../rating"
 
@@ -28,13 +28,8 @@ export function DateRangePicker(props: Props) {
           }}
           customInput={
             <div>
-              <Button context={"light"} width="150px">
-                {since.toLocaleString("en-IN", {
-                  weekday: "short",
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                })}
+              <Button context={"light"} width="100%">
+                {dateToString(since)}
               </Button>
             </div>
           }
@@ -53,13 +48,8 @@ export function DateRangePicker(props: Props) {
           }}
           customInput={
             <div>
-              <Button context={"light"} width="150px">
-                {to.toLocaleString("en-IN", {
-                  weekday: "short",
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                })}
+              <Button context={"light"} width="100%">
+                {dateToString(to)}
               </Button>
             </div>
           }

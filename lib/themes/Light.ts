@@ -148,6 +148,12 @@ const LightTheme: Theme = {
       color: new Color(20, 90, 35),
     }),
   },
+  browser: {
+    activeElement: Colors.navy,
+    browser: new CSSProperties({
+      background: Colors.black.brighten(0.9),
+    }),
+  },
   content: {
     trend: {
       icon: new CSSProperties({

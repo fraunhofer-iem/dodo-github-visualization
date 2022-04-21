@@ -1,13 +1,17 @@
+import { useRouter } from "next/router"
 import useSWR from "swr"
 import { getKpiApiRoute, Repo } from "../../lib/api"
 import {
   CSSProperties,
+  dateToString,
+  getAnalyticsForRepoRoute,
   IconNames,
   KpiAbbreviations,
   KpiIds,
   TrendDirections,
 } from "../../lib/frontend"
 import { useUIContext } from "../../lib/hooks"
+import { Button } from "../action"
 import { Card } from "../card"
 import { Icon } from "../rating"
 import { Table } from "../table"
@@ -18,19 +22,20 @@ interface Props {
   width: string
   margin?: string
   height?: string
-  rangeB: { since: Date; to: Date }
-  rangeA: { since: Date; to: Date }
+  rangeB?: { since: Date; to: Date }
+  rangeA?: { since: Date; to: Date }
 }
 
 export default function RepositoryCard(props: Props) {
   const { theme } = useUIContext()
   const { repo, width, margin, height, rangeA, rangeB } = props
+  const router = useRouter()
   const { data } = useSWR(
     getKpiApiRoute(
       { owner: repo.owner, name: repo.name },
       KpiIds.REPOSITORY_HEALTH,
-      rangeA.since,
-      rangeA.to,
+      rangeA?.since,
+      rangeA?.to,
     ),
   )
 
@@ -58,11 +63,26 @@ export default function RepositoryCard(props: Props) {
       }
     >
       <div style={{ width: "100%", textAlign: "center" }}>
-        <Icon styles={new CSSProperties({ fontSize: "125px" })}>
-          {IconNames.helpOutline}
-        </Icon>
-        <br />
-        <strong>{repo.id}</strong>
+        <Button
+          context={"neutral"}
+          type={"button"}
+          action={() =>
+            router.push({
+              pathname: getAnalyticsForRepoRoute({
+                owner: repo.owner,
+                name: repo.name,
+              }),
+              query: { ...router.query },
+            })
+          }
+          padding={"0"}
+        >
+          <Icon styles={new CSSProperties({ fontSize: "125px" })}>
+            {IconNames.helpOutline}
+          </Icon>
+          <br />
+          <strong>{repo.id}</strong>
+        </Button>
       </div>
       <br />
       <Table>
@@ -73,17 +93,8 @@ export default function RepositoryCard(props: Props) {
               {
                 content: (
                   <>
-                    {rangeB.since.toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })}{" "}
-                    -{" "}
-                    {rangeB.to.toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })}
+                    {rangeB && dateToString(rangeB.since, false)} -{" "}
+                    {rangeB && dateToString(rangeB.to, false)}
                   </>
                 ),
               },
@@ -104,17 +115,8 @@ export default function RepositoryCard(props: Props) {
               {
                 content: (
                   <>
-                    {rangeA.since.toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })}{" "}
-                    -{" "}
-                    {rangeA.to.toLocaleString("en-IN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })}
+                    {rangeA && dateToString(rangeA.since, false)} -{" "}
+                    {rangeA && dateToString(rangeA.to, false)}
                   </>
                 ),
               },

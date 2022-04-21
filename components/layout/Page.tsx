@@ -14,6 +14,8 @@ interface Props {
   sidebar?: React.ReactNode
   children?: React.ReactNode
   user?: User
+  rangeA?: { since: Date; to: Date }
+  rangeB?: { since: Date; to: Date }
   setRangeA?: (since: Date, to: Date) => void
   setRangeB?: (since: Date, to: Date) => void
 }
@@ -33,7 +35,9 @@ export function Page(props: Props) {
           <Comparator
             kpiId={KpiIds.ORGANIZATION_HEALTH}
             repoId={{ owner: props.user ? props.user.organization : "" }}
+            rangeA={props.rangeA}
             setRangeA={props.setRangeA}
+            rangeB={props.rangeB}
             setRangeB={props.setRangeB}
           />
           <div

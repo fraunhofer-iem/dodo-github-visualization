@@ -1,39 +1,84 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
+import { Card, CardTitle } from "../../components/card"
 import { Gallery, Section } from "../../components/content"
 import RepositoryCard from "../../components/content/RepositoryCard"
+import KpiTable from "../../components/KpiTable"
 import { Grid, Page } from "../../components/layout"
 import {
   AuthorizationDetails,
+  getKpisApiRoute,
   getReposApiRoute,
   Repo,
   requireAuthorization,
 } from "../../lib/api"
-import { PageRoutes } from "../../lib/frontend"
+import { dateToString, KpiNames, PageRoutes } from "../../lib/frontend"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const [rangeA, setRangeA] = useState<{ since: Date; to: Date }>({
-      since: new Date(),
-      to: new Date(),
-    })
-    const [rangeB, setRangeB] = useState<{ since: Date; to: Date }>({
-      since: new Date(),
-      to: new Date(),
-    })
+    let sinceA: string | undefined = undefined
+    let sinceB: string | undefined = undefined
+    let toA: string | undefined = undefined
+    let toB: string | undefined = undefined
+
+    if (typeof window !== "undefined") {
+      const query = Object.fromEntries(
+        new URLSearchParams(window.location.search).entries(),
+      )
+      sinceA = query.sinceA
+      toA = query.toA
+      sinceB = query.sinceB
+      toB = query.toB
+    }
+
+    const [rangeA, setRangeA] = useState<{ since: Date; to: Date } | undefined>(
+      sinceA && toA
+        ? {
+            since: new Date(sinceA as string),
+            to: new Date(toA as string),
+          }
+        : undefined,
+    )
+    const [rangeB, setRangeB] = useState<{ since: Date; to: Date } | undefined>(
+      sinceB && toB
+        ? {
+            since: new Date(sinceB as string),
+            to: new Date(toB as string),
+          }
+        : undefined,
+    )
+
+    const updateQuery = (params: { [key: string]: string }) => {
+      router.push({
+        pathname: PageRoutes.ANALYTICS,
+        query: {
+          ...router.query,
+          ...params,
+        },
+      })
+    }
 
     return (
       props.user?.isLoggedIn && (
         <Page
           title="Analytics - KPI Dashboard"
           user={props.user}
-          crumbs={[{ name: "Analytics", route: PageRoutes.ANALYTICS }]}
+          rangeA={rangeA}
           setRangeA={(since, to) => {
+            updateQuery({
+              sinceA: dateToString(since, false),
+              toA: dateToString(to, false),
+            })
             setRangeA({ since, to })
           }}
+          rangeB={rangeB}
           setRangeB={(since, to) => {
+            updateQuery({
+              sinceB: dateToString(since, false),
+              toB: dateToString(to, false),
+            })
             setRangeB({ since, to })
           }}
         >
@@ -60,6 +105,57 @@ const Analytics: NextPage = requireAuthorization(
                 )}
               />
             </Grid>
+          </Section>
+          <Section width="25%">
+            <Card margin="0">
+              <CardTitle>Repository KPIs</CardTitle>
+              <KpiTable
+                columns={[
+                  {
+                    content: "KPI",
+                    sortable: true,
+                    sortKey: "id",
+                    width: "80%",
+                  },
+                  {
+                    content: "Value",
+                    sortable: true,
+                    sortKey: "value",
+                    width: "20%",
+                  },
+                ]}
+                route={(pageSize, pageNumber, sortKey, asc) =>
+                  getKpisApiRoute(
+                    { owner: props.user.organization },
+                    pageSize,
+                    pageNumber,
+                    sortKey,
+                    asc,
+                    rangeB?.since,
+                    rangeB?.to,
+                  )
+                }
+                rowGenerator={(kpi) => {
+                  return [
+                    {
+                      content: (
+                        <>
+                          {/*@ts-ignore-line*/}
+                          <strong>{KpiNames[kpi.id]}</strong>
+                          <br />
+                          <span style={{ fontSize: "10pt" }}>{kpi.repo}</span>
+                        </>
+                      ),
+                      sortKey: "name",
+                    },
+                    {
+                      content: <>{kpi.value}</>,
+                      sortKey: "value",
+                    },
+                  ]
+                }}
+              />
+            </Card>
           </Section>
         </Page>
       )

@@ -7,6 +7,8 @@ import { Selector } from "./Selector"
 interface Props {
   repoId: { owner: string; name?: string }
   kpiId: KpiIds
+  rangeA?: { since: Date; to: Date }
+  rangeB?: { since: Date; to: Date }
   setRangeA?: (since: Date, to: Date) => void
   setRangeB?: (since: Date, to: Date) => void
 }
@@ -27,13 +29,15 @@ export function Comparator(props: Props) {
       <div className={styles.kpiSelector}>
         <Selector
           since={
-            new Date(
-              since.getUTCFullYear(),
-              since.getUTCMonth() - 3,
-              since.getUTCDate(),
-            )
+            props.rangeA
+              ? props.rangeA.since
+              : new Date(
+                  since.getUTCFullYear(),
+                  since.getUTCMonth() - 3,
+                  since.getUTCDate(),
+                )
           }
-          to={since}
+          to={props.rangeA ? props.rangeA.to : since}
           kpiId={props.kpiId}
           owner={props.repoId.owner}
           name={props.repoId.name}
@@ -52,8 +56,8 @@ export function Comparator(props: Props) {
       <div className={styles.kpiSelector}>
         <Selector
           kpiId={props.kpiId}
-          since={since}
-          to={to}
+          since={props.rangeB ? props.rangeB.since : since}
+          to={props.rangeB ? props.rangeB.to : to}
           owner={props.repoId.owner}
           name={props.repoId.name}
           setValue={setB}

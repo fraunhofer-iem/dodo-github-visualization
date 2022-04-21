@@ -1,18 +1,32 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import { ApiError, getKpisForRepoApiRoute, Kpi } from "../lib/api"
-import { getKpiForRepoRoute, TableContexts } from "../lib/frontend"
+import { ApiError, Kpi } from "../lib/api"
+import { TableContexts } from "../lib/frontend"
 import { usePagination } from "../lib/hooks"
-import { Button } from "./action"
 import { Table } from "./table"
 
 interface Props {
-  repoId: { owner: string; name: string }
+  columns: {
+    content: React.ReactNode
+    sortable: boolean
+    sortKey?: string
+    width?: string
+  }[]
+  rowGenerator: (
+    kpi: Kpi,
+  ) => { content: React.ReactNode; sortKey?: string | number }[]
+  route: (
+    pageSize?: number,
+    pageNumber?: number,
+    sortKey?: string,
+    asc?: number,
+    since?: Date,
+    to?: Date,
+  ) => string
   kpiId?: string
 }
 
 export default function KpiTable(props: Props) {
-  const { repoId, kpiId: kpiID } = props
   const router = useRouter()
   const {
     pageNumber,
@@ -23,8 +37,7 @@ export default function KpiTable(props: Props) {
     setSortInformation,
   } = usePagination("name")
   const { data: kpis, error: error } = useSWR<Kpi[], ApiError>(
-    getKpisForRepoApiRoute(
-      repoId,
+    props.route(
       pageSize,
       pageNumber,
       sortInformation.sortKey,
@@ -51,45 +64,8 @@ export default function KpiTable(props: Props) {
       }}
     >
       {{
-        columns: [
-          { content: "Name", sortable: true, sortKey: "name", width: "70%" },
-          { content: "Score", sortable: true, sortKey: "rating" },
-        ],
-        rows: kpis
-          ? kpis.map((kpi) => [
-              {
-                content: (
-                  <Button
-                    action={() =>
-                      router.push(getKpiForRepoRoute(repoId, kpi.id))
-                    }
-                    context="anchor"
-                    width="100%"
-                    display="block"
-                    align="left"
-                  >
-                    {kpiID === kpi.id ? <strong>{kpi.name}</strong> : kpi.name}
-                  </Button>
-                ),
-                sortKey: kpi.name,
-              },
-              {
-                content:
-                  kpiID === kpi.id ? (
-                    <strong>
-                      {Math.round((kpi.rating + Number.EPSILON) * 100) / 100}
-                      {kpi.unit}
-                    </strong>
-                  ) : (
-                    <>
-                      {Math.round((kpi.rating + Number.EPSILON) * 100) / 100}
-                      {kpi.unit}
-                    </>
-                  ),
-                sortKey: kpi.rating,
-              },
-            ])
-          : [],
+        columns: props.columns,
+        rows: kpis ? kpis.map((kpi) => props.rowGenerator(kpi)) : [],
       }}
     </Table>
   )

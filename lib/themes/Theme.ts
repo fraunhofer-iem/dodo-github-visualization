@@ -51,6 +51,10 @@ export type Theme = {
       dataCell: CSSProperties
     }
   }
+  browser: {
+    activeElement: Color
+    browser: CSSProperties
+  }
   form: {
     label: CSSProperties
     input: CSSProperties

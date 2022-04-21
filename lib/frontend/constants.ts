@@ -68,6 +68,22 @@ export enum TableContexts {
   STRIPED = "striped",
 }
 
+export function dateToString(date: Date, includeDayName: boolean = true) {
+  const indexToDay: { [key: number]: string } = {
+    0: "Sun",
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thu",
+    5: "Fri",
+    6: "Sat",
+  }
+
+  return `${includeDayName ? `${indexToDay[date.getUTCDay()]}, ` : ""}${
+    date.toISOString().split("T")[0]
+  }`
+}
+
 export enum KpiIds {
   ORGANIZATION_HEALTH = "orgHealth",
   REPOSITORY_HEALTH = "repoHealth",
@@ -76,6 +92,10 @@ export enum KpiIds {
 export const KpiNames = {
   orgHealth: "Organization Health",
   repoHealth: "Repository Health",
+  devSpread: "Developer Spread",
+  releaseCycle: "Release Cycle",
+  mttr: "Mean Time to Resolution",
+  coc: "Coupling of Components",
 }
 
 export const KpiAbbreviations = {

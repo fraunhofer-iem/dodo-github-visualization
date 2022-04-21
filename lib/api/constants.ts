@@ -1,5 +1,5 @@
 // pagination default values
-export const PAGE_SIZE_LIMIT = 50
+export const PAGE_SIZE_LIMIT = 5
 export const FIRST_PAGE = 1
 // query parameter for sort functionality
 export const enum PaginationQueryParams {
@@ -76,6 +76,43 @@ export function getKpisForRepoApiRoute(
   params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
   params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
   return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${params.toString()}`
+}
+
+export function getKpisApiRoute(
+  id: { owner: string; name?: string },
+  pageSize?: number,
+  pageNumber?: number,
+  sortKey?: string,
+  asc?: number,
+  since?: Date,
+  to?: Date,
+  interval?: Intervals,
+) {
+  const params = new URLSearchParams()
+  params.append(
+    PaginationQueryParams.PAGE_SIZE,
+    `${pageSize ? pageSize : PAGE_SIZE_LIMIT}`,
+  )
+  params.append(
+    PaginationQueryParams.PAGE_NUMBER,
+    `${pageNumber ? pageNumber : FIRST_PAGE}`,
+  )
+  params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
+  params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
+  params.append("owner", id.owner)
+  if (id.name) {
+    params.append("repo", id.name)
+  }
+  if (since) {
+    params.append("since", since.toISOString().split("T")[0])
+  }
+  if (to) {
+    params.append("to", to.toISOString().split("T")[0])
+  }
+  if (interval) {
+    params.append("interval", interval)
+  }
+  return `${ApiRoutes.KPIS}?${params.toString()}`
 }
 
 export function getKpiApiRoute(

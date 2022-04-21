@@ -37,8 +37,10 @@
 
 .container {
   min-height: calc(100vh - 100px);
-  justify-content: center;
+  // justify-content: center;
   width: 100%;
+  display: flex;
+  flex-wrap: "wrap";
 }
 
 .grid,

@@ -27,10 +27,10 @@ export type User = {
 
 export type Kpi = {
   id: string
+  owner: string
+  repo?: string
   name?: string
-  rating?: number
   value?: number
-  unit: string
 }
 
 export type KpiDetail = Kpi & {
