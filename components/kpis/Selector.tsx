@@ -14,6 +14,7 @@ interface Props {
 }
 
 export function Selector(props: Props) {
+  const { setValue, setRange } = props
   const [since, setSince] = useState<Date>(
     props.since ??
       new Date(
@@ -35,10 +36,10 @@ export function Selector(props: Props) {
 
   useEffect(() => {
     if (data && data.value) {
-      props.setValue(data.value)
+      setValue(data.value)
     }
-    if (props.setRange) {
-      props.setRange(since, to)
+    if (setRange) {
+      setRange(since, to)
     }
   }, [data])
 

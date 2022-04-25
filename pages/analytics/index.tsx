@@ -1,6 +1,5 @@
 import { NextPage } from "next"
-import { useRouter } from "next/router"
-import React, { useState } from "react"
+import React from "react"
 import { Card, CardTitle } from "../../components/card"
 import { Gallery, Section } from "../../components/content"
 import RepositoryCard from "../../components/content/RepositoryCard"
@@ -14,51 +13,13 @@ import {
   requireAuthorization,
 } from "../../lib/api"
 import { dateToString, KpiNames, PageRoutes } from "../../lib/frontend"
+import { useHeader } from "../../lib/hooks/useHeader"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
-    const router = useRouter()
-    let sinceA: string | undefined = undefined
-    let sinceB: string | undefined = undefined
-    let toA: string | undefined = undefined
-    let toB: string | undefined = undefined
-
-    if (typeof window !== "undefined") {
-      const query = Object.fromEntries(
-        new URLSearchParams(window.location.search).entries(),
-      )
-      sinceA = query.sinceA
-      toA = query.toA
-      sinceB = query.sinceB
-      toB = query.toB
-    }
-
-    const [rangeA, setRangeA] = useState<{ since: Date; to: Date } | undefined>(
-      sinceA && toA
-        ? {
-            since: new Date(sinceA as string),
-            to: new Date(toA as string),
-          }
-        : undefined,
+    const { rangeA, setRangeA, rangeB, setRangeB, updateQuery } = useHeader(
+      () => PageRoutes.ANALYTICS,
     )
-    const [rangeB, setRangeB] = useState<{ since: Date; to: Date } | undefined>(
-      sinceB && toB
-        ? {
-            since: new Date(sinceB as string),
-            to: new Date(toB as string),
-          }
-        : undefined,
-    )
-
-    const updateQuery = (params: { [key: string]: string }) => {
-      router.push({
-        pathname: PageRoutes.ANALYTICS,
-        query: {
-          ...router.query,
-          ...params,
-        },
-      })
-    }
 
     return (
       props.user?.isLoggedIn && (

@@ -40,7 +40,7 @@ const LightTheme: Theme = {
   },
   card: {
     card: new CSSProperties({
-      backgroundColor: white.darken(0.01),
+      background: white.darken(0.01),
       borderColor: gray,
     }),
     title: new CSSProperties({ color: black }),
