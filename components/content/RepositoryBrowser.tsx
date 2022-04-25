@@ -31,7 +31,7 @@ export default function RepositoryBrowser(props: Props) {
   })
 
   const getPage = useCallback(() => {
-    setPageNumber(pageNumber + 1)
+    setPageNumber(pageNumber + 2)
   }, [pageNumber, setPageNumber])
 
   const containerRef = useRef<HTMLDivElement>(null)

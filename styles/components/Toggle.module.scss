@@ -1,0 +1,23 @@
+.toggle {
+  width: 40px;
+  height: 20px;
+  border-radius: 25px;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.slider {
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  position: absolute;
+  left: 0;
+  transform: translate(-1px, -1px);
+  transition: all ease-in-out 0.3s;
+  border: 1px solid transparent;
+}
+
+.active {
+  left: 100%;
+  transform: translate(calc(-100% + 2px), -1px);
+}

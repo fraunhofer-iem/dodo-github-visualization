@@ -98,6 +98,19 @@ const LightTheme: Theme = {
       borderColor: white.darken(0.1),
     }),
     select: new CSSProperties({}),
+    toggle: {
+      frame: new CSSProperties({
+        backgroundColor: white.darken(0.5),
+        borderColor: gray,
+      }),
+      "frame:active": new CSSProperties({
+        backgroundColor: blue.darken(0.2),
+      }),
+      slider: new CSSProperties({
+        backgroundColor: white,
+        borderColor: black,
+      }),
+    },
   },
   button: {
     primary: new CSSProperties({

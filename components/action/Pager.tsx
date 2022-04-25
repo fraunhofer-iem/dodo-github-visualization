@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Spinner } from "../content"
 
 interface Props {
@@ -9,13 +9,18 @@ interface Props {
 }
 
 export default function Pager(props: Props) {
+  const { width, height, size, callback } = props
   const pagerRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState<boolean>(false)
 
   useEffect(() => {
     const pager = pagerRef.current
     let observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        props.callback()
+        if (!visible) {
+          callback()
+        }
+        setVisible(true)
       }
     })
     if (pager) {
@@ -26,20 +31,20 @@ export default function Pager(props: Props) {
         observer.unobserve(pager)
       }
     }
-  })
+  }, [callback])
 
   return (
     <div
       ref={pagerRef}
       style={{
-        width: props.width,
-        height: props.height,
+        width: width,
+        height: height,
         display: "flex",
         justifyContent: "center",
         verticalAlign: "middle",
       }}
     >
-      <Spinner size={props.size} />
+      <Spinner size={size} />
     </div>
   )
 }

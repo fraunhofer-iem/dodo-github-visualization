@@ -59,6 +59,11 @@ export type Theme = {
     label: CSSProperties
     input: CSSProperties
     select: CSSProperties
+    toggle: {
+      frame: CSSProperties
+      "frame:active": CSSProperties
+      slider: CSSProperties
+    }
   }
   content: {
     trend: {

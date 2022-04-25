@@ -57,27 +57,6 @@ export function getRepoApiRoute(repoId: { owner: string; name: string }) {
   return `/api/repos/${repoId.owner}/${repoId.name}`
 }
 
-export function getKpisForRepoApiRoute(
-  repoId: { owner: string; name: string },
-  pageSize?: number,
-  pageNumber?: number,
-  sortKey?: string,
-  asc?: number,
-) {
-  const params = new URLSearchParams()
-  params.append(
-    PaginationQueryParams.PAGE_SIZE,
-    `${pageSize ? pageSize : PAGE_SIZE_LIMIT}`,
-  )
-  params.append(
-    PaginationQueryParams.PAGE_NUMBER,
-    `${pageNumber ? pageNumber : FIRST_PAGE}`,
-  )
-  params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
-  params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
-  return `/api/repos/${repoId.owner}/${repoId.name}/kpis?${params.toString()}`
-}
-
 export function getKpisApiRoute(
   id: { owner: string; name?: string },
   pageSize?: number,
@@ -87,6 +66,8 @@ export function getKpisApiRoute(
   since?: Date,
   to?: Date,
   interval?: Intervals,
+  kpiIds?: string[],
+  data: boolean = false,
 ) {
   const params = new URLSearchParams()
   params.append(
@@ -101,7 +82,12 @@ export function getKpisApiRoute(
   params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
   params.append("owner", id.owner)
   if (id.name) {
-    params.append("repo", id.name)
+    params.append("repos[]", id.name)
+  }
+  if (kpiIds) {
+    for (const kpi of kpiIds) {
+      params.append("kpis[]", kpi)
+    }
   }
   if (since) {
     params.append("since", since.toISOString().split("T")[0])
@@ -112,6 +98,7 @@ export function getKpisApiRoute(
   if (interval) {
     params.append("interval", interval)
   }
+  params.append("data", `${data}`)
   return `${ApiRoutes.KPIS}?${params.toString()}`
 }
 
@@ -156,9 +143,3 @@ export function getTrendsApiRoute(
   asc = asc == 0 ? 0 : 1
   return `/api/trends?${PaginationQueryParams.PAGE_SIZE}=${pageSize}&${PaginationQueryParams.PAGE_NUMBER}=${pageNumber}&${PaginationQueryParams.SORT_KEY}=${sortKey}&${PaginationQueryParams.ASC}=${asc}`
 }
-
-export const KpiNames = new Map<string, string>([
-  ["devSpread", "Developer Spread"],
-  ["releaseCycle", "Release Cycle"],
-  ["coc", "Coupling of Components"],
-])

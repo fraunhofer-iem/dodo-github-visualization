@@ -13,7 +13,7 @@ import {
   requireAuthorization,
 } from "../../lib/api"
 import { dateToString, KpiNames, PageRoutes } from "../../lib/frontend"
-import { useHeader } from "../../lib/hooks/useHeader"
+import { useHeader } from "../../lib/hooks"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
