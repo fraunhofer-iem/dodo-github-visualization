@@ -1,5 +1,6 @@
 import { ChartData, ChartOptions, ChartType } from "chart.js"
 import Chart from "chart.js/auto"
+import { MatrixController, MatrixElement } from "chartjs-chart-matrix"
 import { useEffect, useRef } from "react"
 import { compareProps } from "../../lib/frontend"
 
@@ -25,11 +26,11 @@ export function ChartComponent(props: Props) {
   const chart = useRef<Chart | null>()
 
   useEffect(() => {
+    Chart.register(MatrixController, MatrixElement)
     if (!compareProps(prevProps.current, props) && container.current !== null) {
       chart.current?.destroy()
       chart.current = new Chart(container.current, {
         type: props.type,
-
         data: { ...props.data },
 
         options: {

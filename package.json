@@ -17,6 +17,7 @@
     "@popperjs/core": "^2.11.2",
     "@tippyjs/react": "^4.2.6",
     "chart.js": "^3.7.1",
+    "chartjs-chart-matrix": "^1.1.1",
     "cytoscape": "^3.21.0",
     "cytoscape-cxtmenu": "^3.4.0",
     "cytoscape-dagre": "^2.4.0",
