@@ -1,8 +1,9 @@
 import { NextPage } from "next"
+import { useRouter } from "next/router"
 import React from "react"
+import { Button } from "../../components/action"
 import { Card, CardTitle } from "../../components/card"
-import { Gallery, Section } from "../../components/content"
-import RepositoryCard from "../../components/content/RepositoryCard"
+import { Gallery, RepositoryCard, Section } from "../../components/content"
 import KpiTable from "../../components/KpiTable"
 import { Grid, Page } from "../../components/layout"
 import {
@@ -12,11 +13,17 @@ import {
   Repo,
   requireAuthorization,
 } from "../../lib/api"
-import { dateToString, KpiNames, PageRoutes } from "../../lib/frontend"
+import {
+  dateToString,
+  getKpiForRepoRoute,
+  KpiNames,
+  PageRoutes,
+} from "../../lib/frontend"
 import { useHeader } from "../../lib/hooks"
 
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
+    const router = useRouter()
     const { rangeA, setRangeA, rangeB, setRangeB, updateQuery } = useHeader(
       () => PageRoutes.ANALYTICS,
     )
@@ -100,12 +107,25 @@ const Analytics: NextPage = requireAuthorization(
                   return [
                     {
                       content: (
-                        <>
+                        <Button
+                          context={"anchor"}
+                          display="block"
+                          width="100%"
+                          action={() =>
+                            router.push({
+                              pathname: getKpiForRepoRoute(
+                                { owner: kpi.owner, name: kpi.repo as string },
+                                kpi.id,
+                              ),
+                              query: { ...router.query },
+                            })
+                          }
+                        >
                           {/*@ts-ignore-line*/}
                           <strong>{KpiNames[kpi.id]}</strong>
                           <br />
                           <span style={{ fontSize: "10pt" }}>{kpi.repo}</span>
-                        </>
+                        </Button>
                       ),
                       sortKey: "name",
                     },

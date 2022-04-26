@@ -7,7 +7,7 @@ interface Props {
   action: () => void
 }
 
-export default function Toggle(props: Props) {
+export function Toggle(props: Props) {
   const { theme } = useUIContext()
   const [active, setActive] = useState<boolean>(props.active)
 

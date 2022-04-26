@@ -36,9 +36,10 @@ export default withSession(
           }/kpis?${params.toString()}`,
         ),
       )
+
       const chunk = paginate<Kpi>(kpis, paginationParams)
       if (!chunk.length) {
-        res.status(404).json([])
+        res.status(200).json([])
       } else {
         res.status(200).json(chunk)
       }

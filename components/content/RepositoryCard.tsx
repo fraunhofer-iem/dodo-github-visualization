@@ -27,9 +27,10 @@ interface Props {
   rangeA?: { since: Date; to: Date }
   minified?: boolean
   background?: string
+  backgroundHover?: string
 }
 
-export default function RepositoryCard(props: Props) {
+export function RepositoryCard(props: Props) {
   const { theme } = useUIContext()
   const { repo, minified, width, margin, height, rangeA, rangeB } = props
   const router = useRouter()
@@ -70,6 +71,7 @@ export default function RepositoryCard(props: Props) {
             ].color.rgba()} 500%)`
           : undefined
       }
+      backgroundHover={props.backgroundHover}
     >
       <div style={{ width: "100%", textAlign: "center" }}>
         <Button

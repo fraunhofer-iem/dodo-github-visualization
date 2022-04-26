@@ -24,6 +24,7 @@ interface Props {
     to?: Date,
   ) => string
   kpiId?: string
+  paginate?: boolean
 }
 
 export default function KpiTable(props: Props) {
@@ -52,7 +53,7 @@ export default function KpiTable(props: Props) {
     <Table
       width="100%"
       context={TableContexts.STRIPED}
-      paginate={true}
+      paginate={props.paginate === undefined ? true : props.paginate}
       {...{
         pageSize,
         setPageSize,

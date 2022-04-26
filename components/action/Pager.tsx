@@ -8,7 +8,7 @@ interface Props {
   callback: () => void
 }
 
-export default function Pager(props: Props) {
+export function Pager(props: Props) {
   const { width, height, size, callback } = props
   const pagerRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState<boolean>(false)

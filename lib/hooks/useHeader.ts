@@ -1,10 +1,20 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
 
-export function useHeader(path: (owner?: string, name?: string) => string) {
+export function useHeader(
+  path: (owner?: string, name?: string, kpi?: string) => string,
+  params?: (path: string[]) => {
+    owner?: string
+    name?: string
+    kpi?: string
+  },
+) {
   const router = useRouter()
-  let owner: string | undefined = undefined
-  let name: string | undefined = undefined
+  let pathParams: {
+    owner?: string
+    name?: string
+    kpi?: string
+  } = {}
   let sinceA: string | undefined = undefined
   let sinceB: string | undefined = undefined
   let toA: string | undefined = undefined
@@ -15,10 +25,10 @@ export function useHeader(path: (owner?: string, name?: string) => string) {
       new URLSearchParams(window.location.search).entries(),
     )
     const path = window.location.pathname.split("/")
-    if (path.length >= 2) {
-      owner = path[path.length - 2]
-      name = path[path.length - 1]
+    if (params) {
+      pathParams = params(path)
     }
+
     sinceA = query.sinceA
     toA = query.toA
     sinceB = query.sinceB
@@ -44,7 +54,7 @@ export function useHeader(path: (owner?: string, name?: string) => string) {
 
   const updateQuery = (params: { [key: string]: string }) => {
     router.push({
-      pathname: path(owner, name),
+      pathname: path(pathParams.owner, pathParams.name, pathParams.kpi),
       query: {
         ...router.query,
         ...params,
@@ -52,5 +62,5 @@ export function useHeader(path: (owner?: string, name?: string) => string) {
     })
   }
 
-  return { owner, name, rangeA, setRangeA, rangeB, setRangeB, updateQuery }
+  return { ...pathParams, rangeA, setRangeA, rangeB, setRangeB, updateQuery }
 }

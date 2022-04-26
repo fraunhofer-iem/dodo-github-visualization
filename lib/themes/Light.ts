@@ -134,11 +134,11 @@ const LightTheme: Theme = {
     anchor: new CSSProperties({
       backgroundColor: transparent,
       color: "inherit",
-      textDecoration: "none",
+      textDecoration: "underline",
     }),
     "anchor:hover": new CSSProperties({
       backgroundColor: transparent,
-      textDecoration: "underline",
+      textDecoration: "none",
     }),
     light: new CSSProperties({
       backgroundColor: white.darken(0.1),

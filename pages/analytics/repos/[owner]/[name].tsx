@@ -1,29 +1,45 @@
 import { NextPage } from "next"
+import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
+import { Button, Toggle } from "../../../../components/action"
 import { Card } from "../../../../components/card"
-import { Section } from "../../../../components/content"
-import RepositoryBrowser from "../../../../components/content/RepositoryBrowser"
-import Toggle from "../../../../components/form/Toggle"
+import {
+  Browser,
+  RepositoryCard,
+  Section,
+} from "../../../../components/content"
 import KpiChart from "../../../../components/KpiChart"
 import KpiTable from "../../../../components/KpiTable"
 import { Page } from "../../../../components/layout"
 import {
   AuthorizationDetails,
   getKpisApiRoute,
+  getReposApiRoute,
+  Repo,
   requireAuthorization,
 } from "../../../../lib/api"
 import {
   dateToString,
   getAnalyticsForRepoRoute,
+  getKpiForRepoRoute,
   KpiNames,
 } from "../../../../lib/frontend"
-import { useHeader } from "../../../../lib/hooks"
+import { useHeader, useUIContext } from "../../../../lib/hooks"
 
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
+  const router = useRouter()
   const { owner, name, rangeA, setRangeA, rangeB, setRangeB, updateQuery } =
-    useHeader((owner, name) =>
-      getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
+    useHeader(
+      (owner, name) =>
+        getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
+      (path) => {
+        return {
+          owner: path[path.length - 2],
+          name: path[path.length - 1],
+        }
+      },
     )
+  const { theme } = useUIContext()
 
   const [shownKpis, setShownKpis] = useState<string[]>([])
   useEffect(() => {
@@ -55,7 +71,26 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
         {owner && name && (
           <>
             <Section width="150px" padding="0">
-              <RepositoryBrowser repoId={{ owner: owner, name: name }} />
+              <Browser<Repo>
+                route={getReposApiRoute}
+                generator={(repo) => (
+                  <RepositoryCard
+                    key={repo.id}
+                    repo={repo}
+                    iconSize={"75px"}
+                    width="100%"
+                    height="100px"
+                    minified={true}
+                    margin="0"
+                    background={
+                      repo.id === `${owner}/${name}`
+                        ? `radial-gradient(circle at center, white, ${theme.browser.activeElement.rgba()} 500%)`
+                        : undefined
+                    }
+                    backgroundHover={`radial-gradient(circle at center, white, ${theme.browser.activeElement.rgba()} 500%)`}
+                  />
+                )}
+              />
             </Section>
             <Section padding="0 5px">
               <Card>
@@ -170,7 +205,25 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                         content: <>diff</>,
                       },
                       {
-                        content: <>details</>,
+                        content: (
+                          <Button
+                            context={"anchor"}
+                            action={() =>
+                              router.push({
+                                pathname: getKpiForRepoRoute(
+                                  {
+                                    owner: owner,
+                                    name: name,
+                                  },
+                                  kpi.id,
+                                ),
+                                query: { ...router.query },
+                              })
+                            }
+                          >
+                            Show details
+                          </Button>
+                        ),
                       },
                     ]
                   }}
