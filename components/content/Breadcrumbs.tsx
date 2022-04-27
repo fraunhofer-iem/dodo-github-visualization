@@ -15,7 +15,7 @@ export function Breadcrumbs(props: Props) {
 
   return (
     <div className={styles.breadcrumbs}>
-      You are here:
+      You are here:{" "}
       {crumbs.map((currentCrumb, i) => (
         <React.Fragment key={i}>
           {i > 0 && <Icon>{IconNames.chevronRight}</Icon>}
@@ -25,6 +25,8 @@ export function Breadcrumbs(props: Props) {
             context="anchor"
             display="inline-block"
             action={() => router.push(currentCrumb.route)}
+            padding="0"
+            fontSize="11pt"
           >
             {currentCrumb.name}
           </Button>

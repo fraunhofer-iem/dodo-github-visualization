@@ -1,4 +1,4 @@
-import { reverse, sortBy } from "lodash"
+import { filter, reverse, sortBy } from "lodash"
 import { NextApiRequestQuery } from "next/dist/server/api-utils"
 import { FIRST_PAGE, PAGE_SIZE_LIMIT, PaginationQueryParams } from "./constants"
 import { Pagination, Sort } from "./types"
@@ -92,6 +92,7 @@ export function paginate<T>(
     pageSize: number
     pageNumber: number
   },
+  filterPredicate: (elem: T) => boolean,
 ): T[] {
   const { sortKey, asc, pageSize, pageNumber } = paginationParams
   if (sortKey) {
@@ -102,6 +103,7 @@ export function paginate<T>(
       reverse(collection)
     }
   }
+  collection = filter(collection, filterPredicate)
   let startOfChunk = pageSize * (pageNumber - 1)
   let endOfChunk = pageSize * (pageNumber - 1) + pageSize
   if (startOfChunk >= collection.length) {

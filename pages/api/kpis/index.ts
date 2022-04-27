@@ -8,6 +8,7 @@ import {
   USER_COOKIE,
   withSession,
 } from "../../../lib/api"
+import { KpiNames } from "../../../lib/frontend"
 
 export default withSession(
   async (req: NextIronRequest, res: NextApiResponse<Kpi[]>) => {
@@ -36,8 +37,13 @@ export default withSession(
           }/kpis?${params.toString()}`,
         ),
       )
-
-      const chunk = paginate<Kpi>(kpis, paginationParams)
+      const chunk = paginate<Kpi>(
+        kpis,
+        paginationParams,
+        (elem) =>
+          params.get("filter") === null ||
+          KpiNames[elem.id].includes(params.get("filter") as string),
+      )
       if (!chunk.length) {
         res.status(200).json([])
       } else {

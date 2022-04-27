@@ -59,7 +59,6 @@ export default function KpiChart(props: Props) {
             backgroundColor: ColorScheme(i).rgba(),
             borderColor: ColorScheme(i).rgba(),
             showLine: true,
-            ///@ts-ignore-line
             label: KpiNames[kpi],
           }
         }),

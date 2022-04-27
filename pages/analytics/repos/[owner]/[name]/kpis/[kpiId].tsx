@@ -4,14 +4,17 @@ import React from "react"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "../../../../../../components/action"
 import { Card } from "../../../../../../components/card"
-import { Browser, Section } from "../../../../../../components/content"
+import {
+  Breadcrumbs,
+  Browser,
+  Section,
+} from "../../../../../../components/content"
 import KpiChart from "../../../../../../components/KpiChart"
 import KpiTable from "../../../../../../components/KpiTable"
 import { Page } from "../../../../../../components/layout"
 import {
   AuthorizationDetails,
   getKpisApiRoute,
-  Intervals,
   Kpi,
   requireAuthorization,
 } from "../../../../../../lib/api"
@@ -21,8 +24,6 @@ import {
   KpiNames,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
-
-const intervals: Intervals[] = [Intervals.MONTH, Intervals.WEEK, Intervals.DAY]
 
 const KPIDetail: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
@@ -78,13 +79,14 @@ const KPIDetail: NextPage = requireAuthorization(
             <>
               <Section width="150px" padding="0">
                 <Browser<Kpi>
-                  route={(pageSize, pageNumber, sortKey, asc) =>
+                  route={(pageSize, pageNumber, sortKey, asc, filter) =>
                     getKpisApiRoute(
                       { owner: owner },
                       pageSize,
                       pageNumber,
                       sortKey,
                       asc,
+                      filter,
                       rangeB?.since,
                       rangeB?.to,
                     )
@@ -132,7 +134,6 @@ const KPIDetail: NextPage = requireAuthorization(
                           }
                           padding={"0"}
                         >
-                          {/*@ts-ignore-line*/}
                           <strong>{KpiNames[kpi.id]}</strong>
                           <br />
                           <span style={{ fontSize: "10pt" }}>
@@ -145,12 +146,20 @@ const KPIDetail: NextPage = requireAuthorization(
                 />
               </Section>
               <Section padding="0 5px">
+                <Breadcrumbs
+                  crumbs={[
+                    { name: "Analytics", route: "" },
+                    { name: `${owner}/${repo}`, route: "" },
+                    { name: KpiNames[kpiId], route: "" },
+                  ]}
+                />
                 <Card>
                   <KpiChart
                     route={() =>
                       getKpisApiRoute(
                         { owner, name: repo },
                         1,
+                        undefined,
                         undefined,
                         undefined,
                         undefined,
@@ -201,6 +210,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         1,
                         undefined,
                         undefined,
+                        undefined,
                         rangeB?.since,
                         rangeB?.to,
                         undefined,
@@ -212,7 +222,6 @@ const KPIDetail: NextPage = requireAuthorization(
                         {
                           content: (
                             <>
-                              {/*@ts-ignore-line*/}
                               <strong>{KpiNames[kpi.id]}</strong>
                             </>
                           ),

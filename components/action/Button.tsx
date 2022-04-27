@@ -46,6 +46,7 @@ interface Props {
   display?: string
   align?: "left" | "right" | "center"
   padding?: string
+  fontSize?: string
 }
 
 /**
@@ -79,6 +80,9 @@ export function Button(props: Props) {
   }
   if (props.padding) {
     css["padding"] = props.padding
+  }
+  if (props.fontSize) {
+    css["fontSize"] = props.fontSize
   }
 
   return props.href ? (

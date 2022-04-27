@@ -1,9 +1,11 @@
-import { useCallback, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { ApiError } from "../../lib/api"
+import { IconNames } from "../../lib/frontend"
 import { usePagination, useUIContext } from "../../lib/hooks"
 import styles from "../../styles/components/Content.module.scss"
 import { Pager } from "../action"
+import { Input } from "../form"
 
 interface Props<EntityType> {
   route: (
@@ -11,6 +13,7 @@ interface Props<EntityType> {
     pageNumber?: number,
     sortKey?: string,
     asc?: number,
+    filter?: string,
   ) => string
   generator: (entity: EntityType) => JSX.Element
   sortKey?: string
@@ -20,11 +23,13 @@ export function Browser<EntityType>(props: Props<EntityType>) {
   const { theme } = useUIContext()
   const { route, generator, sortKey } = props
   const { pageSize, sortInformation } = usePagination(sortKey ?? "name", 1)
+  const [filter, setFilter] = useState<string>("")
 
   const {
     data: pages,
     size: pageNumber,
     setSize: setPageNumber,
+    mutate,
   } = useSWRInfinite<EntityType[], ApiError>(
     (pageIndex: any, previousPage: any) => {
       if (previousPage && !previousPage.length) {
@@ -35,6 +40,7 @@ export function Browser<EntityType>(props: Props<EntityType>) {
         pageIndex + 1,
         sortInformation.sortKey,
         sortInformation.ordering,
+        filter,
       )
     },
   )
@@ -44,26 +50,27 @@ export function Browser<EntityType>(props: Props<EntityType>) {
   }, [pageNumber, setPageNumber])
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
-  // useEffect(() => {
-  //   let scrollOffset = -100
-  //   repoPages?.forEach((currentPage) => {
-  //     currentPage.forEach((currentRepo) => {
-  //       scrollOffset += 100
-  //       if (
-  //         currentRepo.owner === props.repoId.owner &&
-  //         currentRepo.name === props.repoId.name
-  //       ) {
-  //         if (containerRef.current) {
-  //           containerRef.current.scrollTop = scrollOffset
-  //         }
-  //       }
-  //     })
-  //   })
-  //   if (scrollOffset < 0) {
-  //     getPage()
-  //   }
-  // }, [repoPages])
+  useEffect(() => {
+    if (containerRef.current) {
+      if (scrollRef.current) {
+        let childrenHeight = -scrollRef.current.clientHeight
+        Array.from(containerRef.current.children).forEach((child) => {
+          childrenHeight += child.clientHeight
+        })
+        scrollRef.current.style.height =
+          containerRef.current.clientHeight -
+          childrenHeight +
+          containerRef.current.children[0].clientHeight +
+          "px"
+        if (!filter) {
+          containerRef.current.scrollTop =
+            containerRef.current.children[0].clientHeight
+        }
+      }
+    }
+  }, [pages])
 
   return (
     <div
@@ -71,15 +78,26 @@ export function Browser<EntityType>(props: Props<EntityType>) {
       className={styles.browser}
       style={theme.browser.browser.css()}
     >
+      <Input
+        value={filter}
+        changeHandler={(e) => {
+          mutate([])
+          setFilter(e.currentTarget.value)
+        }}
+        width="95%"
+        placeholder="Search"
+        icon={IconNames.search}
+      />
       {pages &&
         pages.map((currentPage) =>
           currentPage.map((currentEntity) => generator(currentEntity)),
         )}
-      {pages && pages[pages.length - 1].length ? (
+      {pages && pages.length > 0 && pages[pages.length - 1].length ? (
         <Pager width="100%" height="100px" size="50px" callback={getPage} />
       ) : (
         <></>
       )}
+      <div style={{ height: "0px" }} ref={scrollRef}></div>
     </div>
   )
 }

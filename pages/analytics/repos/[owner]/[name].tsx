@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Button, Toggle } from "../../../../components/action"
 import { Card } from "../../../../components/card"
 import {
+  Breadcrumbs,
   Browser,
   RepositoryCard,
   Section,
@@ -93,6 +94,12 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
               />
             </Section>
             <Section padding="0 5px">
+              <Breadcrumbs
+                crumbs={[
+                  { name: "Analytics", route: "" },
+                  { name: `${owner}/${name}`, route: "" },
+                ]}
+              />
               <Card>
                 <KpiChart
                   route={() =>
@@ -100,6 +107,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       ? getKpisApiRoute(
                           { owner, name },
                           shownKpis.length,
+                          undefined,
                           undefined,
                           undefined,
                           undefined,
@@ -159,6 +167,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       pageNumber,
                       sortKey,
                       asc,
+                      undefined,
                       rangeB?.since,
                       rangeB?.to,
                     )
@@ -185,7 +194,6 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       {
                         content: (
                           <>
-                            {/*@ts-ignore-line*/}
                             <strong>{KpiNames[kpi.id]}</strong>
                           </>
                         ),

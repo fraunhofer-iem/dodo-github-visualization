@@ -30,6 +30,7 @@ export function getReposApiRoute(
   pageNumber?: number,
   sortKey?: string,
   asc?: number,
+  filter?: string,
   since?: Date,
   to?: Date,
 ) {
@@ -50,6 +51,9 @@ export function getReposApiRoute(
   if (to) {
     params.append("to", to.toISOString().split("T")[0])
   }
+  if (filter) {
+    params.append("filter", filter)
+  }
   return `/api/repos?${params.toString()}`
 }
 
@@ -63,6 +67,7 @@ export function getKpisApiRoute(
   pageNumber?: number,
   sortKey?: string,
   asc?: number,
+  filter?: string,
   since?: Date,
   to?: Date,
   interval?: Intervals,
@@ -97,6 +102,9 @@ export function getKpisApiRoute(
   }
   if (interval) {
     params.append("interval", interval)
+  }
+  if (filter) {
+    params.append("filter", filter)
   }
   params.append("data", `${data}`)
   return `${ApiRoutes.KPIS}?${params.toString()}`

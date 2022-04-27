@@ -16,7 +16,7 @@ export default withSession(
       res.status(403).json("Access denied" as any)
     } else {
       const paginationParams = getPagination(req.query, ["name", "health"])
-      const { since, to } = req.query
+      const { since, to, filter } = req.query
       let params: URLSearchParams | undefined = undefined
       if (since && to) {
         params = new URLSearchParams({
@@ -31,8 +31,14 @@ export default withSession(
           }/repositories${params ? `?${params.toString()}` : ""}`,
         ),
       )
-
-      const chunk = paginate<Repo>(repos, paginationParams)
+      const chunk = paginate<Repo>(
+        repos,
+        paginationParams,
+        (elem) =>
+          filter === undefined ||
+          elem.owner.includes(filter as string) ||
+          elem.name.includes(filter as string),
+      )
       if (!chunk.length) {
         res.status(200).json([])
       } else {

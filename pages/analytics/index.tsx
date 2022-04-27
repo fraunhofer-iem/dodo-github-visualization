@@ -99,6 +99,7 @@ const Analytics: NextPage = requireAuthorization(
                     pageNumber,
                     sortKey,
                     asc,
+                    undefined,
                     rangeB?.since,
                     rangeB?.to,
                   )
@@ -121,7 +122,6 @@ const Analytics: NextPage = requireAuthorization(
                             })
                           }
                         >
-                          {/*@ts-ignore-line*/}
                           <strong>{KpiNames[kpi.id]}</strong>
                           <br />
                           <span style={{ fontSize: "10pt" }}>{kpi.repo}</span>

@@ -13,6 +13,10 @@ export function Toggle(props: Props) {
 
   return (
     <div
+      onClick={() => {
+        setActive(!active)
+        props.action()
+      }}
       className={styles.toggle}
       style={
         active

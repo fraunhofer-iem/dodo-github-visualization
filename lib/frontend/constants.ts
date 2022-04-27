@@ -89,7 +89,7 @@ export enum KpiIds {
   REPOSITORY_HEALTH = "repoHealth",
 }
 
-export const KpiNames = {
+export const KpiNames: { [key: string]: string } = {
   orgHealth: "Organization Health",
   repoHealth: "Repository Health",
   devSpread: "Developer Spread",

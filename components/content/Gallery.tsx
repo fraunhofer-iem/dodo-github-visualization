@@ -46,6 +46,7 @@ interface Props<EntityType> {
     pageNumber?: number,
     sortKey?: string,
     asc?: number,
+    filter?: string,
     since?: Date,
     to?: Date,
   ) => string
@@ -89,6 +90,7 @@ export function Gallery<EntityType>(props: Props<EntityType>) {
       pageNumber,
       sortInformation.sortKey,
       sortInformation.ordering,
+      undefined,
       props.range ? props.range.since : undefined,
       props.range ? props.range.to : undefined,
     ),
