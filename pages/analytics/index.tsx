@@ -124,7 +124,9 @@ const Analytics: NextPage = requireAuthorization(
                         >
                           <strong>{KpiNames[kpi.id]}</strong>
                           <br />
-                          <span style={{ fontSize: "10pt" }}>{kpi.repo}</span>
+                          <span style={{ fontSize: "10pt" }}>
+                            {kpi.owner}/{kpi.repo}
+                          </span>
                         </Button>
                       ),
                       sortKey: "name",

@@ -25,10 +25,6 @@ export function Toggle(props: Props) {
       }
     >
       <div
-        onClick={() => {
-          setActive(!active)
-          props.action()
-        }}
         className={`${styles.slider} ${active ? styles.active : ""}`}
         style={theme.form.toggle.slider.css()}
       />

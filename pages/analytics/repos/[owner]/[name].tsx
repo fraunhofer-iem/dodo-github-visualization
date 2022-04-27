@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { Button, Toggle } from "../../../../components/action"
 import { Card } from "../../../../components/card"
 import {
@@ -24,28 +24,57 @@ import {
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
   KpiNames,
+  PageRoutes,
 } from "../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../lib/hooks"
 
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
-  const { owner, name, rangeA, setRangeA, rangeB, setRangeB, updateQuery } =
-    useHeader(
-      (owner, name) =>
-        getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
-      (path) => {
-        return {
-          owner: path[path.length - 2],
-          name: path[path.length - 1],
-        }
-      },
-    )
+  const {
+    owner,
+    name,
+    rangeA,
+    setRangeA,
+    rangeB,
+    setRangeB,
+    kpiIds,
+    updateQuery,
+  } = useHeader(
+    (owner, name) =>
+      getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
+    (path) => {
+      return {
+        owner: path[path.length - 2],
+        name: path[path.length - 1],
+      }
+    },
+  )
   const { theme } = useUIContext()
 
-  const [shownKpis, setShownKpis] = useState<string[]>([])
-  useEffect(() => {
-    setShownKpis([])
-  }, [owner, name])
+  const [shownKpis, setShownKpis] = useState<string[]>(kpiIds ?? [])
+  // useEffect(() => {
+  //   setShownKpis([])
+  // }, [owner, name])
+
+  const updateKpis = useCallback(
+    (kpiId: string) => {
+      if (shownKpis.includes(kpiId)) {
+        shownKpis.splice(shownKpis.findIndex((k) => kpiId === k))
+        updateQuery({
+          kpiIds: shownKpis,
+        })
+        setShownKpis([...shownKpis])
+      } else {
+        updateQuery({
+          kpiIds: [...shownKpis, kpiId],
+        })
+        setShownKpis([...shownKpis, kpiId])
+      }
+    },
+    [shownKpis],
+  )
+
+  console.log("render")
 
   return (
     props.user?.isLoggedIn && (
@@ -96,8 +125,14 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
             <Section padding="0 5px">
               <Breadcrumbs
                 crumbs={[
-                  { name: "Analytics", route: "" },
-                  { name: `${owner}/${name}`, route: "" },
+                  { name: "Analytics", route: PageRoutes.ANALYTICS },
+                  {
+                    name: `${owner}/${name}`,
+                    route: getAnalyticsForRepoRoute({
+                      owner: owner,
+                      name: name,
+                    }),
+                  },
                 ]}
               />
               <Card>
@@ -177,16 +212,10 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       {
                         content: (
                           <Toggle
+                            key={kpi.id}
                             active={shownKpis.includes(kpi.id)}
                             action={() => {
-                              if (shownKpis.includes(kpi.id)) {
-                                shownKpis.splice(
-                                  shownKpis.findIndex((k) => kpi.id === k),
-                                )
-                                setShownKpis([...shownKpis])
-                              } else {
-                                setShownKpis([...shownKpis, kpi.id])
-                              }
+                              updateKpis(kpi.id)
                             }}
                           />
                         ),

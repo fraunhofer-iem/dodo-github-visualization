@@ -20,8 +20,10 @@ import {
 } from "../../../../../../lib/api"
 import {
   dateToString,
+  getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
   KpiNames,
+  PageRoutes,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
 
@@ -148,9 +150,24 @@ const KPIDetail: NextPage = requireAuthorization(
               <Section padding="0 5px">
                 <Breadcrumbs
                   crumbs={[
-                    { name: "Analytics", route: "" },
-                    { name: `${owner}/${repo}`, route: "" },
-                    { name: KpiNames[kpiId], route: "" },
+                    { name: "Analytics", route: PageRoutes.ANALYTICS },
+                    {
+                      name: `${owner}/${repo}`,
+                      route: getAnalyticsForRepoRoute({
+                        owner: owner,
+                        name: repo,
+                      }),
+                    },
+                    {
+                      name: KpiNames[kpiId],
+                      route: getKpiForRepoRoute(
+                        {
+                          owner: owner,
+                          name: repo,
+                        },
+                        kpiId,
+                      ),
+                    },
                   ]}
                 />
                 <Card>

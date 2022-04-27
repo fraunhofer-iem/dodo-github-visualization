@@ -19,6 +19,7 @@ export function useHeader(
   let sinceB: string | undefined = undefined
   let toA: string | undefined = undefined
   let toB: string | undefined = undefined
+  let kpiIds: string[] | undefined = undefined
 
   if (typeof window !== "undefined") {
     const query = Object.fromEntries(
@@ -33,6 +34,8 @@ export function useHeader(
     toA = query.toA
     sinceB = query.sinceB
     toB = query.toB
+    // console.log(query.kpiIds)
+    kpiIds = query.kpiIds?.split(",")
   }
 
   const [rangeA, setRangeA] = useState<{ since: Date; to: Date } | undefined>(
@@ -52,15 +55,28 @@ export function useHeader(
       : undefined,
   )
 
-  const updateQuery = (params: { [key: string]: string }) => {
+  const updateQuery = (params: { [key: string]: string | string[] }) => {
+    const query = { ...router.query }
+    for (const [param, value] of Object.entries(params)) {
+      if (!Array.isArray(value)) {
+        query[param] = value
+      } else {
+        query[param] = value.join(",")
+      }
+    }
     router.push({
       pathname: path(pathParams.owner, pathParams.name, pathParams.kpi),
-      query: {
-        ...router.query,
-        ...params,
-      },
+      query: query,
     })
   }
 
-  return { ...pathParams, rangeA, setRangeA, rangeB, setRangeB, updateQuery }
+  return {
+    ...pathParams,
+    rangeA,
+    setRangeA,
+    rangeB,
+    setRangeB,
+    kpiIds,
+    updateQuery,
+  }
 }
