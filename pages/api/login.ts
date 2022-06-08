@@ -7,8 +7,8 @@ export default withSession(async (req, res) => {
     const user = {
       name: username,
       admin: true,
-      id: "1234",
-      organization: "octokit",
+      id: process.env.API_USER,
+      organization: process.env.API_ORGA,
     }
     // we check that the user exists on GitHub and store some data in session
     // const { login, avatar_url: avatarUrl } = await fetchJson(url)

@@ -1,5 +1,3 @@
-import { ApiError } from "."
-
 export async function fetchJson(
   input: RequestInfo,
   init?: RequestInit | undefined,
@@ -14,6 +12,6 @@ export async function fetchJson(
     return data
   }
 
-  const error = new ApiError(response.status, response.statusText)
-  throw error
+  // const error = new ApiError(response.status, response.statusText)
+  // throw error
 }

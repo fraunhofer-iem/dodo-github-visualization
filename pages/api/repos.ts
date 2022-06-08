@@ -26,9 +26,9 @@ export default withSession(
       }
       let repos = await fetchJson(
         new Request(
-          `${process.env.HOST}/api/organizations/${
-            user.organization
-          }/repositories${params ? `?${params.toString()}` : ""}`,
+          `${process.env.HOST}/api/users/${user.id}/targets${
+            params ? `?${params.toString()}` : ""
+          }`,
         ),
       )
       const chunk = paginate<Repo>(
