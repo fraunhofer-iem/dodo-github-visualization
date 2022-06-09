@@ -14,10 +14,10 @@ interface Props {
   sidebar?: React.ReactNode
   children?: React.ReactNode
   user?: User
-  rangeA?: { since: Date; to: Date }
-  rangeB?: { since: Date; to: Date }
-  setRangeA?: (since: Date, to: Date) => void
-  setRangeB?: (since: Date, to: Date) => void
+  atA?: Date
+  atB?: Date
+  setAtA?: (at: Date) => void
+  setAtB?: (at: Date) => void
 }
 
 /**
@@ -33,12 +33,12 @@ export function Page(props: Props) {
       <Header title={"KPI Dashboard"}>
         <>
           <Comparator
-            kpiId={KpiIds.ORGANIZATION_HEALTH}
+            kpiId={`${KpiIds.ORGANIZATION_HEALTH}@${props.user?.organization}`}
             repoId={{ owner: props.user ? props.user.organization : "" }}
-            rangeA={props.rangeA}
-            setRangeA={props.setRangeA}
-            rangeB={props.rangeB}
-            setRangeB={props.setRangeB}
+            atA={props.atA}
+            setAtA={props.setAtA}
+            atB={props.atB}
+            setAtB={props.setAtB}
           />
           <div
             style={{

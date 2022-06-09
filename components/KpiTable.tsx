@@ -20,8 +20,7 @@ interface Props {
     pageNumber?: number,
     sortKey?: string,
     asc?: number,
-    since?: Date,
-    to?: Date,
+    at?: Date,
   ) => string
   kpiId?: string
   paginate?: boolean

@@ -68,9 +68,7 @@ export function getKpisApiRoute(
   sortKey?: string,
   asc?: number,
   filter?: string,
-  since?: Date,
-  to?: Date,
-  interval?: Intervals,
+  at?: Date,
   kpiIds?: string[],
   data: boolean = false,
 ) {
@@ -94,14 +92,8 @@ export function getKpisApiRoute(
       params.append("kpis[]", kpi)
     }
   }
-  if (since) {
-    params.append("since", since.toISOString().split("T")[0])
-  }
-  if (to) {
-    params.append("to", to.toISOString().split("T")[0])
-  }
-  if (interval) {
-    params.append("interval", interval)
+  if (at) {
+    params.append("at", at.toISOString().split("T")[0])
   }
   if (filter) {
     params.append("filter", filter)
@@ -110,27 +102,25 @@ export function getKpisApiRoute(
   return `${ApiRoutes.KPIS}?${params.toString()}`
 }
 
-export function getKpiApiRoute(
-  id: { owner: string; name?: string },
+export function getKpiApiRoute(kpiId: string) {
+  const params = new URLSearchParams()
+
+  return `${ApiRoutes.KPIS}/${kpiId}?${params.toString()}`
+}
+
+export function getKpiDataApiRoute(
   kpiId: string,
-  since?: Date,
-  to?: Date,
-  interval?: Intervals,
+  at?: Date,
+  history?: boolean,
 ) {
   const params = new URLSearchParams()
-  params.append("owner", id.owner)
-  if (id.name) {
-    params.append("repo", id.name)
+  if (at) {
+    params.append("at", at.toISOString().split("T")[0])
+  } else if (history) {
+    params.append("history", JSON.stringify(history))
   }
-  if (since) {
-    params.append("since", since.toISOString().split("T")[0])
-  }
-  if (to) {
-    params.append("to", to.toISOString().split("T")[0])
-  }
-  if (interval) {
-    params.append("interval", interval)
-  }
+  params.append("data", JSON.stringify(true))
+
   return `${ApiRoutes.KPIS}/${kpiId}?${params.toString()}`
 }
 

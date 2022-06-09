@@ -18,24 +18,10 @@ export default withSession(
     } else {
       const paginationParams = getPagination(req.query, ["id", "value"])
       const params = new URLSearchParams()
-      for (const [key, value] of Object.entries(req.query)) {
-        if (Array.isArray(value)) {
-          for (const elem of value) {
-            params.append(`${key}[]`, elem)
-          }
-        } else {
-          params.append(key, value)
-        }
-      }
-      if (!user.admin) {
-        params.set("owner", user.organization)
-      }
+      params.append("children", JSON.stringify(false))
+      params.append("at", req.query.at as string)
       const kpis = await fetchJson(
-        new Request(
-          `${process.env.HOST}/api/organizations/${
-            user.organization
-          }/kpis?${params.toString()}`,
-        ),
+        new Request(`${process.env.HOST}/api/kpis?${params.toString()}`),
       )
       const chunk = paginate<Kpi>(
         kpis,

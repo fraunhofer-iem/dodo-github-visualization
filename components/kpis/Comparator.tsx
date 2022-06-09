@@ -1,21 +1,25 @@
 import { useState } from "react"
-import { CSSProperties, IconNames, KpiIds, KpiNames } from "../../lib/frontend"
+import useSWR from "swr"
+import { getKpiApiRoute, Kpi } from "../../lib/api"
+import { CSSProperties, IconNames } from "../../lib/frontend"
 import styles from "../../styles/components/Content.module.scss"
 import { Icon } from "../rating"
 import { Selector } from "./Selector"
 
 interface Props {
   repoId: { owner: string; name?: string }
-  kpiId: KpiIds
-  rangeA?: { since: Date; to: Date }
-  rangeB?: { since: Date; to: Date }
-  setRangeA?: (since: Date, to: Date) => void
-  setRangeB?: (since: Date, to: Date) => void
+  kpiId: string
+  atA?: Date
+  atB?: Date
+  setAtA?: (at: Date) => void
+  setAtB?: (at: Date) => void
 }
 
 export function Comparator(props: Props) {
   const [A, setA] = useState<number>(0)
   const [B, setB] = useState<number>(0)
+
+  const { data: kpi } = useSWR<Kpi>(getKpiApiRoute(props.kpiId))
 
   const since = new Date(
     new Date().getUTCFullYear(),
@@ -28,42 +32,32 @@ export function Comparator(props: Props) {
     <div className={styles.comparator}>
       <div className={styles.kpiSelector}>
         <Selector
-          since={
-            props.rangeA
-              ? props.rangeA.since
-              : new Date(
-                  since.getUTCFullYear(),
-                  since.getUTCMonth() - 3,
-                  since.getUTCDate(),
-                )
-          }
-          to={props.rangeA ? props.rangeA.to : since}
+          at={props.atA ? props.atA : since}
           kpiId={props.kpiId}
           owner={props.repoId.owner}
           name={props.repoId.name}
           setValue={setA}
-          setRange={props.setRangeA}
+          setAt={props.setAtA}
         />
-        {KpiNames[props.kpiId]} {A}%
+        {kpi?.name} {A.toFixed(2)}%
       </div>
       <div className={styles.kpiComparison}>
         <Icon styles={new CSSProperties({ fontSize: "32pt" })}>
           {IconNames.compareArrows}
         </Icon>
         {B - A > 0 ? "+" : ""}
-        {B - A}
+        {(B - A).toFixed(2)}
       </div>
       <div className={styles.kpiSelector}>
         <Selector
           kpiId={props.kpiId}
-          since={props.rangeB ? props.rangeB.since : since}
-          to={props.rangeB ? props.rangeB.to : to}
+          at={props.atB ? props.atB : to}
           owner={props.repoId.owner}
           name={props.repoId.name}
           setValue={setB}
-          setRange={props.setRangeB}
+          setAt={props.setAtB}
         />
-        {KpiNames[props.kpiId]} {B}%
+        {kpi?.name} {B.toFixed(2)}%
       </div>
     </div>
   )

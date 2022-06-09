@@ -16,7 +16,6 @@ import {
 import {
   dateToString,
   getKpiForRepoRoute,
-  KpiNames,
   PageRoutes,
 } from "../../lib/frontend"
 import { useHeader } from "../../lib/hooks"
@@ -24,7 +23,7 @@ import { useHeader } from "../../lib/hooks"
 const Analytics: NextPage = requireAuthorization(
   (props: AuthorizationDetails) => {
     const router = useRouter()
-    const { rangeA, setRangeA, rangeB, setRangeB, updateQuery } = useHeader(
+    const { atA, setAtA, atB, setAtB, updateQuery } = useHeader(
       () => PageRoutes.ANALYTICS,
     )
 
@@ -33,21 +32,19 @@ const Analytics: NextPage = requireAuthorization(
         <Page
           title="Analytics - KPI Dashboard"
           user={props.user}
-          rangeA={rangeA}
-          setRangeA={(since, to) => {
+          atA={atA}
+          setAtA={(at) => {
             updateQuery({
-              sinceA: dateToString(since, false),
-              toA: dateToString(to, false),
+              atA: dateToString(at, false),
             })
-            setRangeA({ since, to })
+            setAtA(at)
           }}
-          rangeB={rangeB}
-          setRangeB={(since, to) => {
+          atB={atB}
+          setAtB={(at) => {
             updateQuery({
-              sinceB: dateToString(since, false),
-              toB: dateToString(to, false),
+              atB: dateToString(at, false),
             })
-            setRangeB({ since, to })
+            setAtB(at)
           }}
         >
           <Section width="75%">
@@ -60,15 +57,14 @@ const Analytics: NextPage = requireAuthorization(
                 itemsPerRow={3}
                 sortKeys={["name", "health"]}
                 route={getReposApiRoute}
-                range={rangeB}
                 generator={(currentRepo: Repo, size: number, key: number) => (
                   <RepositoryCard
                     key={key}
                     repo={currentRepo}
                     width={`${size}px`}
                     margin={"0"}
-                    rangeA={rangeA}
-                    rangeB={rangeB}
+                    atA={atA}
+                    atB={atB}
                   />
                 )}
               />
@@ -100,8 +96,7 @@ const Analytics: NextPage = requireAuthorization(
                     sortKey,
                     asc,
                     undefined,
-                    rangeB?.since,
-                    rangeB?.to,
+                    atB,
                   )
                 }
                 rowGenerator={(kpi) => {
@@ -122,7 +117,7 @@ const Analytics: NextPage = requireAuthorization(
                             })
                           }
                         >
-                          <strong>{KpiNames[kpi.id]}</strong>
+                          <strong>{kpi.name}</strong>
                           <br />
                           <span style={{ fontSize: "10pt" }}>
                             {kpi.owner}/{kpi.repo}
@@ -132,7 +127,13 @@ const Analytics: NextPage = requireAuthorization(
                       sortKey: "name",
                     },
                     {
-                      content: <>{kpi.value}</>,
+                      content: (
+                        <>
+                          {kpi.value && kpi.value > Math.floor(kpi.value)
+                            ? kpi.value.toFixed(2)
+                            : kpi.value}
+                        </>
+                      ),
                       sortKey: "value",
                     },
                   ]

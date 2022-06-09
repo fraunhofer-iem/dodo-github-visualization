@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
-import { getKpiApiRoute, Repo } from "../../lib/api"
+import { getKpiDataApiRoute, Repo } from "../../lib/api"
 import {
   CSSProperties,
   dateToString,
@@ -23,8 +23,8 @@ interface Props {
   margin?: string
   height?: string
   iconSize?: string
-  rangeB?: { since: Date; to: Date }
-  rangeA?: { since: Date; to: Date }
+  atB?: Date
+  atA?: Date
   minified?: boolean
   background?: string
   backgroundHover?: string
@@ -32,17 +32,26 @@ interface Props {
 
 export function RepositoryCard(props: Props) {
   const { theme } = useUIContext()
-  const { repo, minified, width, margin, height, rangeA, rangeB } = props
+  const { repo, minified, width, margin, height, atA, atB } = props
   const router = useRouter()
-  const { data } = useSWR(() => {
+  const { data: valueA } = useSWR(() => {
     if (minified) {
       return null
     } else {
-      return getKpiApiRoute(
-        { owner: repo.owner, name: repo.name },
-        KpiIds.REPOSITORY_HEALTH,
-        rangeA?.since,
-        rangeA?.to,
+      return getKpiDataApiRoute(
+        `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
+        atA,
+      )
+    }
+  })
+
+  const { data: valueB } = useSWR(() => {
+    if (minified) {
+      return null
+    } else {
+      return getKpiDataApiRoute(
+        `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
+        atB,
       )
     }
   })
@@ -65,9 +74,9 @@ export function RepositoryCard(props: Props) {
       background={
         minified
           ? props.background
-          : evaluateHealth(repo.health) !== TrendDirections.UP
+          : evaluateHealth(valueB ? valueB.value : 0) !== TrendDirections.UP
           ? `radial-gradient(circle at center, white, ${theme.trends[
-              evaluateHealth(repo.health)
+              evaluateHealth(valueB ? valueB.value : 0)
             ].color.rgba()} 500%)`
           : undefined
       }
@@ -106,43 +115,35 @@ export function RepositoryCard(props: Props) {
               rows: [
                 [
                   {
-                    content: (
-                      <>
-                        {rangeB && dateToString(rangeB.since, false)} -{" "}
-                        {rangeB && dateToString(rangeB.to, false)}
-                      </>
-                    ),
+                    content: <>{atB && dateToString(atB, false)}</>,
                   },
                   {
                     content: (
                       <strong>
-                        <TrendComponent
-                          label={KpiAbbreviations.repoHealth}
-                          rating={repo.health}
-                          direction={evaluateHealth(repo.health)}
-                          compact={true}
-                        />
+                        {valueB && (
+                          <TrendComponent
+                            label={KpiAbbreviations.repoHealth}
+                            rating={valueB.value}
+                            direction={evaluateHealth(valueB.value)}
+                            compact={true}
+                          />
+                        )}
                       </strong>
                     ),
                   },
                 ],
                 [
                   {
-                    content: (
-                      <>
-                        {rangeA && dateToString(rangeA.since, false)} -{" "}
-                        {rangeA && dateToString(rangeA.to, false)}
-                      </>
-                    ),
+                    content: <>{atA && dateToString(atA, false)}</>,
                   },
                   {
                     content: (
                       <strong>
-                        {data && (
+                        {valueA && (
                           <TrendComponent
                             label={KpiAbbreviations.repoHealth}
-                            rating={data.value}
-                            direction={evaluateHealth(data.value)}
+                            rating={valueA.value}
+                            direction={evaluateHealth(valueA.value)}
                             compact={true}
                           />
                         )}

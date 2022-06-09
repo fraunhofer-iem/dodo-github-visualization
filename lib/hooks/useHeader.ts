@@ -15,10 +15,8 @@ export function useHeader(
     name?: string
     kpi?: string
   } = {}
-  let sinceA: string | undefined = undefined
-  let sinceB: string | undefined = undefined
-  let toA: string | undefined = undefined
-  let toB: string | undefined = undefined
+  let atA: string | undefined = undefined
+  let atB: string | undefined = undefined
   let kpiIds: string[] | undefined = undefined
 
   if (typeof window !== "undefined") {
@@ -30,29 +28,16 @@ export function useHeader(
       pathParams = params(path)
     }
 
-    sinceA = query.sinceA
-    toA = query.toA
-    sinceB = query.sinceB
-    toB = query.toB
-    // console.log(query.kpiIds)
+    atA = query.atA
+    atB = query.atB
     kpiIds = query.kpiIds?.split(",")
   }
 
-  const [rangeA, setRangeA] = useState<{ since: Date; to: Date } | undefined>(
-    sinceA && toA
-      ? {
-          since: new Date(sinceA as string),
-          to: new Date(toA as string),
-        }
-      : undefined,
+  const [a, setAtA] = useState<Date | undefined>(
+    atA ? new Date(atA as string) : undefined,
   )
-  const [rangeB, setRangeB] = useState<{ since: Date; to: Date } | undefined>(
-    sinceB && toB
-      ? {
-          since: new Date(sinceB as string),
-          to: new Date(toB as string),
-        }
-      : undefined,
+  const [b, setAtB] = useState<Date | undefined>(
+    atB ? new Date(atB as string) : undefined,
   )
 
   const updateQuery = (params: { [key: string]: string | string[] }) => {
@@ -72,10 +57,10 @@ export function useHeader(
 
   return {
     ...pathParams,
-    rangeA,
-    setRangeA,
-    rangeB,
-    setRangeB,
+    atA: a,
+    setAtA,
+    atB: b,
+    setAtB,
     kpiIds,
     updateQuery,
   }
