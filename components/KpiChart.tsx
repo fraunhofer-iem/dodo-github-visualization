@@ -2,7 +2,7 @@ import { ChartData } from "chart.js"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Kpi } from "../lib/api"
-import { ColorScheme, KpiNames } from "../lib/frontend"
+import { ColorScheme, dateToString } from "../lib/frontend"
 import { LineChart } from "./chart"
 
 interface Props {
@@ -26,16 +26,14 @@ export default function KpiChart(props: Props) {
       kpis.map((currentKpi) => {
         if (currentKpi.data) {
           const dataPoints = []
-          for (const year of Object.keys(currentKpi.data)) {
-            for (const ident of Object.keys(currentKpi.data[+year])) {
-              const label = `${year}-${+ident < 10 ? `0${ident}` : ident}`
-              dataPoints.push({
-                label: label,
-                value: currentKpi.data[+year][+ident].avg,
-              })
-              if (!labels.includes(label)) {
-                labels.push(label)
-              }
+          for (const [l, value] of Object.entries(currentKpi.data)) {
+            let label = l
+            try {
+              let label = dateToString(new Date(l), false)
+            } catch {}
+            dataPoints.push({ label: label, value: value })
+            if (!labels.includes(label)) {
+              labels.push(label)
             }
           }
           data.push({ kpi: currentKpi.id, dataPoints })
@@ -59,7 +57,7 @@ export default function KpiChart(props: Props) {
             backgroundColor: ColorScheme(i).rgba(),
             borderColor: ColorScheme(i).rgba(),
             showLine: true,
-            label: KpiNames[kpi],
+            label: kpi,
           }
         }),
         labels: labels,

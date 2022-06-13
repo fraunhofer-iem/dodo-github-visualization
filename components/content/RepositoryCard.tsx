@@ -38,10 +38,10 @@ export function RepositoryCard(props: Props) {
     if (minified) {
       return null
     } else {
-      return getKpiDataApiRoute(
-        `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
-        atA,
-      )
+      return getKpiDataApiRoute({
+        kpiId: `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
+        at: atA,
+      })
     }
   })
 
@@ -49,10 +49,10 @@ export function RepositoryCard(props: Props) {
     if (minified) {
       return null
     } else {
-      return getKpiDataApiRoute(
-        `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
-        atB,
-      )
+      return getKpiDataApiRoute({
+        kpiId: `${KpiIds.REPOSITORY_HEALTH}@${repo.owner}/${repo.name}`,
+        at: atB,
+      })
     }
   })
 

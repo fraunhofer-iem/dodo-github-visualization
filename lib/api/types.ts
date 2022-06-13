@@ -32,7 +32,7 @@ export type Kpi = {
   name?: string
   value?: number
   data?: {
-    [year: number]: { [interval: number]: { avg: number; [key: string]: any } }
+    [timestamp: string]: number
   }
 }
 

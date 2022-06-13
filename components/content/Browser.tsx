@@ -59,8 +59,10 @@ export function Browser<EntityType>(props: Props<EntityType>) {
         Array.from(containerRef.current.children).forEach((child) => {
           childrenHeight += child.clientHeight
         })
+        containerRef.current.style.height =
+          document.body.clientHeight - 100 + "px"
         scrollRef.current.style.height =
-          containerRef.current.clientHeight -
+          document.body.clientHeight -
           childrenHeight +
           containerRef.current.children[0].clientHeight +
           "px"

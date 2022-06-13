@@ -18,11 +18,20 @@ export default withSession(
     } else {
       const paginationParams = getPagination(req.query, ["id", "value"])
       const params = new URLSearchParams()
+      params.append("owner", req.query.owner as string)
+      if (req.query.repo) {
+        params.append("repo", req.query.repo as string)
+      }
       params.append("children", JSON.stringify(false))
-      params.append("at", req.query.at as string)
-      const kpis = await fetchJson(
+      params.append("to", req.query.to as string)
+      params.append("from", req.query.from as string)
+      params.append("history", req.query.history as string)
+      let kpis: Kpi[] = await fetchJson(
         new Request(`${process.env.HOST}/api/kpis?${params.toString()}`),
       )
+      if (req.query["kpis[]"]) {
+        kpis = kpis.filter((kpi) => req.query["kpis[]"].includes(kpi.id))
+      }
       const chunk = paginate<Kpi>(
         kpis,
         paginationParams,
@@ -31,7 +40,7 @@ export default withSession(
           KpiNames[elem.id].includes(params.get("filter") as string),
       )
       if (!chunk.length) {
-        res.status(200).json([])
+        res.status(404).json([])
       } else {
         res.status(200).json(chunk)
       }

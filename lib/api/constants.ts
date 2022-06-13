@@ -61,17 +61,32 @@ export function getRepoApiRoute(repoId: { owner: string; name: string }) {
   return `/api/repos/${repoId.owner}/${repoId.name}`
 }
 
-export function getKpisApiRoute(
-  id: { owner: string; name?: string },
-  pageSize?: number,
-  pageNumber?: number,
-  sortKey?: string,
-  asc?: number,
-  filter?: string,
-  at?: Date,
-  kpiIds?: string[],
-  data: boolean = false,
-) {
+export function getKpisApiRoute(options: {
+  owner: string
+  repo?: string
+  pageSize?: number
+  pageNumber?: number
+  sortKey?: string
+  asc?: number
+  filter?: string
+  from?: Date
+  to?: Date
+  kpiIds?: string[]
+  data?: boolean
+}) {
+  const {
+    owner,
+    repo,
+    pageSize,
+    pageNumber,
+    sortKey,
+    asc,
+    filter,
+    from,
+    to,
+    kpiIds,
+    data,
+  } = options
   const params = new URLSearchParams()
   params.append(
     PaginationQueryParams.PAGE_SIZE,
@@ -83,22 +98,27 @@ export function getKpisApiRoute(
   )
   params.append(PaginationQueryParams.SORT_KEY, `${sortKey ? sortKey : "name"}`)
   params.append(PaginationQueryParams.ASC, `${asc == 0 ? 0 : 1}`)
-  params.append("owner", id.owner)
-  if (id.name) {
-    params.append("repos[]", id.name)
+  params.append("owner", owner)
+  if (repo) {
+    params.append("repo", repo)
   }
   if (kpiIds) {
     for (const kpi of kpiIds) {
       params.append("kpis[]", kpi)
     }
   }
-  if (at) {
-    params.append("at", at.toISOString().split("T")[0])
+  if (to) {
+    params.append("to", to.toISOString().split("T")[0])
+  }
+  if (from) {
+    params.append("from", from.toISOString().split("T")[0])
   }
   if (filter) {
     params.append("filter", filter)
   }
-  params.append("data", `${data}`)
+  if (data) {
+    params.append("history", JSON.stringify(data))
+  }
   return `${ApiRoutes.KPIS}?${params.toString()}`
 }
 
@@ -108,15 +128,17 @@ export function getKpiApiRoute(kpiId: string) {
   return `${ApiRoutes.KPIS}/${kpiId}?${params.toString()}`
 }
 
-export function getKpiDataApiRoute(
-  kpiId: string,
-  at?: Date,
-  history?: boolean,
-) {
+export function getKpiDataApiRoute(options: {
+  kpiId: string
+  at?: Date
+  history?: boolean
+}) {
+  const { kpiId, at, history } = options
   const params = new URLSearchParams()
   if (at) {
-    params.append("at", at.toISOString().split("T")[0])
-  } else if (history) {
+    params.append("to", at.toISOString().split("T")[0])
+  }
+  if (history) {
     params.append("history", JSON.stringify(history))
   }
   params.append("data", JSON.stringify(true))

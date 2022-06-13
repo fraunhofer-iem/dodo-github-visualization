@@ -23,38 +23,26 @@ import {
   dateToString,
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
-  KpiNames,
   PageRoutes,
 } from "../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../lib/hooks"
 
 const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
   const router = useRouter()
-  const {
-    owner,
-    name,
-    rangeA,
-    setRangeA,
-    rangeB,
-    setRangeB,
-    kpiIds,
-    updateQuery,
-  } = useHeader(
-    (owner, name) =>
-      getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
-    (path) => {
-      return {
-        owner: path[path.length - 2],
-        name: path[path.length - 1],
-      }
-    },
-  )
+  const { owner, name, atA, setAtA, atB, setAtB, kpiIds, updateQuery } =
+    useHeader(
+      (owner, name) =>
+        getAnalyticsForRepoRoute({ owner: owner ?? "", name: name ?? "" }),
+      (path) => {
+        return {
+          owner: path[path.length - 2],
+          name: path[path.length - 1],
+        }
+      },
+    )
   const { theme } = useUIContext()
 
   const [shownKpis, setShownKpis] = useState<string[]>(kpiIds ?? [])
-  // useEffect(() => {
-  //   setShownKpis([])
-  // }, [owner, name])
 
   const updateKpis = useCallback(
     (kpiId: string) => {
@@ -74,28 +62,24 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
     [shownKpis],
   )
 
-  console.log("render")
-
   return (
     props.user?.isLoggedIn && (
       <Page
         title={`${name}  - KPI Dashboard`}
         user={props.user}
-        rangeA={rangeA}
-        setRangeA={(since, to) => {
+        atA={atA}
+        setAtA={(at: Date) => {
           updateQuery({
-            sinceA: dateToString(since, false),
-            toA: dateToString(to, false),
+            atA: dateToString(at, false),
           })
-          setRangeA({ since, to })
+          setAtA(at)
         }}
-        rangeB={rangeB}
-        setRangeB={(since, to) => {
+        atB={atB}
+        setAtB={(at: Date) => {
           updateQuery({
-            sinceB: dateToString(since, false),
-            toB: dateToString(to, false),
+            atB: dateToString(at, false),
           })
-          setRangeB({ since, to })
+          setAtB(at)
         }}
       >
         {owner && name && (
@@ -109,7 +93,6 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                     repo={repo}
                     iconSize={"75px"}
                     width="100%"
-                    height="100px"
                     minified={true}
                     margin="0"
                     background={
@@ -139,19 +122,15 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                 <KpiChart
                   route={() =>
                     shownKpis.length
-                      ? getKpisApiRoute(
-                          { owner, name },
-                          shownKpis.length,
-                          undefined,
-                          undefined,
-                          undefined,
-                          undefined,
-                          rangeB?.since,
-                          rangeB?.to,
-                          undefined,
-                          shownKpis,
-                          true,
-                        )
+                      ? getKpisApiRoute({
+                          owner: owner,
+                          repo: name,
+                          pageSize: shownKpis.length,
+                          from: atA,
+                          to: atB,
+                          kpiIds: shownKpis,
+                          data: true,
+                        })
                       : null
                   }
                 />
@@ -171,7 +150,8 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                     },
                     {
                       content: "Value",
-                      sortable: false,
+                      sortable: true,
+                      sortKey: "value",
                       width: "20%",
                     },
                     {
@@ -196,16 +176,15 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                     },
                   ]}
                   route={(pageSize, pageNumber, sortKey, asc) =>
-                    getKpisApiRoute(
-                      { owner: owner, name: name },
+                    getKpisApiRoute({
+                      owner: owner,
+                      repo: name,
                       pageSize,
                       pageNumber,
                       sortKey,
                       asc,
-                      undefined,
-                      rangeB?.since,
-                      rangeB?.to,
-                    )
+                      to: atB,
+                    })
                   }
                   rowGenerator={(kpi) => {
                     return [
@@ -223,13 +202,19 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       {
                         content: (
                           <>
-                            <strong>{KpiNames[kpi.id]}</strong>
+                            <strong>{kpi.name}</strong>
                           </>
                         ),
                         sortKey: "name",
                       },
                       {
-                        content: <>{kpi.value}</>,
+                        content: (
+                          <>
+                            {kpi.value && kpi.value > Math.floor(kpi.value)
+                              ? kpi.value.toFixed(2)
+                              : kpi.value}
+                          </>
+                        ),
                         sortKey: "value",
                       },
                       {

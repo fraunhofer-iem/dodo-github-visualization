@@ -89,15 +89,14 @@ const Analytics: NextPage = requireAuthorization(
                   },
                 ]}
                 route={(pageSize, pageNumber, sortKey, asc) =>
-                  getKpisApiRoute(
-                    { owner: props.user.organization },
+                  getKpisApiRoute({
+                    owner: props.user.organization,
                     pageSize,
                     pageNumber,
                     sortKey,
                     asc,
-                    undefined,
-                    atB,
-                  )
+                    to: atB,
+                  })
                 }
                 rowGenerator={(kpi) => {
                   return [
