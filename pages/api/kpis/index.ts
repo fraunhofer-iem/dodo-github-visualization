@@ -23,9 +23,15 @@ export default withSession(
         params.append("repo", req.query.repo as string)
       }
       params.append("children", JSON.stringify(false))
-      params.append("to", req.query.to as string)
-      params.append("from", req.query.from as string)
-      params.append("history", req.query.history as string)
+      if (req.query.to) {
+        params.append("to", req.query.to as string)
+      }
+      if (req.query.from) {
+        params.append("from", req.query.from as string)
+      }
+      if (req.query.history) {
+        params.append("history", req.query.history as string)
+      }
       let kpis: Kpi[] = await fetchJson(
         new Request(`${process.env.HOST}/api/kpis?${params.toString()}`),
       )

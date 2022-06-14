@@ -22,17 +22,18 @@ interface Props<EntityType> {
 export function Browser<EntityType>(props: Props<EntityType>) {
   const { theme } = useUIContext()
   const { route, generator, sortKey } = props
-  const { pageSize, sortInformation } = usePagination(sortKey ?? "name", 1)
+  const { pageSize, sortInformation } = usePagination(sortKey ?? "name", 5)
   const [filter, setFilter] = useState<string>("")
 
   const {
     data: pages,
+    error,
     size: pageNumber,
     setSize: setPageNumber,
     mutate,
   } = useSWRInfinite<EntityType[], ApiError>(
     (pageIndex: any, previousPage: any) => {
-      if (previousPage && !previousPage.length) {
+      if (previousPage && previousPage.length < pageSize) {
         return null
       }
       return route(
@@ -44,6 +45,11 @@ export function Browser<EntityType>(props: Props<EntityType>) {
       )
     },
   )
+
+  const isLoadingInitialData = !pages && !error
+  const isLoadingMore =
+    isLoadingInitialData ||
+    (pageNumber > 0 && pages && typeof pages[pageNumber - 1] === "undefined")
 
   const getPage = useCallback(() => {
     setPageNumber(pageNumber + 2)
@@ -94,7 +100,10 @@ export function Browser<EntityType>(props: Props<EntityType>) {
         pages.map((currentPage) =>
           currentPage.map((currentEntity) => generator(currentEntity)),
         )}
-      {pages && pages.length > 0 && pages[pages.length - 1].length ? (
+      {!isLoadingMore &&
+      pages &&
+      pages.length > 0 &&
+      pages[pages.length - 1].length == pageSize ? (
         <Pager width="100%" height="100px" size="50px" callback={getPage} />
       ) : (
         <></>
