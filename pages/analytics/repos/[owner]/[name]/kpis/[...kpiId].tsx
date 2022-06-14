@@ -1,6 +1,5 @@
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import React from "react"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "../../../../../../components/action"
 import { Card } from "../../../../../../components/card"
@@ -22,7 +21,6 @@ import {
   dateToString,
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
-  KpiNames,
   PageRoutes,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
@@ -32,12 +30,12 @@ const KPIDetail: NextPage = requireAuthorization(
     const router = useRouter()
     const {
       owner,
-      name: repo,
+      name,
       kpi: kpiId,
-      rangeA,
-      setRangeA,
-      rangeB,
-      setRangeB,
+      atA,
+      setAtA,
+      atB,
+      setAtB,
       updateQuery,
     } = useHeader(
       (owner, name) =>
@@ -47,9 +45,9 @@ const KPIDetail: NextPage = requireAuthorization(
         ),
       (path) => {
         return {
-          owner: path[path.length - 4],
-          name: path[path.length - 3],
-          kpi: path[path.length - 1],
+          owner: path[3],
+          name: path[4],
+          kpi: path.slice(6).join("/"),
         }
       },
     )
@@ -60,49 +58,44 @@ const KPIDetail: NextPage = requireAuthorization(
         <Page
           title={`${name}  - KPI Dashboard`}
           user={props.user}
-          rangeA={rangeA}
-          setRangeA={(since, to) => {
+          atA={atA}
+          setAtA={(at: Date) => {
             updateQuery({
-              sinceA: dateToString(since, false),
-              toA: dateToString(to, false),
+              atA: dateToString(at, false),
             })
-            setRangeA({ since, to })
+            setAtA(at)
           }}
-          rangeB={rangeB}
-          setRangeB={(since, to) => {
+          atB={atB}
+          setAtB={(at: Date) => {
             updateQuery({
-              sinceB: dateToString(since, false),
-              toB: dateToString(to, false),
+              atB: dateToString(at, false),
             })
-            setRangeB({ since, to })
+            setAtB(at)
           }}
         >
-          {owner && repo && kpiId && (
+          {owner && name && kpiId && (
             <>
               <Section width="150px" padding="0">
                 <Browser<Kpi>
                   route={(pageSize, pageNumber, sortKey, asc, filter) =>
-                    getKpisApiRoute(
-                      { owner: owner },
-                      pageSize,
-                      pageNumber,
-                      sortKey,
-                      asc,
-                      filter,
-                      rangeB?.since,
-                      rangeB?.to,
-                    )
+                    getKpisApiRoute({
+                      owner: owner,
+                      pageSize: pageSize,
+                      pageNumber: pageNumber,
+                      sortKey: sortKey,
+                      asc: asc,
+                      filter: filter,
+                    })
                   }
                   sortKey={"id"}
                   generator={(kpi) => (
                     <Card
                       key={`${kpi.owner}/${kpi.repo}/${kpi.id}`}
                       margin="0"
-                      height="100px"
                       width="100%"
                       background={
                         kpi.owner === owner &&
-                        kpi.repo === repo &&
+                        kpi.repo === name &&
                         kpi.id === kpiId
                           ? `radial-gradient(circle at center, white, ${theme.browser.activeElement.rgba()} 500%)`
                           : undefined
@@ -136,7 +129,7 @@ const KPIDetail: NextPage = requireAuthorization(
                           }
                           padding={"0"}
                         >
-                          <strong>{KpiNames[kpi.id]}</strong>
+                          <strong>{kpi.name}</strong>
                           <br />
                           <span style={{ fontSize: "10pt" }}>
                             {kpi.owner}/{kpi.repo}
@@ -152,18 +145,18 @@ const KPIDetail: NextPage = requireAuthorization(
                   crumbs={[
                     { name: "Analytics", route: PageRoutes.ANALYTICS },
                     {
-                      name: `${owner}/${repo}`,
+                      name: `${owner}/${name}`,
                       route: getAnalyticsForRepoRoute({
                         owner: owner,
-                        name: repo,
+                        name: name,
                       }),
                     },
                     {
-                      name: KpiNames[kpiId],
+                      name: kpiId,
                       route: getKpiForRepoRoute(
                         {
                           owner: owner,
-                          name: repo,
+                          name: name,
                         },
                         kpiId,
                       ),
@@ -173,20 +166,21 @@ const KPIDetail: NextPage = requireAuthorization(
                 <Card>
                   <KpiChart
                     route={() =>
-                      getKpisApiRoute(
-                        { owner, name: repo },
-                        1,
-                        undefined,
-                        undefined,
-                        undefined,
-                        undefined,
-                        rangeB?.since,
-                        rangeB?.to,
-                        undefined,
-                        [kpiId],
-                        true,
-                      )
+                      getKpisApiRoute({
+                        owner: owner,
+                        repo: name,
+                        pageSize: 1,
+                        from: atA,
+                        to: atB,
+                        kpiIds: [kpiId],
+                        data: true,
+                      })
                     }
+                    clickHandler={(kpiId, label) => {
+                      alert(
+                        `TODO: Show children of ${kpiId} for release ${label}`,
+                      )
+                    }}
                   />
                 </Card>
                 <Card>
@@ -221,31 +215,33 @@ const KPIDetail: NextPage = requireAuthorization(
                       },
                     ]}
                     route={(pageSize, pageNumber, sortKey, asc) =>
-                      getKpisApiRoute(
-                        { owner: owner, name: repo },
-                        1,
-                        1,
-                        undefined,
-                        undefined,
-                        undefined,
-                        rangeB?.since,
-                        rangeB?.to,
-                        undefined,
-                        [kpiId],
-                      )
+                      getKpisApiRoute({
+                        owner: owner,
+                        repo: name,
+                        pageSize: 1,
+                        pageNumber: 1,
+                        to: atB,
+                        kpiIds: [kpiId],
+                      })
                     }
                     rowGenerator={(kpi) => {
                       return [
                         {
                           content: (
                             <>
-                              <strong>{KpiNames[kpi.id]}</strong>
+                              <strong>{kpi.name}</strong>
                             </>
                           ),
                           sortKey: "name",
                         },
                         {
-                          content: <>{kpi.value}</>,
+                          content: (
+                            <>
+                              {kpi.value && kpi.value > Math.floor(kpi.value)
+                                ? kpi.value.toFixed(2)
+                                : kpi.value}
+                            </>
+                          ),
                           sortKey: "value",
                         },
                         {
