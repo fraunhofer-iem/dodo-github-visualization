@@ -8,7 +8,6 @@ import {
   USER_COOKIE,
   withSession,
 } from "../../../lib/api"
-import { KpiNames } from "../../../lib/frontend"
 
 export default withSession(
   async (req: NextIronRequest, res: NextApiResponse<Kpi[]>) => {
@@ -22,7 +21,11 @@ export default withSession(
       if (req.query.repo) {
         params.append("repo", req.query.repo as string)
       }
-      params.append("children", JSON.stringify(false))
+      if (req.query.children) {
+        params.append("children", req.query.children as string)
+      } else {
+        params.append("children", JSON.stringify(false))
+      }
       if (req.query.to) {
         params.append("to", req.query.to as string)
       }
@@ -32,18 +35,34 @@ export default withSession(
       if (req.query.history) {
         params.append("history", req.query.history as string)
       }
+      if (req.query["kinds[]"]) {
+        if (Array.isArray(req.query["kinds[]"])) {
+          for (const kind of req.query["kinds[]"]) {
+            params.append("kinds", kind)
+          }
+        } else {
+          params.append("kinds", req.query["kinds[]"])
+        }
+      }
       let kpis: Kpi[] = await fetchJson(
         new Request(`${process.env.HOST}/api/kpis?${params.toString()}`),
       )
       if (req.query["kpis[]"]) {
         kpis = kpis.filter((kpi) => req.query["kpis[]"].includes(kpi.id))
       }
+      if (req.query.filter) {
+        params.append("filter", req.query.filter as string)
+      }
       const chunk = paginate<Kpi>(
         kpis,
         paginationParams,
         (elem) =>
           params.get("filter") === null ||
-          KpiNames[elem.id].includes(params.get("filter") as string),
+          (elem.name
+            ? elem.name
+                .toLowerCase()
+                .includes((params.get("filter") as string).toLowerCase())
+            : false),
       )
       if (!chunk.length) {
         res.status(404).json([])

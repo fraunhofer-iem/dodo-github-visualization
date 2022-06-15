@@ -8,11 +8,12 @@ import { LineChart } from "./chart"
 
 interface Props {
   route: () => string | null
-  clickHandler?: (kpiId: string, label: string) => void
+  clickHandler?: (kpiId: string, pointIndex: number, timestamp?: string) => void
+  activePoint?: number
 }
 
 export default function KpiChart(props: Props) {
-  const { route } = props
+  const { route, activePoint } = props
   const clickHandler = props.clickHandler ?? (() => {})
   const { data: kpis } = useSWR<Kpi[]>(route())
   const [dataset, setDataset] = useState<ChartData<"line">>({
@@ -24,11 +25,11 @@ export default function KpiChart(props: Props) {
       const labels: string[] = []
       const data: {
         kpi: string
-        dataPoints: { label: string; value: number }[]
+        dataPoints: Map<string, number>
       }[] = []
       kpis.map((currentKpi) => {
         if (currentKpi.data) {
-          const dataPoints = []
+          const dataPoints = new Map<string, number>()
           for (const [timestamp, { label: l, value }] of sortBy(
             Object.entries(currentKpi.data),
             [(entry) => new Date(entry[0])],
@@ -37,7 +38,7 @@ export default function KpiChart(props: Props) {
             try {
               label = dateToString(new Date(l), false)
             } catch {}
-            dataPoints.push({ label: label, value: value })
+            dataPoints.set(label, value)
             if (!labels.includes(label)) {
               labels.push(label)
             }
@@ -49,16 +50,20 @@ export default function KpiChart(props: Props) {
         datasets: data.map(({ kpi, dataPoints }, i) => {
           return {
             data: labels.map((label) => {
-              const dataPoint = dataPoints.find(
-                (dataPoint) => dataPoint.label === label,
-              )
-              if (dataPoint) {
-                return dataPoint.value
-              }
-              return null
+              return dataPoints.get(label) ?? null
             }),
             borderWidth: 1,
-            pointRadius: 5,
+            pointRadius: (ctx, options) => {
+              if (!activePoint) {
+                if (ctx.dataIndex === labels.length - 1) {
+                  return 6
+                }
+              }
+              if (activePoint === ctx.dataIndex) {
+                return 6
+              }
+              return 4
+            },
             backgroundColor: ColorScheme(i).rgba(),
             borderColor: ColorScheme(i).rgba(),
             showLine: true,
@@ -70,7 +75,7 @@ export default function KpiChart(props: Props) {
     } else {
       setDataset({ datasets: [], labels: [] })
     }
-  }, [kpis])
+  }, [kpis, activePoint])
 
   return (
     <LineChart
@@ -84,6 +89,7 @@ export default function KpiChart(props: Props) {
             enabled: false,
           },
         },
+        animation: false,
         scales: {
           y: {
             min: 0,
@@ -92,11 +98,29 @@ export default function KpiChart(props: Props) {
         aspectRatio: 3.5,
         onClick: (event, elements) => {
           if (elements.length) {
+            let timestamp = undefined
+            if (kpis) {
+              for (const kpi of kpis) {
+                if (
+                  kpi.id === dataset.datasets[elements[0].datasetIndex].label
+                ) {
+                  if (kpi.data) {
+                    for (const entry of Object.entries(kpi.data)) {
+                      if (
+                        dataset.labels &&
+                        entry[1].label === dataset.labels[elements[0].index]
+                      ) {
+                        timestamp = entry[0]
+                      }
+                    }
+                  }
+                }
+              }
+            }
             clickHandler(
               dataset.datasets[elements[0].datasetIndex].label ?? "",
-              dataset.labels
-                ? (dataset.labels[elements[0].index] as string)
-                : "",
+              elements[0].index,
+              timestamp,
             )
           }
         },

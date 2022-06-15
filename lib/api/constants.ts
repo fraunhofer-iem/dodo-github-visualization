@@ -72,6 +72,8 @@ export function getKpisApiRoute(options: {
   from?: Date
   to?: Date
   kpiIds?: string[]
+  children?: boolean
+  kinds?: string[]
   data?: boolean
 }) {
   const {
@@ -86,6 +88,8 @@ export function getKpisApiRoute(options: {
     to,
     kpiIds,
     data,
+    children,
+    kinds,
   } = options
   const params = new URLSearchParams()
   params.append(
@@ -107,17 +111,26 @@ export function getKpisApiRoute(options: {
       params.append("kpis[]", kpi)
     }
   }
+  if (kinds) {
+    for (const kind of kinds) {
+      params.append("kinds[]", kind)
+    }
+  }
   if (to) {
-    params.append("to", to.toISOString().split("T")[0])
+    params.append("to", to.toISOString())
   }
   if (from) {
-    params.append("from", from.toISOString().split("T")[0])
+    params.append("from", from.toISOString())
   }
   if (filter) {
+    console.log(filter)
     params.append("filter", filter)
   }
   if (data) {
     params.append("history", JSON.stringify(data))
+  }
+  if (children) {
+    params.append("children", JSON.stringify(children))
   }
   return `${ApiRoutes.KPIS}?${params.toString()}`
 }

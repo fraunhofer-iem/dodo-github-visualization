@@ -29,7 +29,7 @@ export function DatePicker(props: Props) {
         selected={at}
         onChange={(date) => {
           if (date) {
-            setAt(date)
+            setAt(new Date(date.setUTCHours(23, 59, 59, 9999)))
           }
         }}
         includeDates={dates}

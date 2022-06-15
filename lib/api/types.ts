@@ -31,6 +31,8 @@ export type Kpi = {
   repo?: string
   name?: string
   value?: number
+  kind?: string
+  children?: string[]
   data?: {
     [timestamp: string]: { label: Date | string; value: number }
   }

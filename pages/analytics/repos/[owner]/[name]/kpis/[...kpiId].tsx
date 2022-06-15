@@ -1,11 +1,13 @@
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
+import { useState } from "react"
 import "react-datepicker/dist/react-datepicker.css"
-import { Button } from "../../../../../../components/action"
 import { Card } from "../../../../../../components/card"
 import {
   Breadcrumbs,
   Browser,
+  KpiCard,
+  KpiInspector,
   Section,
 } from "../../../../../../components/content"
 import KpiChart from "../../../../../../components/KpiChart"
@@ -53,6 +55,10 @@ const KPIDetail: NextPage = requireAuthorization(
     )
     const { theme } = useUIContext()
 
+    const [inspectionDetails, setInspectionDetails] = useState<
+      { date?: Date; pointIndex?: number } | undefined
+    >({ date: atB })
+
     return (
       props.user?.isLoggedIn && (
         <Page
@@ -85,12 +91,14 @@ const KPIDetail: NextPage = requireAuthorization(
                       sortKey: sortKey,
                       asc: asc,
                       filter: filter,
+                      kinds: ["orga", "repo"],
                     })
                   }
                   sortKey={"id"}
                   generator={(kpi) => (
-                    <Card
-                      key={`${kpi.owner}/${kpi.repo}/${kpi.id}`}
+                    <KpiCard
+                      key={kpi.id}
+                      kpi={kpi}
                       margin="0"
                       width="100%"
                       background={
@@ -101,58 +109,23 @@ const KPIDetail: NextPage = requireAuthorization(
                           : undefined
                       }
                       backgroundHover={`radial-gradient(circle at center, white, ${theme.browser.activeElement.rgba()} 500%)`}
-                    >
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Button
-                          context={"neutral"}
-                          type={"button"}
-                          action={() =>
-                            router.push({
-                              pathname: getKpiForRepoRoute(
-                                {
-                                  owner: kpi.owner,
-                                  name: kpi.repo as string,
-                                },
-                                kpi.id,
-                              ),
-                              query: { ...router.query },
-                            })
-                          }
-                          padding={"0"}
-                        >
-                          <strong>{kpi.name}</strong>
-                          <br />
-                          <span style={{ fontSize: "10pt" }}>
-                            {kpi.owner}/{kpi.repo}
-                          </span>
-                        </Button>
-                      </div>
-                    </Card>
+                    />
                   )}
                 />
               </Section>
               <Section padding="0 5px">
                 <Breadcrumbs
                   crumbs={[
-                    { name: "Analytics", route: PageRoutes.ANALYTICS },
+                    { name: `${owner}`, route: PageRoutes.ANALYTICS },
                     {
-                      name: `${owner}/${name}`,
+                      name: `${name}`,
                       route: getAnalyticsForRepoRoute({
                         owner: owner,
                         name: name,
                       }),
                     },
                     {
-                      name: kpiId,
+                      name: kpiId.split("@")[0],
                       route: getKpiForRepoRoute(
                         {
                           owner: owner,
@@ -174,13 +147,18 @@ const KPIDetail: NextPage = requireAuthorization(
                         to: atB,
                         kpiIds: [kpiId],
                         data: true,
+                        kinds: ["repo"],
                       })
                     }
-                    clickHandler={(kpiId, label) => {
-                      alert(
-                        `TODO: Show children of ${kpiId} for release ${label}`,
-                      )
+                    clickHandler={(kpiId, pointIndex, timestamp) => {
+                      if (timestamp) {
+                        setInspectionDetails({
+                          date: new Date(timestamp),
+                          pointIndex: pointIndex,
+                        })
+                      }
                     }}
+                    activePoint={inspectionDetails?.pointIndex}
                   />
                 </Card>
                 <Card>
@@ -220,8 +198,9 @@ const KPIDetail: NextPage = requireAuthorization(
                         repo: name,
                         pageSize: 1,
                         pageNumber: 1,
-                        to: atB,
+                        to: inspectionDetails?.date,
                         kpiIds: [kpiId],
+                        kinds: ["repo"],
                       })
                     }
                     rowGenerator={(kpi) => {
@@ -257,6 +236,7 @@ const KPIDetail: NextPage = requireAuthorization(
                     }}
                   />
                 </Card>
+                <KpiInspector kpiId={kpiId} at={inspectionDetails?.date} />
               </Section>
             </>
           )}

@@ -55,8 +55,9 @@ const LightTheme: Theme = {
       borderColor: white.darken(0.1),
     }),
     listTitle: new CSSProperties({
-      backgroundColor: fraunhoferGreen,
-      color: white,
+      backgroundColor: white.darken(0.1),
+      padding: "0.75rem",
+      color: black,
       borderColor: fraunhoferGreen.darken(0.1),
       fontWeight: "600",
     }),

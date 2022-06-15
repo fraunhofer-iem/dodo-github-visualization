@@ -1,6 +1,5 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React from "react"
 import { Button } from "../../components/action"
 import { Card, CardTitle } from "../../components/card"
 import { Gallery, RepositoryCard, Section } from "../../components/content"
@@ -96,6 +95,7 @@ const Analytics: NextPage = requireAuthorization(
                     sortKey,
                     asc,
                     to: atB,
+                    kinds: ["orga", "repo"],
                   })
                 }
                 rowGenerator={(kpi) => {

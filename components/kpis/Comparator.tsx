@@ -56,8 +56,10 @@ export function Comparator(props: Props) {
       if (rightPickerControl.current) {
         rightPickerControl.current(dates)
       }
-      if (setAtA && !atA) setAtA(dates[1])
-      if (setAtB && !atB) setAtB(dates[0])
+      if (setAtA && !atA)
+        setAtA(new Date(dates[1].setUTCHours(23, 59, 59, 9999)))
+      if (setAtB && !atB)
+        setAtB(new Date(dates[0].setUTCHours(23, 59, 59, 9999)))
     }
   }, [history])
 

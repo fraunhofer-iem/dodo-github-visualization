@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useCallback, useState } from "react"
+import { useCallback, useState } from "react"
 import { Button, Toggle } from "../../../../components/action"
 import { Card } from "../../../../components/card"
 import {
@@ -130,6 +130,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                           to: atB,
                           kpiIds: shownKpis,
                           data: true,
+                          kinds: ["repo"],
                         })
                       : null
                   }
@@ -184,6 +185,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       sortKey,
                       asc,
                       to: atB,
+                      kinds: ["repo"],
                     })
                   }
                   rowGenerator={(kpi) => {
