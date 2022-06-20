@@ -2,11 +2,12 @@ import { useRouter } from "next/router"
 import React from "react"
 import useSWR from "swr"
 import { getKpiApiRoute, getKpisApiRoute, Kpi } from "../../lib/api"
-import { getKpiForRepoRoute, TableContexts } from "../../lib/frontend"
+import { getKpiForRepoRoute, KpiKinds, TableContexts } from "../../lib/frontend"
 import { Button } from "../action"
 import { Card, CardTitle } from "../card"
 import { ListGroup, ListGroupItem } from "../list"
 import { Table } from "../table"
+import { Spinner } from "./Spinner"
 
 interface Props {
   kpiId: string
@@ -16,8 +17,8 @@ interface Props {
 export function KpiInspector(props: Props) {
   const router = useRouter()
   const { kpiId, at } = props
-  const { data: kpi } = useSWR<Kpi>(getKpiApiRoute(kpiId))
-  const { data: children } = useSWR<Kpi[]>(
+  const { data: kpi, error: kpiError } = useSWR<Kpi>(getKpiApiRoute(kpiId))
+  const { data: children, error: childrenError } = useSWR<Kpi[]>(
     kpi
       ? getKpisApiRoute({
           owner: kpi.owner,
@@ -28,12 +29,23 @@ export function KpiInspector(props: Props) {
           children: false,
           kpiIds: kpi.children,
           to: at,
-          kinds: ["orga", "repo", "data"],
+          kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
         })
       : null,
   )
 
-  return kpi && kpi.children && kpi.children.length && children ? (
+  const isLoadingKpi = !kpi && !kpiError
+  const isLoadingChildren = !children && !childrenError
+
+  return isLoadingKpi ? (
+    <div style={{ textAlign: "center" }}>
+      <Spinner size="100px" />
+    </div>
+  ) : isLoadingChildren ? (
+    <div style={{ textAlign: "center" }}>
+      <Spinner size="100px" />
+    </div>
+  ) : kpi && kpi.children && kpi.children.length && children ? (
     <>
       {children.filter((child) => child.kind !== "data").length > 0 && (
         <Card>
@@ -154,12 +166,16 @@ export function KpiInspector(props: Props) {
                             },
                             {
                               content: Array.isArray(value) ? (
-                                value.map((element, index) => (
-                                  <React.Fragment key={index}>
-                                    {element}
-                                    <br />
-                                  </React.Fragment>
-                                ))
+                                value.length ? (
+                                  value.map((element, index) => (
+                                    <React.Fragment key={index}>
+                                      {element}
+                                      <br />
+                                    </React.Fragment>
+                                  ))
+                                ) : (
+                                  "-"
+                                )
                               ) : (
                                 <>{value}</>
                               ),

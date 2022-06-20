@@ -23,6 +23,7 @@ import {
   dateToString,
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
+  KpiKinds,
   PageRoutes,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
@@ -163,7 +164,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         to: atB,
                         kpiIds: [kpiId],
                         data: true,
-                        kinds: ["repo", "orga"],
+                        kinds: [KpiKinds.ORGA, KpiKinds.REPO],
                       })
                     }
                     clickHandler={(kpiId, pointIndex, timestamp) => {
@@ -216,7 +217,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         pageNumber: 1,
                         to: inspectionDetails?.date,
                         kpiIds: [kpiId],
-                        kinds: ["repo", "orga"],
+                        kinds: [KpiKinds.ORGA, KpiKinds.REPO],
                       })
                     }
                     rowGenerator={(kpi) => {
