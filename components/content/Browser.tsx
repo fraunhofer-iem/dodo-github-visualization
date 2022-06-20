@@ -83,7 +83,7 @@ export function Browser<EntityType>(props: Props<EntityType>) {
         }
       }
     }
-  }, [pages, pageNumber])
+  }, [pages, pageNumber, filter])
 
   return (
     <div

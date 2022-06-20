@@ -31,7 +31,7 @@ export function Pager(props: Props) {
         observer.unobserve(pager)
       }
     }
-  }, [callback])
+  }, [callback, visible])
 
   return (
     <div

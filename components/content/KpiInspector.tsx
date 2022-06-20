@@ -143,7 +143,7 @@ export function KpiInspector(props: Props) {
           {children
             .filter((child) => child.kind === "data")
             .map((child) => (
-              <ListGroup>
+              <ListGroup key={child.id}>
                 <ListGroupItem borderColor="none">
                   {child.value && (
                     <Table context={TableContexts.STRIPED}>

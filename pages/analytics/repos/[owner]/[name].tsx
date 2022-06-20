@@ -59,7 +59,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
         setShownKpis([...shownKpis, kpiId])
       }
     },
-    [shownKpis],
+    [shownKpis, updateQuery],
   )
 
   return (
