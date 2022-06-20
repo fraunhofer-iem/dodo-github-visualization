@@ -19,8 +19,11 @@
 }
 
 .browser {
+  position: sticky;
+  left: 0;
+  top: 0;
   width: 100%;
-  height: calc(100vh - 100px);
+  height: 100vh;
   overflow: scroll;
   text-align: center;
 }

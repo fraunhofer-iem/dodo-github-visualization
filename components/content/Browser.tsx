@@ -61,24 +61,29 @@ export function Browser<EntityType>(props: Props<EntityType>) {
   useEffect(() => {
     if (containerRef.current) {
       if (scrollRef.current) {
-        let childrenHeight = -scrollRef.current.clientHeight
+        let childrenHeight = 0
         Array.from(containerRef.current.children).forEach((child) => {
           childrenHeight += child.clientHeight
         })
-        containerRef.current.style.height =
-          document.body.clientHeight - 100 + "px"
-        scrollRef.current.style.height =
-          document.body.clientHeight -
-          childrenHeight +
-          containerRef.current.children[0].clientHeight +
-          "px"
+
+        if (scrollRef.current) {
+          if (childrenHeight < containerRef.current.clientHeight) {
+            scrollRef.current.style.height =
+              containerRef.current.clientHeight -
+              childrenHeight +
+              containerRef.current.children[0].clientHeight +
+              "px"
+          } else {
+            scrollRef.current.style.height = "0px"
+          }
+        }
         if (!filter) {
           containerRef.current.scrollTop =
             containerRef.current.children[0].clientHeight
         }
       }
     }
-  }, [pages])
+  }, [pages, pageNumber])
 
   return (
     <div

@@ -106,7 +106,6 @@ export function getKpisApiRoute(options: {
   if (repo) {
     params.append("repo", repo)
   }
-  console.log(kpiIds)
   if (kpiIds) {
     for (const kpi of kpiIds) {
       params.append("kpis[]", kpi)
