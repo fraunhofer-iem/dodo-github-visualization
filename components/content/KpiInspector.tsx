@@ -33,7 +33,7 @@ export function KpiInspector(props: Props) {
       : null,
   )
 
-  return kpi && children ? (
+  return kpi && kpi.children && kpi.children.length && children ? (
     <>
       {children.filter((child) => child.kind !== "data").length > 0 && (
         <Card>

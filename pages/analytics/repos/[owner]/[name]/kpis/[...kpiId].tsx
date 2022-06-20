@@ -42,13 +42,13 @@ const KPIDetail: NextPage = requireAuthorization(
     } = useHeader(
       (owner, name) =>
         getKpiForRepoRoute(
-          { owner: owner ?? "", name: name ?? "" },
+          { owner: owner ?? "", name: name ?? "undefined" },
           kpiId ?? "",
         ),
       (path) => {
         return {
           owner: path[3],
-          name: path[4],
+          name: path[4] === "undefined" ? undefined : path[4],
           kpi: path.slice(6).join("/"),
         }
       },
@@ -62,7 +62,7 @@ const KPIDetail: NextPage = requireAuthorization(
     return (
       props.user?.isLoggedIn && (
         <Page
-          title={`${name}  - KPI Dashboard`}
+          title={`${kpiId}  - KPI Dashboard`}
           user={props.user}
           atA={atA}
           setAtA={(at: Date) => {
@@ -79,7 +79,7 @@ const KPIDetail: NextPage = requireAuthorization(
             setAtB(at)
           }}
         >
-          {owner && name && kpiId && (
+          {owner && kpiId && (
             <>
               <Section width="150px" padding="0">
                 <Browser<Kpi>
@@ -115,26 +115,42 @@ const KPIDetail: NextPage = requireAuthorization(
               </Section>
               <Section padding="0 5px">
                 <Breadcrumbs
-                  crumbs={[
-                    { name: `${owner}`, route: PageRoutes.ANALYTICS },
-                    {
-                      name: `${name}`,
-                      route: getAnalyticsForRepoRoute({
-                        owner: owner,
-                        name: name,
-                      }),
-                    },
-                    {
-                      name: kpiId.split("@")[0],
-                      route: getKpiForRepoRoute(
-                        {
-                          owner: owner,
-                          name: name,
-                        },
-                        kpiId,
-                      ),
-                    },
-                  ]}
+                  crumbs={
+                    name
+                      ? [
+                          { name: `${owner}`, route: PageRoutes.ANALYTICS },
+                          {
+                            name: `${name}`,
+                            route: getAnalyticsForRepoRoute({
+                              owner: owner,
+                              name: name,
+                            }),
+                          },
+                          {
+                            name: kpiId.split("@")[0],
+                            route: getKpiForRepoRoute(
+                              {
+                                owner: owner,
+                                name: name,
+                              },
+                              kpiId,
+                            ),
+                          },
+                        ]
+                      : [
+                          { name: `${owner}`, route: PageRoutes.ANALYTICS },
+                          {
+                            name: kpiId.split("@")[0],
+                            route: getKpiForRepoRoute(
+                              {
+                                owner: owner,
+                                name: "undefined",
+                              },
+                              kpiId,
+                            ),
+                          },
+                        ]
+                  }
                 />
                 <Card>
                   <KpiChart
@@ -147,7 +163,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         to: atB,
                         kpiIds: [kpiId],
                         data: true,
-                        kinds: ["repo"],
+                        kinds: ["repo", "orga"],
                       })
                     }
                     clickHandler={(kpiId, pointIndex, timestamp) => {
@@ -200,7 +216,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         pageNumber: 1,
                         to: inspectionDetails?.date,
                         kpiIds: [kpiId],
-                        kinds: ["repo"],
+                        kinds: ["repo", "orga"],
                       })
                     }
                     rowGenerator={(kpi) => {
@@ -222,15 +238,23 @@ const KPIDetail: NextPage = requireAuthorization(
                             </>
                           ),
                           sortKey: "value",
+                          textAlign: "right",
+                          vAlign: "middle",
                         },
                         {
                           content: <>limits</>,
+                          textAlign: "center",
+                          vAlign: "middle",
                         },
                         {
                           content: <>exp</>,
+                          textAlign: "center",
+                          vAlign: "middle",
                         },
                         {
                           content: <>diff</>,
+                          textAlign: "center",
+                          vAlign: "middle",
                         },
                       ]
                     }}
