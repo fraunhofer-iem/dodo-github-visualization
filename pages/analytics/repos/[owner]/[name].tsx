@@ -142,38 +142,34 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                     {
                       content: "",
                       sortable: false,
+                      width: "3%",
                     },
                     {
                       content: "Name",
                       sortable: true,
                       sortKey: "name",
-                      width: "40%",
+                      width: "50%",
                     },
                     {
                       content: "Value",
                       sortable: true,
                       sortKey: "value",
-                      width: "20%",
+                      width: "15%",
                     },
                     {
                       content: "Limits",
                       sortable: false,
-                      width: "10%",
+                      width: "15%",
                     },
                     {
                       content: "Expected Value",
                       sortable: false,
-                      width: "10%",
+                      width: "15%",
                     },
                     {
                       content: "Difference",
                       sortable: false,
-                      width: "10%",
-                    },
-                    {
-                      content: "",
-                      sortable: false,
-                      width: "10%",
+                      width: "15%",
                     },
                   ]}
                   route={(pageSize, pageNumber, sortKey, asc) =>
@@ -200,33 +196,8 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                             }}
                           />
                         ),
-                      },
-                      {
-                        content: (
-                          <>
-                            <strong>{kpi.name}</strong>
-                          </>
-                        ),
-                        sortKey: "name",
-                      },
-                      {
-                        content: (
-                          <>
-                            {kpi.value && kpi.value > Math.floor(kpi.value)
-                              ? kpi.value.toFixed(2)
-                              : kpi.value}
-                          </>
-                        ),
-                        sortKey: "value",
-                      },
-                      {
-                        content: <>limits</>,
-                      },
-                      {
-                        content: <>exp</>,
-                      },
-                      {
-                        content: <>diff</>,
+                        textAlign: "center",
+                        vAlign: "middle",
                       },
                       {
                         content: (
@@ -245,9 +216,37 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                               })
                             }
                           >
-                            Show details
+                            <strong>{kpi.name}</strong>
                           </Button>
                         ),
+                        sortKey: "name",
+                      },
+                      {
+                        content: (
+                          <>
+                            {kpi.value && kpi.value > Math.floor(kpi.value)
+                              ? kpi.value.toFixed(2)
+                              : kpi.value}
+                          </>
+                        ),
+                        sortKey: "value",
+                        textAlign: "right",
+                        vAlign: "middle",
+                      },
+                      {
+                        content: <>limits</>,
+                        textAlign: "center",
+                        vAlign: "middle",
+                      },
+                      {
+                        content: <>exp</>,
+                        textAlign: "center",
+                        vAlign: "middle",
+                      },
+                      {
+                        content: <>diff</>,
+                        textAlign: "center",
+                        vAlign: "middle",
                       },
                     ]
                   }}

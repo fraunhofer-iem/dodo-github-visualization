@@ -12,9 +12,12 @@ interface Props {
     sortKey?: string
     width?: string
   }[]
-  rowGenerator: (
-    kpi: Kpi,
-  ) => { content: React.ReactNode; sortKey?: string | number }[]
+  rowGenerator: (kpi: Kpi) => {
+    content: React.ReactNode
+    sortKey?: string | number
+    textAlign?: "left" | "right" | "center"
+    vAlign?: "top" | "middle" | "bottom"
+  }[]
   route: (
     pageSize?: number,
     pageNumber?: number,

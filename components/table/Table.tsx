@@ -18,8 +18,15 @@ interface Props {
       sortable: boolean
       sortKey?: string
       width?: string
+      textAlign?: "left" | "right" | "center"
+      vAlign?: "top" | "middle" | "bottom"
     }[]
-    rows: { content: React.ReactNode; sortKey?: string | number }[][]
+    rows: {
+      content: React.ReactNode
+      sortKey?: string | number
+      textAlign?: "left" | "right" | "center"
+      vAlign?: "top" | "middle" | "bottom"
+    }[][]
   }
   context?: TableContexts
   width?: string
@@ -109,7 +116,12 @@ export function Table(props: Props) {
               key={i}
             >
               {cells.map((cell, i) => (
-                <TableCell context={context} key={i}>
+                <TableCell
+                  context={context}
+                  key={i}
+                  textAlign={cell.textAlign}
+                  vAlign={cell.vAlign}
+                >
                   {cell.content}
                 </TableCell>
               ))}

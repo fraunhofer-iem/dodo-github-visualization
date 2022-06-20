@@ -5,6 +5,8 @@ import { Icon } from "../rating"
 interface Props {
   scope?: "col" | "row"
   width?: string
+  textAlign?: string
+  vAlign?: string
   children?: React.ReactNode
   context: TableContexts
   sortedBy?: boolean
@@ -26,6 +28,12 @@ export function TableCell(props: Props) {
   const css = theme.table[props.context].headCell.css()
   if (props.width) {
     css.width = props.width
+  }
+  if (props.textAlign) {
+    css.textAlign = props.textAlign
+  }
+  if (props.vAlign) {
+    css.verticalAlign = props.vAlign
   }
 
   return props.scope ? (
