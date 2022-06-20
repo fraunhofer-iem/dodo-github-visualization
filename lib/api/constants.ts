@@ -123,7 +123,6 @@ export function getKpisApiRoute(options: {
     params.append("from", from.toISOString())
   }
   if (filter) {
-    console.log(filter)
     params.append("filter", filter)
   }
   if (data) {
