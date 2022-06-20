@@ -23,6 +23,7 @@ import {
   dateToString,
   getAnalyticsForRepoRoute,
   getKpiForRepoRoute,
+  KpiKinds,
   PageRoutes,
 } from "../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../lib/hooks"
@@ -108,13 +109,32 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
             <Section padding="0 5px">
               <Breadcrumbs
                 crumbs={[
-                  { name: "Analytics", route: PageRoutes.ANALYTICS },
+                  {
+                    name: "Analytics",
+                    action: (router) => {
+                      router.push({
+                        pathname: PageRoutes.ANALYTICS,
+                        query: {
+                          atA: router.query.atA,
+                          atB: router.query.atB,
+                        },
+                      })
+                    },
+                  },
                   {
                     name: `${owner}/${name}`,
-                    route: getAnalyticsForRepoRoute({
-                      owner: owner,
-                      name: name,
-                    }),
+                    action: (router) => {
+                      router.push({
+                        pathname: getAnalyticsForRepoRoute({
+                          owner: owner,
+                          name: name,
+                        }),
+                        query: {
+                          atA: router.query.atA,
+                          atB: router.query.atB,
+                        },
+                      })
+                    },
                   },
                 ]}
               />
@@ -130,7 +150,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                           to: atB,
                           kpiIds: shownKpis,
                           data: true,
-                          kinds: ["repo"],
+                          kinds: [KpiKinds.REPO],
                         })
                       : null
                   }
@@ -181,7 +201,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       sortKey,
                       asc,
                       to: atB,
-                      kinds: ["repo"],
+                      kinds: [KpiKinds.REPO],
                     })
                   }
                   rowGenerator={(kpi) => {
@@ -208,11 +228,14 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                                 pathname: getKpiForRepoRoute(
                                   {
                                     owner: owner,
-                                    name: name,
+                                    name: name ?? "undefined",
                                   },
                                   kpi.id,
                                 ),
-                                query: { ...router.query },
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                },
                               })
                             }
                           >

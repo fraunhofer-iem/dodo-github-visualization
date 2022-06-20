@@ -15,6 +15,7 @@ import {
 import {
   dateToString,
   getKpiForRepoRoute,
+  KpiKinds,
   PageRoutes,
 } from "../../lib/frontend"
 import { useHeader } from "../../lib/hooks"
@@ -95,7 +96,7 @@ const Analytics: NextPage = requireAuthorization(
                     sortKey,
                     asc,
                     to: atB,
-                    kinds: ["orga", "repo"],
+                    kinds: [KpiKinds.ORGA, KpiKinds.REPO],
                   })
                 }
                 rowGenerator={(kpi) => {

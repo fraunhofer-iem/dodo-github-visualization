@@ -24,12 +24,7 @@ export function Breadcrumbs(props: Props) {
             type="button"
             context="anchor"
             display="inline-block"
-            action={() =>
-              router.push({
-                pathname: currentCrumb.route,
-                query: { ...router.query },
-              })
-            }
+            action={() => currentCrumb.action(router)}
             padding="0"
             fontSize="11pt"
           >

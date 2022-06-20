@@ -100,7 +100,12 @@ export function KpiInspector(props: Props) {
                               },
                               child.id,
                             ),
-                            query: { ...router.query },
+                            query: {
+                              atA: router.query.atA,
+                              atB: router.query.atB,
+                              owner: child.owner,
+                              name: child.name,
+                            },
                           })
                         }
                       >

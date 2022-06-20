@@ -1,3 +1,5 @@
+import { NextRouter } from "next/router"
+
 export type Ring = {
   /**
    * The value to be displayed
@@ -16,7 +18,7 @@ export type Ring = {
 
 export type Crumb = {
   name: string
-  route: string
+  action: (router: NextRouter) => void
 }
 
 export type TableContext = "neutral" | "striped"

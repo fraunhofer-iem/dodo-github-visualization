@@ -92,7 +92,7 @@ const KPIDetail: NextPage = requireAuthorization(
                       sortKey: sortKey,
                       asc: asc,
                       filter: filter,
-                      kinds: ["orga", "repo"],
+                      kinds: [KpiKinds.ORGA, KpiKinds.REPO],
                     })
                   }
                   sortKey={"id"}
@@ -119,36 +119,88 @@ const KPIDetail: NextPage = requireAuthorization(
                   crumbs={
                     name
                       ? [
-                          { name: `${owner}`, route: PageRoutes.ANALYTICS },
+                          {
+                            name: `${owner}`,
+                            action: (router) => {
+                              router.push({
+                                pathname: PageRoutes.ANALYTICS,
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                },
+                              })
+                            },
+                          },
                           {
                             name: `${name}`,
-                            route: getAnalyticsForRepoRoute({
-                              owner: owner,
-                              name: name,
-                            }),
+                            action: (router) => {
+                              router.push({
+                                pathname: getAnalyticsForRepoRoute({
+                                  owner: owner,
+                                  name: name,
+                                }),
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                  owner: owner,
+                                  name: name,
+                                },
+                              })
+                            },
                           },
                           {
                             name: kpiId.split("@")[0],
-                            route: getKpiForRepoRoute(
-                              {
-                                owner: owner,
-                                name: name,
-                              },
-                              kpiId,
-                            ),
+                            action: (router) => {
+                              router.push({
+                                pathname: getKpiForRepoRoute(
+                                  {
+                                    owner: owner,
+                                    name: name,
+                                  },
+                                  kpiId,
+                                ),
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                  owner: owner,
+                                  name: name,
+                                },
+                              })
+                            },
                           },
                         ]
                       : [
-                          { name: `${owner}`, route: PageRoutes.ANALYTICS },
+                          {
+                            name: `${owner}`,
+                            action: (router) => {
+                              router.push({
+                                pathname: PageRoutes.ANALYTICS,
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                },
+                              })
+                            },
+                          },
                           {
                             name: kpiId.split("@")[0],
-                            route: getKpiForRepoRoute(
-                              {
-                                owner: owner,
-                                name: "undefined",
-                              },
-                              kpiId,
-                            ),
+                            action: (router) => {
+                              router.push({
+                                pathname: getKpiForRepoRoute(
+                                  {
+                                    owner: owner,
+                                    name: "undefined",
+                                  },
+                                  kpiId,
+                                ),
+                                query: {
+                                  atA: router.query.atA,
+                                  atB: router.query.atB,
+                                  owner: owner,
+                                  name: name,
+                                },
+                              })
+                            },
                           },
                         ]
                   }
