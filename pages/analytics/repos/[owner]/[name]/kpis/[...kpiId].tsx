@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
-import { useState } from "react"
+import { useCallback } from "react"
 import "react-datepicker/dist/react-datepicker.css"
 import { Card } from "../../../../../../components/card"
 import {
@@ -39,6 +39,8 @@ const KPIDetail: NextPage = requireAuthorization(
       setAtA,
       atB,
       setAtB,
+      atDate,
+      atPoint,
       updateQuery,
     } = useHeader(
       (owner, name) =>
@@ -56,9 +58,18 @@ const KPIDetail: NextPage = requireAuthorization(
     )
     const { theme } = useUIContext()
 
-    const [inspectionDetails, setInspectionDetails] = useState<
-      { date?: Date; pointIndex?: number } | undefined
-    >({ date: atB })
+    const date = atDate ?? atB
+    const point = atPoint ? +atPoint : undefined
+
+    const setInspectionDetails = useCallback(
+      (atDate, atPoint) => {
+        updateQuery({
+          atDate: atDate.toUTCString(),
+          atPoint: atPoint,
+        })
+      },
+      [updateQuery],
+    )
 
     return (
       props.user?.isLoggedIn && (
@@ -144,6 +155,7 @@ const KPIDetail: NextPage = requireAuthorization(
                                   atB: router.query.atB,
                                   owner: owner,
                                   name: name,
+                                  kpiIds: router.query.kpiIds,
                                 },
                               })
                             },
@@ -164,6 +176,7 @@ const KPIDetail: NextPage = requireAuthorization(
                                   atB: router.query.atB,
                                   owner: owner,
                                   name: name,
+                                  kpiIds: router.query.kpiIds,
                                 },
                               })
                             },
@@ -198,6 +211,7 @@ const KPIDetail: NextPage = requireAuthorization(
                                   atB: router.query.atB,
                                   owner: owner,
                                   name: name,
+                                  kpiIds: router.query.kpiIds,
                                 },
                               })
                             },
@@ -221,13 +235,10 @@ const KPIDetail: NextPage = requireAuthorization(
                     }
                     clickHandler={(kpiId, pointIndex, timestamp) => {
                       if (timestamp) {
-                        setInspectionDetails({
-                          date: new Date(timestamp),
-                          pointIndex: pointIndex,
-                        })
+                        setInspectionDetails(new Date(timestamp), pointIndex)
                       }
                     }}
-                    activePoint={inspectionDetails?.pointIndex}
+                    activePoint={point}
                   />
                 </Card>
                 <Card>
@@ -267,7 +278,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         repo: name,
                         pageSize: 1,
                         pageNumber: 1,
-                        to: inspectionDetails?.date,
+                        to: date,
                         kpiIds: [kpiId],
                         kinds: [KpiKinds.ORGA, KpiKinds.REPO],
                       })
@@ -278,6 +289,8 @@ const KPIDetail: NextPage = requireAuthorization(
                           content: (
                             <>
                               <strong>{kpi.name}</strong>
+                              <br />
+                              {kpi.description}
                             </>
                           ),
                           sortKey: "name",
@@ -313,7 +326,7 @@ const KPIDetail: NextPage = requireAuthorization(
                     }}
                   />
                 </Card>
-                <KpiInspector kpiId={kpiId} at={inspectionDetails?.date} />
+                <KpiInspector kpiId={kpiId} at={date} />
               </Section>
             </>
           )}

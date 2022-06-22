@@ -33,6 +33,8 @@ export type Kpi = {
   value?: number
   kind?: string
   children?: string[]
+  description?: string
+  unit?: string
   data?: {
     [timestamp: string]: { label: Date | string; value: number }
   }

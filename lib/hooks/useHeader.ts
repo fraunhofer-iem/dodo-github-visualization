@@ -18,6 +18,8 @@ export function useHeader(
   let atA: string | undefined = undefined
   let atB: string | undefined = undefined
   let kpiIds: string[] | undefined = undefined
+  let atDate: string | undefined = undefined
+  let atPoint: string | undefined = undefined
 
   if (typeof window !== "undefined") {
     const query = Object.fromEntries(
@@ -30,7 +32,9 @@ export function useHeader(
 
     atA = query.atA
     atB = query.atB
-    kpiIds = query.kpiIds?.split(",")
+    kpiIds = query.kpiIds ? query.kpiIds?.split(",") : undefined
+    atDate = query.atDate
+    atPoint = query.atPoint
   }
 
   const [a, setAtA] = useState<Date | undefined>(
@@ -62,6 +66,8 @@ export function useHeader(
     atB: b,
     setAtB,
     kpiIds,
+    atDate: atDate ? new Date(atDate) : undefined,
+    atPoint,
     updateQuery,
   }
 }

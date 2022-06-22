@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo } from "react"
 import { Button, Toggle } from "../../../../components/action"
 import { Card } from "../../../../components/card"
 import {
@@ -43,21 +43,22 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
     )
   const { theme } = useUIContext()
 
-  const [shownKpis, setShownKpis] = useState<string[]>(kpiIds ?? [])
+  const shownKpis = useMemo(() => kpiIds ?? [], [kpiIds])
 
   const updateKpis = useCallback(
     (kpiId: string) => {
       if (shownKpis.includes(kpiId)) {
-        shownKpis.splice(shownKpis.findIndex((k) => kpiId === k))
+        shownKpis.splice(
+          shownKpis.findIndex((k) => kpiId === k),
+          1,
+        )
         updateQuery({
           kpiIds: shownKpis,
         })
-        setShownKpis([...shownKpis])
       } else {
         updateQuery({
           kpiIds: [...shownKpis, kpiId],
         })
-        setShownKpis([...shownKpis, kpiId])
       }
     },
     [shownKpis, updateQuery],
@@ -132,6 +133,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                         query: {
                           atA: router.query.atA,
                           atB: router.query.atB,
+                          kpiIds: router.query.kpiIds,
                         },
                       })
                     },
@@ -154,6 +156,25 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                         })
                       : null
                   }
+                  scale={true}
+                  clickHandler={(kpiId, pointIndex, timestamp) => {
+                    router.push({
+                      pathname: getKpiForRepoRoute(
+                        {
+                          owner: owner ?? "undefined",
+                          name: name ?? "undefined",
+                        },
+                        kpiId,
+                      ),
+                      query: {
+                        atA: router.query.atA,
+                        atB: router.query.atB,
+                        atDate: timestamp,
+                        atPoint: pointIndex,
+                        kpiIds: router.query.kpiIds,
+                      },
+                    })
+                  }}
                 />
               </Card>
               <Card>
@@ -227,7 +248,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                               router.push({
                                 pathname: getKpiForRepoRoute(
                                   {
-                                    owner: owner,
+                                    owner: owner ?? "undefined",
                                     name: name ?? "undefined",
                                   },
                                   kpi.id,
@@ -235,6 +256,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                                 query: {
                                   atA: router.query.atA,
                                   atB: router.query.atB,
+                                  kpiIds: router.query.kpiIds,
                                 },
                               })
                             }

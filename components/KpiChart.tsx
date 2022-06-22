@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js"
-import { sortBy } from "lodash"
+import { max, sortBy } from "lodash"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Kpi } from "../lib/api"
@@ -10,10 +10,21 @@ interface Props {
   route: () => string | null
   clickHandler?: (kpiId: string, pointIndex: number, timestamp?: string) => void
   activePoint?: number
+  scale?: boolean
+}
+
+const scaleValues = (values: (number | null)[]) => {
+  const maximum = max(values)
+  return values.map((value) => {
+    if (value && maximum) {
+      return value / maximum
+    }
+    return null
+  })
 }
 
 export default function KpiChart(props: Props) {
-  const { route, activePoint } = props
+  const { route, activePoint, scale } = props
   const clickHandler = props.clickHandler ?? (() => {})
   const { data: kpis } = useSWR<Kpi[]>(route())
   const [dataset, setDataset] = useState<ChartData<"line">>({
@@ -49,9 +60,15 @@ export default function KpiChart(props: Props) {
       setDataset({
         datasets: data.map(({ kpi, dataPoints }, i) => {
           return {
-            data: labels.map((label) => {
-              return dataPoints.get(label) ?? null
-            }),
+            data: scale
+              ? scaleValues(
+                  labels.map((label) => {
+                    return dataPoints.get(label) ?? null
+                  }),
+                )
+              : labels.map((label) => {
+                  return dataPoints.get(label) ?? null
+                }),
             borderWidth: 1,
             pointRadius: (ctx, options) => {
               if (!activePoint) {
@@ -64,6 +81,17 @@ export default function KpiChart(props: Props) {
               }
               return 4
             },
+            pointHoverRadius: (ctx, options) => {
+              if (!activePoint) {
+                if (ctx.dataIndex === labels.length - 1) {
+                  return 8
+                }
+              }
+              if (activePoint === ctx.dataIndex) {
+                return 8
+              }
+              return 6
+            },
             backgroundColor: ColorScheme(i).rgba(),
             borderColor: ColorScheme(i).rgba(),
             showLine: true,
@@ -75,7 +103,7 @@ export default function KpiChart(props: Props) {
     } else {
       setDataset({ datasets: [], labels: [] })
     }
-  }, [kpis, activePoint])
+  }, [scale, kpis, activePoint])
 
   return (
     <LineChart
@@ -86,13 +114,21 @@ export default function KpiChart(props: Props) {
             display: true,
           },
           tooltip: {
-            enabled: false,
+            enabled: true,
+            callbacks: {
+              label(this, tooltipItems) {
+                return tooltipItems.formattedValue
+              },
+            },
           },
         },
         animation: false,
         scales: {
           y: {
             min: 0,
+            ticks: {
+              display: !scale,
+            },
           },
         },
         aspectRatio: 3.5,
