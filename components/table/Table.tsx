@@ -1,3 +1,4 @@
+import React, { useCallback, useState } from "react"
 import { TableBody, TableCell, TableHead, TableRow } from "."
 import {
   CSSProperties,
@@ -21,12 +22,16 @@ interface Props {
       textAlign?: "left" | "right" | "center"
       vAlign?: "top" | "middle" | "bottom"
     }[]
-    rows: {
-      content: React.ReactNode
-      sortKey?: string | number
-      textAlign?: "left" | "right" | "center"
-      vAlign?: "top" | "middle" | "bottom"
-    }[][]
+    sections: {
+      title?: React.ReactNode
+      rows: {
+        content: React.ReactNode
+        sortKey?: string | number
+        textAlign?: "left" | "right" | "center"
+        vAlign?: "top" | "middle" | "bottom"
+        collapsible?: boolean
+      }[][]
+    }[]
   }
   context?: TableContexts
   width?: string
@@ -54,7 +59,10 @@ interface Props {
 
 export function Table(props: Props) {
   const { theme } = useUIContext()
-  const tableData = props.children ?? { columns: [], rows: [] }
+  const tableData = props.children ?? {
+    columns: [],
+    sections: [{ rows: [] }],
+  }
   const context = props.context ?? TableContexts.NEUTRAL
   const width = props.width ?? "100%"
   // extract state variables and methods from props passed to the Table
@@ -74,6 +82,46 @@ export function Table(props: Props) {
     props.ordering ?? Ordering.GIVEN,
     props.setSortInformation ?? (() => {}),
   ]
+
+  const [collapsedSections, setCollapsedSections] = useState<number[]>([])
+  const [collapsedRows, setCollapsedRows] = useState<
+    { section: number; row: number }[]
+  >([])
+
+  const toggleSection = useCallback(
+    (section) => {
+      if (collapsedSections.includes(section)) {
+        collapsedSections.splice(
+          collapsedSections.findIndex((s) => section === s),
+          1,
+        )
+      } else {
+        collapsedSections.push(section)
+      }
+      setCollapsedSections([...collapsedSections])
+    },
+    [collapsedSections],
+  )
+
+  const toggleRow = useCallback(
+    (section, row) => {
+      const isCollapsed = collapsedRows.some(
+        (entry) => entry.section === section && entry.row === row,
+      )
+      if (isCollapsed) {
+        collapsedRows.splice(
+          collapsedRows.findIndex(
+            (entry) => entry.section === section && entry.row === row,
+          ),
+          1,
+        )
+      } else {
+        collapsedRows.push({ section, row })
+      }
+      setCollapsedRows([...collapsedRows])
+    },
+    [collapsedRows],
+  )
 
   return (
     <div className={styles.tableContainer} style={{ width: width }}>
@@ -104,29 +152,56 @@ export function Table(props: Props) {
           ))}
         </TableHead>
         <TableBody>
-          {tableData.rows.map((cells, i) => (
-            <TableRow
-              context={
-                context === TableContexts.STRIPED
-                  ? i % 2 == 0
-                    ? context
-                    : TableContexts.NEUTRAL
-                  : context
-              }
-              key={i}
-            >
-              {cells.map((cell, i) => (
-                <TableCell
-                  context={context}
-                  key={i}
-                  textAlign={cell.textAlign}
-                  vAlign={cell.vAlign}
-                >
-                  {cell.content}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {tableData.sections.map((section, i) => {
+            const rowsToColor = section.title ? 1 : 0
+            return (
+              <React.Fragment key={i}>
+                {section.title && (
+                  <TableRow context={TableContexts.STRIPED} key={i}>
+                    <TableCell
+                      context={TableContexts.STRIPED}
+                      colSpan={tableData.columns.length}
+                      onClick={() => toggleSection(i)}
+                    >
+                      {section.title}
+                    </TableCell>
+                  </TableRow>
+                )}
+                {!collapsedSections.includes(i) &&
+                  section.rows.map((cells, j) => (
+                    <TableRow
+                      context={
+                        context === TableContexts.STRIPED
+                          ? i % 2 == rowsToColor
+                            ? context
+                            : TableContexts.NEUTRAL
+                          : context
+                      }
+                      key={j}
+                    >
+                      {cells.map((cell, k) => (
+                        <TableCell
+                          context={context}
+                          key={k}
+                          textAlign={cell.textAlign}
+                          vAlign={cell.vAlign}
+                          onClick={
+                            cell.collapsible ? undefined : () => toggleRow(i, j)
+                          }
+                        >
+                          {cell.collapsible &&
+                          collapsedRows.some(
+                            (entry) => entry.section === i && entry.row === j,
+                          )
+                            ? "..."
+                            : cell.content}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </React.Fragment>
+            )
+          })}
         </TableBody>
       </table>
       {props.paginate && (

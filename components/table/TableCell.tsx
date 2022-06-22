@@ -12,10 +12,12 @@ interface Props {
   sortedBy?: boolean
   sortKey?: string
   ordering?: Ordering
+  colSpan?: number
   setSortInformation?: (sortInformation: {
     sortKey: string
     ordering: Ordering
   }) => void
+  onClick?: () => void
 }
 
 export function TableCell(props: Props) {
@@ -36,7 +38,7 @@ export function TableCell(props: Props) {
     css.verticalAlign = props.vAlign
   }
 
-  return props.scope ? (
+  return props.scope === "col" ? (
     <th
       onClick={() => {
         if (sortKey) {
@@ -62,6 +64,8 @@ export function TableCell(props: Props) {
       ) : undefined}
     </th>
   ) : (
-    <td style={css}>{props.children}</td>
+    <td style={css} colSpan={props.colSpan} onClick={props.onClick}>
+      {props.children}
+    </td>
   )
 }
