@@ -112,45 +112,49 @@ export function RepositoryCard(props: Props) {
           <Table>
             {{
               columns: [],
-              rows: [
-                [
-                  {
-                    content: <>{atB && dateToString(atB, false)}</>,
-                  },
-                  {
-                    content: (
-                      <strong>
-                        {valueB && (
-                          <TrendComponent
-                            label={KpiAbbreviations.repoHealth}
-                            rating={valueB.value}
-                            direction={evaluateHealth(valueB.value)}
-                            compact={true}
-                          />
-                        )}
-                      </strong>
-                    ),
-                  },
-                ],
-                [
-                  {
-                    content: <>{atA && dateToString(atA, false)}</>,
-                  },
-                  {
-                    content: (
-                      <strong>
-                        {valueA && (
-                          <TrendComponent
-                            label={KpiAbbreviations.repoHealth}
-                            rating={valueA.value}
-                            direction={evaluateHealth(valueA.value)}
-                            compact={true}
-                          />
-                        )}
-                      </strong>
-                    ),
-                  },
-                ],
+              sections: [
+                {
+                  rows: [
+                    [
+                      {
+                        content: <>{atB && dateToString(atB, false)}</>,
+                      },
+                      {
+                        content: (
+                          <strong>
+                            {valueB && (
+                              <TrendComponent
+                                label={KpiAbbreviations.repoHealth}
+                                rating={valueB.value}
+                                direction={evaluateHealth(valueB.value)}
+                                compact={true}
+                              />
+                            )}
+                          </strong>
+                        ),
+                      },
+                    ],
+                    [
+                      {
+                        content: <>{atA && dateToString(atA, false)}</>,
+                      },
+                      {
+                        content: (
+                          <strong>
+                            {valueA && (
+                              <TrendComponent
+                                label={KpiAbbreviations.repoHealth}
+                                rating={valueA.value}
+                                direction={evaluateHealth(valueA.value)}
+                                compact={true}
+                              />
+                            )}
+                          </strong>
+                        ),
+                      },
+                    ],
+                  ],
+                },
               ],
             }}
           </Table>

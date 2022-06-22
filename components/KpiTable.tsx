@@ -68,7 +68,11 @@ export default function KpiTable(props: Props) {
     >
       {{
         columns: props.columns,
-        rows: kpis ? kpis.map((kpi) => props.rowGenerator(kpi)) : [],
+        sections: [
+          {
+            rows: kpis ? kpis.map((kpi) => props.rowGenerator(kpi)) : [],
+          },
+        ],
       }}
     </Table>
   )
