@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js"
-import { max, sortBy } from "lodash"
+import { max, sortBy, sum } from "lodash"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Kpi } from "../lib/api"
@@ -49,7 +49,18 @@ export default function KpiChart(props: Props) {
             try {
               label = dateToString(new Date(l), false)
             } catch {}
-            dataPoints.set(label, value)
+            if (typeof value === "object") {
+              dataPoints.set(
+                label,
+                sum(
+                  Object.entries<any[] | number>(value).map(([label, v]) =>
+                    Array.isArray(v) ? v.length : v,
+                  ),
+                ) / Object.keys(value).length,
+              )
+            } else {
+              dataPoints.set(label, value)
+            }
             if (!labels.includes(label)) {
               labels.push(label)
             }
@@ -66,7 +77,7 @@ export default function KpiChart(props: Props) {
                     return dataPoints.get(label) ?? null
                   }),
                 )
-              : labels.map((label) => {
+              : labels.map((label, i) => {
                   return dataPoints.get(label) ?? null
                 }),
             borderWidth: 1,

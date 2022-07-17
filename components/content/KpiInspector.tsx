@@ -1,7 +1,12 @@
 import { useRouter } from "next/router"
 import useSWR from "swr"
 import { getKpiApiRoute, getKpisApiRoute, Kpi } from "../../lib/api"
-import { getKpiForRepoRoute, KpiKinds, TableContexts } from "../../lib/frontend"
+import {
+  getKpiForRepoRoute,
+  KpiKinds,
+  TableContexts,
+  toFixed,
+} from "../../lib/frontend"
 import { Button } from "../action"
 import { Card, CardTitle } from "../card"
 import { DataTable } from "../DataTable"
@@ -25,7 +30,7 @@ export function KpiInspector(props: Props) {
           pageSize: kpi.children?.length,
           pageNumber: 1,
           data: false,
-          children: false,
+          children: true,
           kpiIds: kpi.children,
           to: at,
           kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
@@ -120,14 +125,7 @@ export function KpiInspector(props: Props) {
                         sortKey: "name",
                       },
                       {
-                        content: (
-                          <>
-                            {child.value &&
-                            child.value > Math.floor(child.value)
-                              ? child.value.toFixed(2)
-                              : child.value}
-                          </>
-                        ),
+                        content: <>{child.value && toFixed(child.value)}</>,
                         sortKey: "value",
                       },
                       {

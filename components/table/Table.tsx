@@ -172,7 +172,7 @@ export function Table(props: Props) {
                     <TableRow
                       context={
                         context === TableContexts.STRIPED
-                          ? i % 2 == rowsToColor
+                          ? j % 2 == rowsToColor
                             ? context
                             : TableContexts.NEUTRAL
                           : context

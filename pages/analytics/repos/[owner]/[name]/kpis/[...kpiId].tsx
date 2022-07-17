@@ -1,3 +1,4 @@
+import { sum } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import { useCallback } from "react"
@@ -230,7 +231,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         to: atB,
                         kpiIds: [kpiId],
                         data: true,
-                        kinds: [KpiKinds.ORGA, KpiKinds.REPO],
+                        kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
                       })
                     }
                     clickHandler={(kpiId, pointIndex, timestamp) => {
@@ -280,7 +281,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         pageNumber: 1,
                         to: date,
                         kpiIds: [kpiId],
-                        kinds: [KpiKinds.ORGA, KpiKinds.REPO],
+                        kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
                       })
                     }
                     rowGenerator={(kpi) => {
@@ -298,9 +299,21 @@ const KPIDetail: NextPage = requireAuthorization(
                         {
                           content: (
                             <>
-                              {kpi.value && kpi.value > Math.floor(kpi.value)
-                                ? kpi.value.toFixed(2)
-                                : kpi.value}
+                              {kpi.value
+                                ? typeof kpi.value === "object"
+                                  ? (
+                                      sum(
+                                        Object.entries<any[] | number>(
+                                          kpi.value,
+                                        ).map(([label, v]) =>
+                                          Array.isArray(v) ? v.length : v,
+                                        ),
+                                      ) / Object.keys(kpi.value).length
+                                    ).toFixed(2)
+                                  : kpi.value > Math.floor(kpi.value)
+                                  ? kpi.value.toFixed(2)
+                                  : kpi.value
+                                : ""}
                             </>
                           ),
                           sortKey: "value",

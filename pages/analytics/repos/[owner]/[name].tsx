@@ -25,6 +25,7 @@ import {
   getKpiForRepoRoute,
   KpiKinds,
   PageRoutes,
+  toFixed,
 } from "../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../lib/hooks"
 
@@ -267,13 +268,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                         sortKey: "name",
                       },
                       {
-                        content: (
-                          <>
-                            {kpi.value && kpi.value > Math.floor(kpi.value)
-                              ? kpi.value.toFixed(2)
-                              : kpi.value}
-                          </>
-                        ),
+                        content: <>{kpi.value && toFixed(kpi.value)}</>,
                         sortKey: "value",
                         textAlign: "right",
                         vAlign: "middle",

@@ -18,3 +18,8 @@
 .btn:hover {
   cursor: pointer;
 }
+
+.btn:disabled {
+  color: inherit;
+  cursor: default;
+}

@@ -84,6 +84,10 @@ export function dateToString(date: Date, includeDayName: boolean = true) {
   }`
 }
 
+export function toFixed(value: number, digits: number = 2) {
+  return value > Math.floor(value) ? value.toFixed(digits) : value
+}
+
 export enum KpiIds {
   ORGANIZATION_HEALTH = "orgHealth",
   REPOSITORY_HEALTH = "repoHealth",

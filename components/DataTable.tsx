@@ -1,8 +1,15 @@
 import { reverse, sortBy } from "lodash"
+import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import { Kpi } from "../lib/api"
-import { Ordering, TableContexts } from "../lib/frontend"
+import {
+  getKpiForRepoRoute,
+  Ordering,
+  TableContexts,
+  toFixed,
+} from "../lib/frontend"
 import { usePagination } from "../lib/hooks"
+import { Button } from "./action"
 import { Table } from "./table"
 
 interface Props {
@@ -10,6 +17,7 @@ interface Props {
 }
 
 export function DataTable(props: Props) {
+  const router = useRouter()
   const { children } = props
 
   const { sortInformation, setSortInformation } = usePagination("ident")
@@ -69,7 +77,34 @@ export function DataTable(props: Props) {
             sections: data
               .filter((child) => child.kind === "data")
               .map((child) => ({
-                title: <strong>{child.name}</strong>,
+                title: (
+                  <Button
+                    type={"button"}
+                    context="anchor"
+                    disabled={child.children?.length ? false : true}
+                    padding="0"
+                    action={() =>
+                      router.push({
+                        pathname: getKpiForRepoRoute(
+                          {
+                            owner: child.owner,
+                            name: child.repo as string,
+                          },
+                          child.id,
+                        ),
+                        query: {
+                          atA: router.query.atA,
+                          atB: router.query.atB,
+                          owner: child.owner,
+                          name: child.name,
+                          atPoint: router.query.atPoint,
+                        },
+                      })
+                    }
+                  >
+                    <strong>{child.name}</strong>
+                  </Button>
+                ),
                 rows: Object.entries(child.value as any).map(
                   ([label, value]) => [
                     {
@@ -89,7 +124,7 @@ export function DataTable(props: Props) {
                           "-"
                         )
                       ) : (
-                        <>{value}</>
+                        <>{toFixed(value as any, 4)}</>
                       ),
                     },
                   ],

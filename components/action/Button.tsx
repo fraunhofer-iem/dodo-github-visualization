@@ -64,7 +64,9 @@ const contexts = {
 export function Button(props: Props) {
   const { theme } = useUIContext()
   const [hovered, setHovered] = useState(false)
-  const context = contexts[props.context](hovered)
+  const context = contexts[props.context](
+    hovered && (props.disabled !== undefined ? !props.disabled : true),
+  )
   const action = props.action ?? (() => {})
   const cxtAction = props.cxtAction ?? (() => {})
 
