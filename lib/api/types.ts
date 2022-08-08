@@ -32,6 +32,7 @@ export type Kpi = {
   name?: string
   value?: number
   kind?: string
+  type?: string
   children?: string[]
   description?: string
   unit?: string

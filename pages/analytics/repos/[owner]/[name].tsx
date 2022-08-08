@@ -25,7 +25,6 @@ import {
   getKpiForRepoRoute,
   KpiKinds,
   PageRoutes,
-  toFixed,
 } from "../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../lib/hooks"
 
@@ -153,6 +152,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                           to: atB,
                           kpiIds: shownKpis,
                           data: true,
+                          children: true,
                           kinds: [KpiKinds.REPO],
                         })
                       : null
@@ -193,22 +193,6 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       width: "50%",
                     },
                     {
-                      content: "Value",
-                      sortable: true,
-                      sortKey: "value",
-                      width: "15%",
-                    },
-                    {
-                      content: "Limits",
-                      sortable: false,
-                      width: "15%",
-                    },
-                    {
-                      content: "Expected Value",
-                      sortable: false,
-                      width: "15%",
-                    },
-                    {
                       content: "Difference",
                       sortable: false,
                       width: "15%",
@@ -223,6 +207,7 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                       sortKey,
                       asc,
                       to: atB,
+                      children: true,
                       kinds: [KpiKinds.REPO],
                     })
                   }
@@ -266,22 +251,6 @@ const Detail: NextPage = requireAuthorization((props: AuthorizationDetails) => {
                           </Button>
                         ),
                         sortKey: "name",
-                      },
-                      {
-                        content: <>{kpi.value && toFixed(kpi.value)}</>,
-                        sortKey: "value",
-                        textAlign: "right",
-                        vAlign: "middle",
-                      },
-                      {
-                        content: <>limits</>,
-                        textAlign: "center",
-                        vAlign: "middle",
-                      },
-                      {
-                        content: <>exp</>,
-                        textAlign: "center",
-                        vAlign: "middle",
                       },
                       {
                         content: <>diff</>,

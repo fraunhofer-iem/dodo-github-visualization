@@ -1,10 +1,11 @@
 import { ChartData } from "chart.js"
-import { max, sortBy, sum } from "lodash"
+import { find, max, sortBy, sum } from "lodash"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Kpi } from "../lib/api"
-import { ColorScheme, dateToString } from "../lib/frontend"
+import { getKpisApiRoute, Kpi } from "../lib/api"
+import { ColorScheme, dateToString, KpiKinds, toFixed } from "../lib/frontend"
 import { LineChart } from "./chart"
+import { Spinner } from "./content"
 
 interface Props {
   route: () => string | null
@@ -23,13 +24,60 @@ const scaleValues = (values: (number | null)[]) => {
   })
 }
 
+const getKpi = (kpis?: Kpi[], kpiId?: string) => {
+  if (kpis) {
+    for (const kpi of kpis) {
+      if (kpi.id === kpiId) {
+        return kpi
+      }
+    }
+  }
+  return undefined
+}
+
+const prepareKpiValue = (value: any, aggregate: boolean = true) => {
+  if (aggregate && typeof value === "object") {
+    return (
+      sum(
+        Object.entries<any[] | number>(value).map(([label, v]) =>
+          Array.isArray(v) ? v.length : v,
+        ),
+      ) / Object.keys(value).length
+    )
+  }
+  return value
+}
+
 export default function KpiChart(props: Props) {
   const { route, activePoint, scale } = props
   const clickHandler = props.clickHandler ?? (() => {})
-  const { data: kpis } = useSWR<Kpi[]>(route())
+  const { data: kpis, error: kpisError } = useSWR<Kpi[]>(route())
+  const { data: children, error: childrenError } = useSWR<Kpi[]>(
+    kpis
+      ? getKpisApiRoute({
+          owner: kpis[0].owner,
+          pageSize: kpis
+            .map((kpi) => {
+              return kpi.children ?? []
+            })
+            .flat().length,
+          pageNumber: 1,
+          data: true,
+          kpiIds: kpis
+            .map((kpi) => {
+              return kpi.children ?? []
+            })
+            .flat(),
+          kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
+        })
+      : null,
+  )
   const [dataset, setDataset] = useState<ChartData<"line">>({
     datasets: [],
   })
+
+  const isLoadingKpis = !kpis && !kpisError
+  const isLoadingChildren = !children && !childrenError
 
   useEffect(() => {
     if (kpis) {
@@ -45,22 +93,8 @@ export default function KpiChart(props: Props) {
             Object.entries(currentKpi.data),
             [(entry) => new Date(entry[0])],
           )) {
-            let label = l as string
-            try {
-              label = dateToString(new Date(l), false)
-            } catch {}
-            if (typeof value === "object") {
-              dataPoints.set(
-                label,
-                sum(
-                  Object.entries<any[] | number>(value).map(([label, v]) =>
-                    Array.isArray(v) ? v.length : v,
-                  ),
-                ) / Object.keys(value).length,
-              )
-            } else {
-              dataPoints.set(label, value)
-            }
+            let label = dateToString(new Date(timestamp), true, true)
+            dataPoints.set(label, prepareKpiValue(value))
             if (!labels.includes(label)) {
               labels.push(label)
             }
@@ -116,7 +150,15 @@ export default function KpiChart(props: Props) {
     }
   }, [scale, kpis, activePoint])
 
-  return (
+  return isLoadingKpis ? (
+    <div style={{ textAlign: "center" }}>
+      <Spinner size="100px" />
+    </div>
+  ) : isLoadingChildren ? (
+    <div style={{ textAlign: "center" }}>
+      <Spinner size="100px" />
+    </div>
+  ) : (
     <LineChart
       data={dataset}
       options={{
@@ -127,8 +169,66 @@ export default function KpiChart(props: Props) {
           tooltip: {
             enabled: true,
             callbacks: {
-              label(this, tooltipItems) {
-                return tooltipItems.formattedValue
+              title(this, tooltipItems) {
+                const kpi = getKpi(
+                  kpis,
+                  dataset.datasets[tooltipItems[0].datasetIndex].label,
+                )
+                if (kpi && kpi.data) {
+                  const values = sortBy(Object.entries(kpi.data), [
+                    (entry) => new Date(entry[0]),
+                  ])
+                  return `${values[tooltipItems[0].dataIndex][1].label}`
+                }
+                return tooltipItems[0].formattedValue
+              },
+              label(this, tooltipItem) {
+                const kpi = getKpi(
+                  kpis,
+                  dataset.datasets[tooltipItem.datasetIndex].label,
+                )
+                if (kpi && kpi.data) {
+                  const values = sortBy(Object.entries(kpi.data), [
+                    (entry) => new Date(entry[0]),
+                  ])
+                  return `${toFixed(
+                    values[tooltipItem.dataIndex][1].value,
+                    3,
+                  )}${kpi.unit === "percent" ? "%" : ` ${kpi.unit}`}`
+                }
+                return ""
+              },
+              afterLabel(this, tooltipItem) {
+                const kpi = getKpi(
+                  kpis,
+                  dataset.datasets[tooltipItem.datasetIndex].label,
+                )
+                if (kpi && kpi.children) {
+                  const content: string[] = []
+                  if (children) {
+                    for (const childId of kpi.children) {
+                      const child = find(children, (c) => c.id === childId)
+                      if (child && child.data) {
+                        const entry = find(
+                          Object.entries(child.data),
+                          (entry) =>
+                            dateToString(new Date(entry[0]), true, true) ===
+                            tooltipItem.label,
+                        )
+                        if (entry) {
+                          const value = prepareKpiValue(entry[1].value)
+                          content.push(
+                            `${child.type}: ${toFixed(value, 3)}${
+                              child.unit === "percent" ? "%" : ` ${child.unit}`
+                            }`,
+                          )
+                        }
+                      }
+                    }
+                  }
+                  return content
+                }
+                return ""
               },
             },
           },

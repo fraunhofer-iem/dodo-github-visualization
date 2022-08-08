@@ -26,6 +26,7 @@ import {
   getKpiForRepoRoute,
   KpiKinds,
   PageRoutes,
+  toFixed,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
 
@@ -231,6 +232,7 @@ const KPIDetail: NextPage = requireAuthorization(
                         to: atB,
                         kpiIds: [kpiId],
                         data: true,
+                        children: true,
                         kinds: [KpiKinds.ORGA, KpiKinds.REPO, KpiKinds.DATA],
                       })
                     }
@@ -250,27 +252,17 @@ const KPIDetail: NextPage = requireAuthorization(
                         content: "Name",
                         sortable: true,
                         sortKey: "name",
-                        width: "40%",
+                        width: "60%",
                       },
                       {
                         content: "Value",
                         sortable: false,
-                        width: "20%",
-                      },
-                      {
-                        content: "Limits",
-                        sortable: false,
-                        width: "10%",
-                      },
-                      {
-                        content: "Expected Value",
-                        sortable: false,
-                        width: "10%",
+                        width: "30%",
                       },
                       {
                         content: "Difference",
                         sortable: false,
-                        width: "10%",
+                        width: "5%",
                       },
                     ]}
                     route={(pageSize, pageNumber, sortKey, asc) =>
@@ -301,33 +293,25 @@ const KPIDetail: NextPage = requireAuthorization(
                             <>
                               {kpi.value
                                 ? typeof kpi.value === "object"
-                                  ? (
+                                  ? (toFixed(
                                       sum(
                                         Object.entries<any[] | number>(
                                           kpi.value,
                                         ).map(([label, v]) =>
                                           Array.isArray(v) ? v.length : v,
                                         ),
-                                      ) / Object.keys(kpi.value).length
-                                    ).toFixed(2)
-                                  : kpi.value > Math.floor(kpi.value)
-                                  ? kpi.value.toFixed(2)
-                                  : kpi.value
+                                      ) / Object.keys(kpi.value).length,
+                                    ),
+                                    2)
+                                  : toFixed(kpi.value, 2)
                                 : ""}
+                              {`${
+                                kpi.unit === "percent" ? "%" : ` ${kpi.unit}`
+                              }`}
                             </>
                           ),
                           sortKey: "value",
                           textAlign: "right",
-                          vAlign: "middle",
-                        },
-                        {
-                          content: <>limits</>,
-                          textAlign: "center",
-                          vAlign: "middle",
-                        },
-                        {
-                          content: <>exp</>,
-                          textAlign: "center",
                           vAlign: "middle",
                         },
                         {

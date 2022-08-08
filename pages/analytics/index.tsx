@@ -80,13 +80,13 @@ const Analytics: NextPage = requireAuthorization(
                     content: "KPI",
                     sortable: true,
                     sortKey: "id",
-                    width: "80%",
+                    width: "70%",
                   },
                   {
                     content: "Value",
                     sortable: true,
                     sortKey: "value",
-                    width: "20%",
+                    width: "30%",
                   },
                 ]}
                 route={(pageSize, pageNumber, sortKey, asc) =>
@@ -128,7 +128,12 @@ const Analytics: NextPage = requireAuthorization(
                       sortKey: "name",
                     },
                     {
-                      content: <>{kpi.value && toFixed(kpi.value)}</>,
+                      content: (
+                        <>
+                          {kpi.value && toFixed(kpi.value)}
+                          {`${kpi.unit === "percent" ? "%" : ` ${kpi.unit}`}`}
+                        </>
+                      ),
                       sortKey: "value",
                     },
                   ]

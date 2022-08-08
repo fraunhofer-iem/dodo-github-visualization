@@ -68,7 +68,11 @@ export enum TableContexts {
   STRIPED = "striped",
 }
 
-export function dateToString(date: Date, includeDayName: boolean = true) {
+export function dateToString(
+  date: Date,
+  includeDayName: boolean = true,
+  includeTime: boolean = false,
+) {
   const indexToDay: { [key: number]: string } = {
     0: "Sun",
     1: "Mon",
@@ -81,7 +85,7 @@ export function dateToString(date: Date, includeDayName: boolean = true) {
 
   return `${includeDayName ? `${indexToDay[date.getUTCDay()]}, ` : ""}${
     date.toISOString().split("T")[0]
-  }`
+  }${includeTime ? `, ${date.toISOString().split("T")[1].split(".")[0]}` : ""}`
 }
 
 export function toFixed(value: number, digits: number = 2) {
