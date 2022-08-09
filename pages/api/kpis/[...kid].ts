@@ -16,8 +16,8 @@ export default withSession(
       const kid = Array.isArray(req.query.kid)
         ? req.query.kid.join("/")
         : req.query.kid
+      const params = new URLSearchParams()
       if (req.query.data) {
-        const params = new URLSearchParams()
         params.append("data", JSON.stringify(true))
         if (req.query.from) {
           params.append("from", req.query.from as string)
@@ -28,16 +28,13 @@ export default withSession(
         if (req.query.history) {
           params.append("history", req.query.history as string)
         }
-        const data = await fetchJson(
-          new Request(
-            `${process.env.HOST}/api/runs/${kid}?${params.toString()}`,
-          ),
-        )
-        res.status(200).json(data)
+      }
+      const kpi = await fetchJson(
+        new Request(`${process.env.HOST}/api/kpis/${kid}?${params.toString()}`),
+      )
+      if (req.query.data) {
+        res.status(200).json(kpi)
       } else {
-        const kpi = await fetchJson(
-          new Request(`${process.env.HOST}/api/kpis/${kid}`),
-        )
         res.status(200).json(kpi)
       }
     }

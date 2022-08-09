@@ -44,7 +44,7 @@ export function Comparator(props: Props) {
 
   useEffect(() => {
     if (history) {
-      let dates = Object.keys(history).map((timestamp) => {
+      let dates = Object.keys(history.data).map((timestamp) => {
         const date = new Date(timestamp)
         return new Date(dateToString(date, false))
       })
