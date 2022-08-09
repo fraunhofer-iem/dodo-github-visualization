@@ -1,9 +1,15 @@
 import { ChartData } from "chart.js"
-import { find, max, sortBy, sum } from "lodash"
+import { find, max, sortBy } from "lodash"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { getKpisApiRoute, Kpi } from "../lib/api"
-import { ColorScheme, dateToString, KpiKinds, toFixed } from "../lib/frontend"
+import {
+  ColorScheme,
+  dateToString,
+  KpiKinds,
+  prepareKpiValue,
+  toFixed,
+} from "../lib/frontend"
 import { LineChart } from "./chart"
 import { Spinner } from "./content"
 
@@ -33,19 +39,6 @@ const getKpi = (kpis?: Kpi[], kpiId?: string) => {
     }
   }
   return undefined
-}
-
-const prepareKpiValue = (value: any, aggregate: boolean = true) => {
-  if (aggregate && typeof value === "object") {
-    return (
-      sum(
-        Object.entries<any[] | number>(value).map(([label, v]) =>
-          Array.isArray(v) ? v.length : v,
-        ),
-      ) / Object.keys(value).length
-    )
-  }
-  return value
 }
 
 export default function KpiChart(props: Props) {
@@ -150,11 +143,7 @@ export default function KpiChart(props: Props) {
     }
   }, [scale, kpis, activePoint])
 
-  return isLoadingKpis ? (
-    <div style={{ textAlign: "center" }}>
-      <Spinner size="100px" />
-    </div>
-  ) : isLoadingChildren ? (
+  return isLoadingKpis || isLoadingChildren ? (
     <div style={{ textAlign: "center" }}>
       <Spinner size="100px" />
     </div>
@@ -192,7 +181,7 @@ export default function KpiChart(props: Props) {
                     (entry) => new Date(entry[0]),
                   ])
                   return `${toFixed(
-                    values[tooltipItem.dataIndex][1].value,
+                    prepareKpiValue(values[tooltipItem.dataIndex][1].value),
                     3,
                   )}${kpi.unit === "percent" ? "%" : ` ${kpi.unit}`}`
                 }
@@ -255,7 +244,8 @@ export default function KpiChart(props: Props) {
                     for (const entry of Object.entries(kpi.data)) {
                       if (
                         dataset.labels &&
-                        entry[1].label === dataset.labels[elements[0].index]
+                        dateToString(new Date(entry[0]), true, true) ===
+                          dataset.labels[elements[0].index]
                       ) {
                         timestamp = entry[0]
                       }

@@ -69,16 +69,6 @@ export function KpiInspector(props: Props) {
                   width: "20%",
                 },
                 {
-                  content: "Limits",
-                  sortable: false,
-                  width: "10%",
-                },
-                {
-                  content: "Expected Value",
-                  sortable: false,
-                  width: "10%",
-                },
-                {
                   content: "Difference",
                   sortable: false,
                   width: "10%",
@@ -127,12 +117,6 @@ export function KpiInspector(props: Props) {
                       {
                         content: <>{child.value && toFixed(child.value)}</>,
                         sortKey: "value",
-                      },
-                      {
-                        content: <>limits</>,
-                      },
-                      {
-                        content: <>exp</>,
                       },
                       {
                         content: <>diff</>,

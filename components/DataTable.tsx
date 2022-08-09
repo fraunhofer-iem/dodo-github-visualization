@@ -81,7 +81,8 @@ export function DataTable(props: Props) {
                   <Button
                     type={"button"}
                     context="anchor"
-                    disabled={child.children?.length ? false : true}
+                    // disabled={child.children?.length ? false : true}
+                    disabled={false}
                     padding="0"
                     action={() =>
                       router.push({

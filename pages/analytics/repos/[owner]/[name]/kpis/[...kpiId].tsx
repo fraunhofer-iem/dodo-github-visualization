@@ -1,4 +1,3 @@
-import { sum } from "lodash"
 import { NextPage } from "next"
 import { useRouter } from "next/dist/client/router"
 import { useCallback } from "react"
@@ -26,6 +25,7 @@ import {
   getKpiForRepoRoute,
   KpiKinds,
   PageRoutes,
+  prepareKpiValue,
   toFixed,
 } from "../../../../../../lib/frontend"
 import { useHeader, useUIContext } from "../../../../../../lib/hooks"
@@ -291,20 +291,8 @@ const KPIDetail: NextPage = requireAuthorization(
                         {
                           content: (
                             <>
-                              {kpi.value
-                                ? typeof kpi.value === "object"
-                                  ? (toFixed(
-                                      sum(
-                                        Object.entries<any[] | number>(
-                                          kpi.value,
-                                        ).map(([label, v]) =>
-                                          Array.isArray(v) ? v.length : v,
-                                        ),
-                                      ) / Object.keys(kpi.value).length,
-                                    ),
-                                    2)
-                                  : toFixed(kpi.value, 2)
-                                : ""}
+                              {kpi.value &&
+                                toFixed(prepareKpiValue(kpi.value), 2)}
                               {`${
                                 kpi.unit === "percent" ? "%" : ` ${kpi.unit}`
                               }`}

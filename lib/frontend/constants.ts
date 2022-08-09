@@ -1,3 +1,4 @@
+import { sum } from "lodash"
 import { Color } from "."
 
 export const Colors = {
@@ -86,6 +87,19 @@ export function dateToString(
   return `${includeDayName ? `${indexToDay[date.getUTCDay()]}, ` : ""}${
     date.toISOString().split("T")[0]
   }${includeTime ? `, ${date.toISOString().split("T")[1].split(".")[0]}` : ""}`
+}
+
+export function prepareKpiValue(value: any, aggregate: boolean = true) {
+  if (aggregate && typeof value === "object") {
+    return (
+      sum(
+        Object.entries<any[] | number>(value).map(([label, v]) =>
+          Array.isArray(v) ? v.length : v,
+        ),
+      ) / Object.keys(value).length
+    )
+  }
+  return value
 }
 
 export function toFixed(value: number, digits: number = 2) {
